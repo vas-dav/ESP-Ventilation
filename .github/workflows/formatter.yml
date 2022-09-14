@@ -5,6 +5,8 @@ jobs:
     name: clang-format Code Formatter
     runs-on: ubuntu-latest
     steps:
+    - name: git-safe
+      run: git config --global --add safe.directory /github/workspace
     - name: Clang Code Formatter
       uses: ivanludvig/clang-format-action@v1.4
       env:
