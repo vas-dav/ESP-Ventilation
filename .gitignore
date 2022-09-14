@@ -32,3 +32,6 @@
 *.app
 /Debug/
 /.metadata/
+
+# Mac
+.DS_Store
