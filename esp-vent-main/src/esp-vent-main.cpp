@@ -1,7 +1,7 @@
 /*
 ===============================================================================
  Name        : main.c
- Author      : $(author)
+ Author      : Vasily, Evgenii, Jaakko, Miisa 
  Version     :
  Copyright   : $(copyright)
  Description : main definition
