@@ -1,0 +1,13 @@
+Modes:
+
+Manual:
+	Buttons to inc/dec fan speed(0-10V) (show in percents 10% == 1V)
+	Display fan speed + pressure.
+	Fan updates at the same time as UI
+Automatic:
+	Buttons to inc/dec fan pressure level (0-120 Pa) (show in percents 10% == 1V)
+	Pressure to inc/dec fan speed
+
+BTN1: auto/manual
+auto: BTN3 - inc pressure,  BTN2 - dec pressure
+manual: BTN3 - inc voltage,  BTN2 - dec voltage
