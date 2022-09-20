@@ -40,5 +40,5 @@
 
 *.settings/
 *.project
-*.mcuexpressoide_package_support/
+.mcuexpressoide_package_support/
 
