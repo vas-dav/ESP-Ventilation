@@ -7,7 +7,7 @@
 
 #include <EventHandler.h>
 
-EventHandler::EventHandler() {
+EventHandler::EventHandler(EVENT_HANDL * btns) {
 	// TODO Auto-generated constructor stub
 
 }
