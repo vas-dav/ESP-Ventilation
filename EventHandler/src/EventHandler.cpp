@@ -16,3 +16,12 @@ EventHandler::~EventHandler() {
 	// TODO Auto-generated destructor stub
 }
 
+int EventHandler::getSetPresuure(){
+	//TODO
+	return 0;
+}
+
+int EventHandler::getSetSpeed(){
+	// TODO
+	return 0;
+}

@@ -9,6 +9,7 @@
 #define EVENTHANDLER_H_
 
 #include "DigitalIoPin.h"
+#include "Counter.h"
 
 typedef struct _EVENT_HANDL{
 	DigitalIoPin * _button_control_up;
@@ -19,10 +20,15 @@ typedef struct _EVENT_HANDL{
 
 class EventHandler {
 public:
-	EventHandler(EVENT_HANDL * btns);
+	EventHandler(EVENT_HANDL btns);
 	virtual ~EventHandler();
+	int getSetPresuure();
+	int getSetSpeed();
 private:
-	EVENT_HANDL = {0,0,0,0};
+	EVENT_HANDL internal = {0,0,0,0};
+	bool mode;
+	Counter * bar_pressure;
+	Counter * bar_speed;
 
 };
 
