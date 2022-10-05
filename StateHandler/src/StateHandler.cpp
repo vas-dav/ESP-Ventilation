@@ -7,7 +7,7 @@
 
 #include <StateHandler.h>
 
-StateHandler::StateHandler(EVENT_HANDL * btns) {
+StateHandler::StateHandler(EVENT_HANDL btns) {
 	// TODO Auto-generated constructor stub
 
 }
