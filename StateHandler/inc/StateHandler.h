@@ -17,6 +17,7 @@
 
 #include "DigitalIoPin.h"
 #include "Counter.h"
+#include "Event.h"
 
 /** Buttons enumeration
  * 
