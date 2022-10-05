@@ -18,29 +18,35 @@
 #include "DigitalIoPin.h"
 #include "Counter.h"
 
-/** A structure to hold button pointers
- *
- * Main four buttons that operate the
- * whole program. The structure should be
- * initialized in main with correct values and
- * passed to main EvenHandler object constructor.
- *
+/** Buttons enumeration
+ * 
+ * Current switch state is being passed 
+ * from main to StateHandler through 
+ * a keyEvent. Enumeration determines the state
+ * of the particular button. 
  * */
-typedef struct _EVENT_HANDL{
-	DigitalIoPin * _button_control_up;
-	DigitalIoPin * _button_control_down;
-	DigitalIoPin * _button_control_toggle_mode;
-	DigitalIoPin * _button_control_toggle_active;
-} EVENT_HANDL;
+
+enum _buttons {
+	/** Raises the bar up */
+	BUTTON_CONTROL_UP,
+	/** Raises the bar down */
+	BUTTON_CONTROL_DOWN,
+	/** Toggles the mode between auto and
+	 *  manual, which changes the state */
+	BUTTON_CONTROL_TOG_MODE,
+	/** Optional button to toggle the 
+	 * activation of the current setting.
+	 * Not compulsory to be used. */
+	BUTTON_CONTROL_TOG_ACTIVE
+};
 
 class StateHandler {
 public:
-	StateHandler(EVENT_HANDL btns);
+	StateHandler();
 	virtual ~StateHandler();
 	int getSetPresuure(); // Get currently set pressure 0-100%
 	int getSetSpeed(); //Get currently set FanSpeed 0-100%
 private:
-	EVENT_HANDL internal = {0,0,0,0};
 	bool mode;
 	Counter * bar_pressure;
 	Counter * bar_speed;

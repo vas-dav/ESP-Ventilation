@@ -7,8 +7,6 @@
 
 #include "Counter.h"
 
-#include "Counter.h"
-
 void Counter::inc() {
     if(init >= up_lim){
         init = 0;
