@@ -7,23 +7,37 @@
 
 #include <StateHandler.h>
 
-StateHandler::StateHandler() {
-	// TODO Auto-generated constructor stub
-
+StateHandler::StateHandler(LiquidCrystal * lcd) {
+	this->_lcd = lcd;
+	// TODO
 }
 
 StateHandler::~StateHandler() {
 	// TODO Auto-generated destructor stub
 }
 
-int StateHandler::getSetPresuure(){
-	//TODO
-	return 0;
+unsigned int StateHandler::getSetPressure(){
+	return (unsigned int)this->set[PRESSURE].getCurrent();
 }
 
-int StateHandler::getSetSpeed(){
+unsigned int StateHandler::getSetSpeed(){
+	return (unsigned int)this->set[FAN_SPEED].getCurrent();
+}
+
+void StateHandler::displaySet(unsigned int value1, unsigned int value2){
 	// TODO
-	return 0;
+	/** 
+	 * MANUAL MODE:
+	 * ----------------
+	 * SPEED: 20%
+	 * PRESSURE: XXPa
+	 * ----------------
+	 * AUTO MODE:
+	 * ----------------
+	 * PRESSURE SET: 35Pa
+	 * PRESSURE CUR: XXPa
+	 * ----------------
+	 */
 }
 
 void StateHandler::HandleState(const Event &event){
