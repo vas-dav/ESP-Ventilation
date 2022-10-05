@@ -24,7 +24,7 @@ void Counter::dec() {
 }
 
 
-int Counter::getInit(){
+int Counter::getCurrent(){
   return this->init;
 }
 

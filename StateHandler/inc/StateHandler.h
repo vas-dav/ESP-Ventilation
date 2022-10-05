@@ -16,6 +16,7 @@
 #define STATE_HANDLER_H_
 
 #include "DigitalIoPin.h"
+#include "LiquidCrystal.h"
 #include "Counter.h"
 #include "Event.h"
 
@@ -41,16 +42,45 @@ enum _buttons {
 	BUTTON_CONTROL_TOG_ACTIVE
 };
 
+enum _bars {
+	/** 0-100 % */
+	FAN_SPEED,
+	/** 0-120 Pa */
+	PRESSURE
+};
+
+enum _mode {
+	MANUAL,
+	AUTO
+};
+
 class StateHandler;
 typedef void (StateHandler::*state_pointer)(const Event &);
 
 
 class StateHandler {
 public:
-	StateHandler();
+	StateHandler(LiquidCrystal * lcd);
 	virtual ~StateHandler();
-	int getSetPresuure(); // Get currently set pressure 0-100%
-	int getSetSpeed(); //Get currently set FanSpeed 0-100%
+
+	/** Get currently set pressure
+	 * 
+	 * @return pressure in range of 0-120
+	 */
+	unsigned int getSetPressure();
+
+	/** Get currently set FanSpeed
+	*
+	* @return speed in range of 0-100
+	*/
+	unsigned int getSetSpeed();
+
+	/** Display values on LCD depending on current mode
+	 * 
+	 * @param value1 value to be displayed on LCD line 0
+	 * @param value2 value to be displayed on LCD line 1
+	 */
+	void displaySet(unsigned int value1, unsigned int value2);
 
 	/** Handle the given event of the current state
 	* @param event event to be handled in the current state 
@@ -62,9 +92,9 @@ private:
 	* @param newstate new state to be set to current 
 	*/
 	void SetState(state_pointer newstate);
-	bool mode;
-	Counter * bar_pressure;
-	Counter * bar_speed;
+	bool current_mode;
+	Counter set [2] = {{0, 100}, {0, 120}};
+	LiquidCrystal * _lcd;
 
 };
 

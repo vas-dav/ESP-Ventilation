@@ -5,6 +5,7 @@
 	<projects>
 		<project>lpc_chip_15xx</project>
 		<project>DigitalIoPin</project>
+		<project>LiquidCrystal</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
