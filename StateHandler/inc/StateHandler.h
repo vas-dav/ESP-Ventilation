@@ -1,5 +1,5 @@
 /*
- * EventHandler.h
+ * StateHandler.h
  *
  *  Created on: Sep 21, 2022
  *      Author: tylen
@@ -12,8 +12,8 @@
  *
  */
 
-#ifndef EVENTHANDLER_H_
-#define EVENTHANDLER_H_
+#ifndef STATE_HANDLER_H_
+#define STATE_HANDLER_H_
 
 #include "DigitalIoPin.h"
 #include "Counter.h"
@@ -33,10 +33,10 @@ typedef struct _EVENT_HANDL{
 	DigitalIoPin * _button_control_toggle_active;
 } EVENT_HANDL;
 
-class EventHandler {
+class StateHandler {
 public:
-	EventHandler(EVENT_HANDL btns);
-	virtual ~EventHandler();
+	StateHandler(EVENT_HANDL btns);
+	virtual ~StateHandler();
 	int getSetPresuure(); // Get currently set pressure 0-100%
 	int getSetSpeed(); //Get currently set FanSpeed 0-100%
 private:
@@ -47,4 +47,4 @@ private:
 
 };
 
-#endif /* EVENTHANDLER_H_ */
+#endif /* STATE_HANDLER_H_ */
