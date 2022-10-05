@@ -25,3 +25,14 @@ int StateHandler::getSetSpeed(){
 	// TODO
 	return 0;
 }
+
+void StateHandler::HandleState(const Event &event){
+	(this->*current)(event);
+}
+
+void StateHandler::SetState(state_pointer newstate){
+	(this->*current)(Event(Event::eExit));
+	current = newstate;
+	(this->*current)(Event(Event::eEnter));
+
+}
