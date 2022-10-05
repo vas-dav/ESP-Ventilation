@@ -39,6 +39,5 @@
 # MCUExpresso stuff
 
 *.settings/
-*.project
 .mcuexpressoide_package_support/
 
