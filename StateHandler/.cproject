@@ -5,9 +5,9 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.lib.debug.1917324784" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/EventHandler"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/EventHandler/Debug"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="EventHandler" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/StateHandler"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/StateHandler/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="StateHandler" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -25,7 +25,7 @@
 					<folderInfo id="com.crt.advproject.config.lib.debug.1917324784." name="/" resourcePath="">
 						<toolChain id="com.crt.advproject.toolchain.lib.debug.301539991" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.lib.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.lib.debug.1975706127" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.lib.debug"/>
-							<builder buildPath="${workspace_loc:/EventHandler}/Debug" id="com.crt.advproject.builder.lib.debug.67415099" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="com.crt.advproject.builder.lib.debug"/>
+							<builder buildPath="${workspace_loc:/StateHandler}/Debug" id="com.crt.advproject.builder.lib.debug.67415099" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="com.crt.advproject.builder.lib.debug"/>
 							<tool id="com.crt.advproject.cpp.lib.debug.2122404759" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.lib.debug">
 								<option id="com.crt.advproject.cpp.thumb.383841445" name="Thumb mode" superClass="com.crt.advproject.cpp.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.specs.814897417" name="Specs" superClass="com.crt.advproject.cpp.specs" useByScannerDiscovery="false" value="com.crt.advproject.cpp.specs.newlib" valueType="enumerated"/>
@@ -108,9 +108,9 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.crt.advproject.config.lib.release.1933882444" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/EventHandler"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/EventHandler/Release"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="EventHandler" srcPrefixMapping="" srcRootPath=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/StateHandler"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/StateHandler/Release"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="StateHandler" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -128,7 +128,7 @@
 					<folderInfo id="com.crt.advproject.config.lib.release.1933882444." name="/" resourcePath="">
 						<toolChain id="com.crt.advproject.toolchain.lib.release.1866760111" name="NXP MCU Tools" superClass="com.crt.advproject.toolchain.lib.release">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.lib.release.527454700" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.lib.release"/>
-							<builder buildPath="${workspace_loc:/EventHandler}/Release" id="com.crt.advproject.builder.lib.release.456743579" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="com.crt.advproject.builder.lib.release"/>
+							<builder buildPath="${workspace_loc:/StateHandler}/Release" id="com.crt.advproject.builder.lib.release.456743579" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="com.crt.advproject.builder.lib.release"/>
 							<tool id="com.crt.advproject.cpp.lib.release.220368493" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.lib.release">
 								<option id="com.crt.advproject.cpp.thumb.286226772" name="Thumb mode" superClass="com.crt.advproject.cpp.thumb" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 								<option id="com.crt.advproject.cpp.specs.2239614" name="Specs" superClass="com.crt.advproject.cpp.specs" useByScannerDiscovery="false" value="com.crt.advproject.cpp.specs.newlib" valueType="enumerated"/>
@@ -208,7 +208,7 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="EventHandler.com.crt.advproject.projecttype.lib.852909629" name="Static Library" projectType="com.crt.advproject.projecttype.lib"/>
+		<project id="StateHandler.com.crt.advproject.projecttype.lib.852909629" name="Static Library" projectType="com.crt.advproject.projecttype.lib"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
