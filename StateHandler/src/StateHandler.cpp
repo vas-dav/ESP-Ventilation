@@ -62,13 +62,50 @@ StateHandler::SetState (state_pointer newstate)
   (this->*current) (Event (Event::eEnter));
 }
 
-void StateHandler::HandleState(const Event &event){
-	(this->*current)(event);
+void
+stateInit (const Event &event)
+{
+  switch (event.type)
+    {
+    case Event::eEnter:
+      break;
+    case Event::eExit:
+      break;
+    case Event::eKey:
+      break;
+    case Event::eTick:
+      break;
+    }
 }
 
-void StateHandler::SetState(state_pointer newstate){
-	(this->*current)(Event(Event::eExit));
-	current = newstate;
-	(this->*current)(Event(Event::eEnter));
+void
+stateManual (const Event &event)
+{
+  switch (event.type)
+    {
+    case Event::eEnter:
+      break;
+    case Event::eExit:
+      break;
+    case Event::eKey:
+      break;
+    case Event::eTick:
+      break;
+    }
+}
 
+void
+stateAuto (const Event &event)
+{
+  switch (event.type)
+    {
+    case Event::eEnter:
+      break;
+    case Event::eExit:
+      break;
+    case Event::eKey:
+      break;
+    case Event::eTick:
+      break;
+    }
 }

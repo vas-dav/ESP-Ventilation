@@ -99,6 +99,31 @@ private:
   bool current_mode;
   Counter set[2] = { { 0, 100 }, { 0, 120 } };
   LiquidCrystal *_lcd;
+
+  /** Initialization state
+   *
+   * @param event event of the state
+   */
+  void stateInit (const Event &event);
+
+  /** Manual state
+   *
+   * - set current speed
+   * - print current pressure
+   *
+   * @param event event of the state
+   */
+  void stateManual (const Event &event);
+
+  /** Automated state
+   *
+   * - print current pressure
+   * - print set pressure
+   * - inc/dec fan speed
+   *
+   * @param event
+   */
+  void stateAuto (const Event &event);
 };
 
 #endif /* STATE_HANDLER_H_ */
