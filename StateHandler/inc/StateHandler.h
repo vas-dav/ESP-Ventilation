@@ -15,17 +15,12 @@
 #ifndef STATE_HANDLER_H_
 #define STATE_HANDLER_H_
 
-<<<<<<< HEAD
-=======
-#include "DigitalIoPin.h"
-#include "LiquidCrystal.h"
->>>>>>> a6b953c51fc0a0204b4a5f881a975ec5e9842c6f
 #include "Counter.h"
 #include "DigitalIoPin.h"
 #include "Event.h"
 #include "LiquidCrystal.h"
 
-    /** Buttons enumeration
+/** Buttons enumeration
  *
  * Current switch state is being passed
  * from main to StateHandler through
@@ -33,18 +28,20 @@
  * of the particular button.
  * */
 
-    enum _buttons {
-      /** Raises the bar up */
-      BUTTON_CONTROL_UP,
-      /** Raises the bar down */
-      BUTTON_CONTROL_DOWN,
-      /** Toggles the mode between auto and
+enum _buttons
+{
+  /** Raises the bar up */
+  BUTTON_CONTROL_UP,
+  /** Raises the bar down */
+  BUTTON_CONTROL_DOWN,
+  /** Toggles the mode between auto and
    *  manual, which changes the state */
-      BUTTON_CONTROL_TOG_MODE,
-      /** Optional button to toggle the
+  BUTTON_CONTROL_TOG_MODE,
+  /** Optional button to toggle the
    * activation of the current setting.
    * Not compulsory to be used. */
-      BUTTON_CONTROL_TOG_ACTIVE };
+  BUTTON_CONTROL_TOG_ACTIVE
+};
 
 enum _bars
 {

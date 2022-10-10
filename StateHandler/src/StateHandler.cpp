@@ -49,24 +49,6 @@ StateHandler::getSetSpeed ()
 }
 
 void
-StateHandler::displaySet (unsigned int value1, unsigned int value2)
-{
-  // TODO
-  /**
-   * MANUAL MODE:
-   * ----------------
-   * SPEED: 20%
-   * PRESSURE: XXPa
-   * ----------------
-   * AUTO MODE:
-   * ----------------
-   * PRESSURE SET: 35Pa
-   * PRESSURE CUR: XXPa
-   * ----------------
-   */
-}
-
-void
 StateHandler::HandleState (const Event &event)
 {
   (this->*current) (event);
