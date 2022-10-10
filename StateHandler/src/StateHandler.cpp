@@ -21,19 +21,41 @@ StateHandler::~StateHandler ()
 void
 StateHandler::displaySet (unsigned int value1, unsigned int value2)
 {
-  // TODO
-  /**
-   * MANUAL MODE:
-   * ----------------
-   * SPEED: 20%
-   * PRESSURE: XXPa
-   * ----------------
-   * AUTO MODE:
-   * ----------------
-   * PRESSURE SET: 35Pa
-   * PRESSURE CUR: XXPa
-   * ----------------
-   */
+  char line_up[16] = { 0 };
+  char line_down[16] = { 0 };
+
+  switch (current_mode)
+    {
+    /*
+     * MANUAL MODE:
+     * ----------------
+     * SPEED: 20%
+     * PRESSURE: XXPa
+     * ----------------
+     */
+    case MANUAL:
+      snprintf (line_up, 16, "SPEED: %02d%", value1);
+      snprintf (line_down, 16, "PRESSURE: %02dPa", value2);
+      break;
+    /*
+     * AUTO MODE:
+     * ----------------
+     * PRESSURE SET: 35Pa
+     * PRESSURE CUR: XXPa
+     * ----------------
+     */
+    case AUTO:
+      snprintf (line_up, 16, "P. SET: %02dPa", value1);
+      snprintf (line_down, 16, "P. CURR: %02dPa", value2);
+      break;
+    default:
+      break;
+    }
+  _lcd->clear ();
+  _lcd->setCursor (0, 0);
+  _lcd->print (line_up);
+  _lcd->setCursor (0, 1);
+  _lcd->print (line_down);
 }
 
 unsigned int

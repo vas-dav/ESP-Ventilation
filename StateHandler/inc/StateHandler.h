@@ -96,7 +96,7 @@ private:
    * @param newstate new state to be set to current
    */
   void SetState (state_pointer newstate);
-  bool current_mode;
+  uint8_t current_mode;
   Counter value[2] = { { 0, 100 }, { 0, 120 } };
   LiquidCrystal *_lcd;
 
