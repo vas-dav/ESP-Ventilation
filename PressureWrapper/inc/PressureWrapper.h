@@ -18,14 +18,20 @@
 class PressureWrapper
 {
 public:
-	PressureWrapper();
-	bool getStatus();
-	int16_t getPressure();
+  PressureWrapper ();
+  /**
+   * @brief Get the Status object
+   *
+   * @return true
+   * @return false
+   */
+  bool getStatus ();
+  int16_t getPressure ();
 
-	virtual ~PressureWrapper();
+  virtual ~PressureWrapper ();
 
 private:
-	I2C *i2c;
+  I2C *i2c;
 };
 
 #endif /* PRESSUREWRAPPER_H_ */
