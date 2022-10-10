@@ -1,0 +1,5 @@
+{
+    "C_Cpp.autocompleteAddParentheses": true,
+    "files.autoSave": "onFocusChange",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true
+}
