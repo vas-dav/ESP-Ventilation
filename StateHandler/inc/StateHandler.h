@@ -97,7 +97,7 @@ private:
    */
   void SetState (state_pointer newstate);
   bool current_mode;
-  Counter set[2] = { { 0, 100 }, { 0, 120 } };
+  Counter value[2] = { { 0, 100 }, { 0, 120 } };
   LiquidCrystal *_lcd;
 
   /** Initialization state

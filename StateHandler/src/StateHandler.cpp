@@ -39,13 +39,13 @@ StateHandler::displaySet (unsigned int value1, unsigned int value2)
 unsigned int
 StateHandler::getSetPressure ()
 {
-  return (unsigned int)this->set[PRESSURE].getCurrent ();
+  return (unsigned int)this->value[PRESSURE].getCurrent ();
 }
 
 unsigned int
 StateHandler::getSetSpeed ()
 {
-  return (unsigned int)this->set[FAN_SPEED].getCurrent ();
+  return (unsigned int)this->value[FAN_SPEED].getCurrent ();
 }
 
 void
