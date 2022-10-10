@@ -14,7 +14,7 @@ public:
     Counter(int i, int up);
     void inc();
     void dec();
-    int getInit();
+    int getCurrent();
     void setInit(int i);
     ~Counter() = default;
 
