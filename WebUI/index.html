@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP-Ventilation</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" defer></script>
+    <script src="main.js" defer></script>
+    
+</head>
+<header class="mainheader">
+    <h1>ESP-Ventilation</h1>
+</header>
+<body onload="updateChart()">
+    <div class="split left">
+        <div class="modes">
+            <br>
+            <div class="buttons">
+                <input type="radio" id="m_auto" name="mode" value="Automatic" checked="true">
+                <label for="auto">Automatic</label><br>
+            </div>            
+            <div class="buttons">
+                <input type="radio" id="m_man" name="mode" value="Manual">
+                <label for="man">Manual</label><br>         
+            </div>           
+        </div>
+        <div class="set_values">
+            <div class="field">                                             
+                <div class="ofield">
+                    <h3>Set pressure value</h3>  
+                    <output class="set_output" id="set_press">10 Pa</output>
+                    <input class="slider" id="pressure" type="range" value="10" max="120" oninput="set_press.value = this.value + ' Pa'">
+                </div>                
+            </div>
+            <div class="field">                                              
+                <div class="ofield">
+                    <h3>Set fan speed</h3>
+                    <output class="set_output" id="set_speed">0 %</output>
+                    <input class="slider" id="speed" type="range" value="0" max="100" oninput="set_speed.value = this.value + ' %'" disabled="true">
+                </div> 
+            </div>                             
+        </div>
+        <br><br>
+    
+        <div class="get_values">
+            <div class="field">                                       
+                <div class="ifield">
+                    <h3>Pressure</h3>
+                    <output class="get_output" id="get_press">0</output>
+                </div>                
+            </div>
+            <div class="field">                                              
+                <div class="ifield">
+                    <h3>Fan speed</h3>
+                    <output class="get_output" id="get_speed">0</output>
+                </div> 
+            </div>    
+            <div class="field">                                              
+                <div class="ifield">
+                    <h3>CO2</h3>
+                    <output class="get_output" id="get_co">0</output>
+                </div> 
+            </div>  
+            <div class="field">                                              
+                <div class="ifield">
+                    <h3>Temperature</h3>
+                    <output class="get_output" id="get_temp">0</output>
+                </div> 
+            </div>   
+            <div class="field">                                              
+                <div class="ifield">
+                    <h3>RH</h3>
+                    <output class="get_output" id="get_rh">0</output>
+                </div> 
+            </div>                 
+        </div>
+    </div>
+    
+
+    <div class="split right">
+        <br><br>
+        <div class="chart-container">
+            <canvas id="dataChart" width="600px" height="300px"></canvas>
+        </div>
+    </div>
+    
+    
+</body>
+</html>
