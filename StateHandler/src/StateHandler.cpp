@@ -28,25 +28,11 @@ StateHandler::displaySet (unsigned int value1, unsigned int value2)
 
   if (current_mode == MANUAL)
     {
-      /*
-       * MANUAL MODE:
-       * ----------------
-       * SPEED: 20%
-       * PRESSURE: XXPa
-       * ----------------
-       */
       snprintf (line_up, 16, "SPEED: %02d%", value1);
       snprintf (line_down, 16, "PRESSURE: %02dPa", value2);
     }
   else
     {
-      /*
-       * AUTO MODE:
-       * ----------------
-       * P. SET: 35Pa
-       * P. CURR: XXPa
-       * ----------------
-       */
       snprintf (line_up, 16, "P. SET: %02dPa", value1);
       snprintf (line_down, 16, "P. CURR: %02dPa", value2);
     }

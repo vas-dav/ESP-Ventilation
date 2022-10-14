@@ -80,12 +80,17 @@ public:
 
   /** Display values on LCD depending on current mode
    *
+   * MANUAL MODE: SPEED: XX% PRESSURE: XXPa
+   *
+   * AUTO MODE: P. SET: XXPa P. CURR: XXPa
+   *
    * @param value1 value to be displayed on LCD line 0
    * @param value2 value to be displayed on LCD line 1
    */
   void displaySet (unsigned int value1, unsigned int value2);
 
   /** Handle the given event of the current state
+   *
    * @param event event to be handled in the current state
    */
   void HandleState (const Event &event);
