@@ -131,3 +131,22 @@ stateAuto (const Event &event)
       break;
     }
 }
+
+void
+handleControlButtons (uint8_t button)
+{
+  switch (button)
+    {
+    case BUTTON_CONTROL_DOWN:
+      /* code */
+      break;
+    case BUTTON_CONTROL_UP:
+      /* code */
+      break;
+    case BUTTON_CONTROL_TOG_MODE:
+      /* code */
+      break;
+    default:
+      break;
+    }
+}
