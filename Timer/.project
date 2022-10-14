@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>esp-vent-main</name>
+	<name>Timer</name>
 	<comment></comment>
 	<projects>
-		<project>lpc_board_nxp_lpcxpresso_1549</project>
 		<project>lpc_chip_15xx</project>
-		<project>DigitalIoPin</project>
-		<project>LiquidCrystal</project>
-		<project>I2C</project>
-		<project>StateHandler</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

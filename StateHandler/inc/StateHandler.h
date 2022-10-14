@@ -124,6 +124,12 @@ private:
    * @param event
    */
   void stateAuto (const Event &event);
+
+  /** Hnadle button presses
+   *
+   * @param button current button
+   */
+  void handleControlButtons (uint8_t button);
 };
 
 #endif /* STATE_HANDLER_H_ */
