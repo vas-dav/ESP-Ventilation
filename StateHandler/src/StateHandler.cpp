@@ -10,7 +10,9 @@
 StateHandler::StateHandler (LiquidCrystal *lcd)
 {
   this->_lcd = lcd;
-  // TODO
+  current = &StateHandler::stateInit;
+  (this->*current) (Event (Event::eEnter));
+  current_mode = MANUAL;
 }
 
 StateHandler::~StateHandler ()
@@ -40,8 +42,8 @@ StateHandler::displaySet (unsigned int value1, unsigned int value2)
     /*
      * AUTO MODE:
      * ----------------
-     * PRESSURE SET: 35Pa
-     * PRESSURE CUR: XXPa
+     * P. SET: 35Pa
+     * P. CURR: XXPa
      * ----------------
      */
     case AUTO:
@@ -85,15 +87,43 @@ StateHandler::SetState (state_pointer newstate)
 }
 
 void
-stateInit (const Event &event)
+StateHandler::stateInit (const Event &event)
 {
   switch (event.type)
     {
     case Event::eEnter:
       break;
     case Event::eExit:
+      _lcd->clear ();
       break;
     case Event::eKey:
+      handleControlButtons (event.button);
+      break;
+    case Event::eTick:
+      if (current_mode == MANUAL)
+        {
+          SetState (&StateHandler::stateManual);
+        }
+      else
+        {
+          SetState (&StateHandler::stateAuto);
+        }
+      break;
+    }
+}
+
+void
+StateHandler::stateManual (const Event &event)
+{
+  switch (event.type)
+    {
+    case Event::eEnter:
+      break;
+    case Event::eExit:
+      _lcd->clear ();
+      break;
+    case Event::eKey:
+      handleControlButtons (event.button);
       break;
     case Event::eTick:
       break;
@@ -101,15 +131,17 @@ stateInit (const Event &event)
 }
 
 void
-stateManual (const Event &event)
+StateHandler::stateAuto (const Event &event)
 {
   switch (event.type)
     {
     case Event::eEnter:
       break;
     case Event::eExit:
+      _lcd->clear ();
       break;
     case Event::eKey:
+      handleControlButtons (event.button);
       break;
     case Event::eTick:
       break;
@@ -117,34 +149,19 @@ stateManual (const Event &event)
 }
 
 void
-stateAuto (const Event &event)
-{
-  switch (event.type)
-    {
-    case Event::eEnter:
-      break;
-    case Event::eExit:
-      break;
-    case Event::eKey:
-      break;
-    case Event::eTick:
-      break;
-    }
-}
-
-void
-handleControlButtons (uint8_t button)
+StateHandler::handleControlButtons (uint8_t button)
 {
   switch (button)
     {
     case BUTTON_CONTROL_DOWN:
-      /* code */
+      this->value[(current_mode) ? AUTO : MANUAL].dec ();
       break;
     case BUTTON_CONTROL_UP:
-      /* code */
+      this->value[(current_mode) ? AUTO : MANUAL].inc ();
       break;
     case BUTTON_CONTROL_TOG_MODE:
-      /* code */
+      current_mode = !current_mode;
+      SetState (&StateHandler::stateInit);
       break;
     default:
       break;

@@ -23,10 +23,10 @@ class Event {
     /** Time event */
     eTick
   };
-  Event(eventType e = eTick, int b = 0, int t = 0)
+  Event(eventType e = eTick, uint8_t b = 0, int t = 0)
       : type(e), button(b), temp(t){};
   eventType type;
-  int button;
+  uint8_t button;
   int temp;
 };
 
