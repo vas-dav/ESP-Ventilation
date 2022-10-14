@@ -124,6 +124,7 @@ StateHandler::stateManual (const Event &event)
       handleControlButtons (event.button);
       break;
     case Event::eTick:
+      displaySet (getSetSpeed (), event.pressure);
       break;
     }
 }
@@ -142,6 +143,7 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.button);
       break;
     case Event::eTick:
+      displaySet (getSetPressure (), event.pressure);
       break;
     }
 }

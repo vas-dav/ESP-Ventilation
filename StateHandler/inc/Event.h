@@ -8,11 +8,13 @@
 #ifndef EVENT_H_
 #define EVENT_H_
 
-class Event {
- public:
-  virtual ~Event(){};
+class Event
+{
+public:
+  virtual ~Event (){};
 
-  enum eventType {
+  enum eventType
+  {
     /** Start of the event */
     eEnter,
     /** End of the event*/
@@ -23,10 +25,11 @@ class Event {
     /** Time event */
     eTick
   };
-  Event(eventType e = eTick, uint8_t b = 0, int t = 0)
-      : type(e), button(b), temp(t){};
+  Event (eventType e = eTick, uint8_t b = 0) : type (e), button (b){};
+  Event (eventType e = eTick, int16_t pres = 0) : type (e), pressure (pres){};
   eventType type;
   uint8_t button;
+  int16_t pressure;
   int temp;
 };
 

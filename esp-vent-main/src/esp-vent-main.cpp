@@ -48,6 +48,8 @@ main (void)
 
   StateHandler ventMachine;
 
+  int16_t pressure = 1;
+
   while (1)
     {
       if (b_up.read ())
@@ -77,7 +79,7 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
-      ventMachine.HandleState (Event (Event::eTick));
+      ventMachine.HandleState (Event (Event::eTick, pressure));
     }
 
   return 0;
