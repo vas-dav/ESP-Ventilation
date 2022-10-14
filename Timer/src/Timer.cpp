@@ -17,12 +17,13 @@ extern "C"
   }
 }
 
-Timer::Timer (uint32_t freq = 1000)
+Timer::Timer (uint32_t freq) : freq (freq)
 {
   Chip_Clock_SetSysTickClockDiv (1);
   uint32_t sysTickRate = Chip_Clock_GetSysTickClockRate ();
   SysTick_Config (sysTickRate / freq);
   counter = 0;
+  timer = 0;
 }
 
 Timer::~Timer ()

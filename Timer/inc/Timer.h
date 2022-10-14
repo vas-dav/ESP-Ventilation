@@ -70,6 +70,7 @@ public:
 private:
   volatile std::atomic_int counter;
   volatile std::atomic_int timer;
+  uint32_t freq;
 };
 
 #endif /* TIMER_H_ */
