@@ -13,6 +13,8 @@ StateHandler::StateHandler (LiquidCrystal *lcd)
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
   current_mode = MANUAL;
+  saved_set_value = 0;
+  saved_curr_value = 0;
 }
 
 StateHandler::~StateHandler ()
@@ -110,7 +112,13 @@ StateHandler::stateManual (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      displaySet (getSetSpeed (), event.value);
+      if (saved_curr_value != event.value
+          || saved_set_value != value[MANUAL].getCurrent ())
+        {
+          saved_curr_value = event.value;
+          saved_set_value = value[MANUAL].getCurrent ();
+          displaySet (value[MANUAL].getCurrent (), event.value);
+        }
       break;
     }
 }
@@ -129,7 +137,13 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      displaySet (getSetPressure (), event.value);
+      if (saved_curr_value != event.value
+          || saved_set_value != value[AUTO].getCurrent ())
+        {
+          saved_curr_value = event.value;
+          saved_set_value = value[AUTO].getCurrent ();
+          displaySet (value[AUTO].getCurrent (), event.value);
+        }
       break;
     }
 }
