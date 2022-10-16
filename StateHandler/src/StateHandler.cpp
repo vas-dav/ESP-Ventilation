@@ -81,7 +81,7 @@ StateHandler::stateInit (const Event &event)
       _lcd->clear ();
       break;
     case Event::eKey:
-      handleControlButtons (event.button);
+      handleControlButtons (event.value);
       break;
     case Event::eTick:
       if (current_mode == MANUAL)
@@ -107,10 +107,10 @@ StateHandler::stateManual (const Event &event)
       _lcd->clear ();
       break;
     case Event::eKey:
-      handleControlButtons (event.button);
+      handleControlButtons (event.value);
       break;
     case Event::eTick:
-      displaySet (getSetSpeed (), event.pressure);
+      displaySet (getSetSpeed (), event.value);
       break;
     }
 }
@@ -126,10 +126,10 @@ StateHandler::stateAuto (const Event &event)
       _lcd->clear ();
       break;
     case Event::eKey:
-      handleControlButtons (event.button);
+      handleControlButtons (event.value);
       break;
     case Event::eTick:
-      displaySet (getSetPressure (), event.pressure);
+      displaySet (getSetPressure (), event.value);
       break;
     }
 }

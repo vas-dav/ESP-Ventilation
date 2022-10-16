@@ -25,12 +25,9 @@ public:
     /** Time event */
     eTick
   };
-  Event (eventType e = eTick, uint8_t b = 0) : type (e), button (b){};
-  Event (eventType e = eTick, int16_t pres = 0) : type (e), pressure (pres){};
+  Event (eventType e = eTick, int val = 0) : type (e), value (val){};
   eventType type;
-  uint8_t button;
-  int16_t pressure;
-  int temp;
+  int value;
 };
 
 #endif /* EVENT_H_ */
