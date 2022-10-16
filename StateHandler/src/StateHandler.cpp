@@ -102,6 +102,7 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
+      displaySet (saved_set_value[MANUAL], saved_curr_value[MANUAL]);
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -121,6 +122,7 @@ StateHandler::stateAuto (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
+      displaySet (saved_set_value[AUTO], saved_curr_value[AUTO]);
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -162,6 +164,6 @@ StateHandler::save (int eventValue, int counterValue, size_t mode)
     {
       saved_curr_value[mode] = eventValue;
       saved_set_value[mode] = counterValue;
-      displaySet (counterValue, eventValue);
+      displaySet (saved_set_value[mode], saved_curr_value[mode]);
     }
 }
