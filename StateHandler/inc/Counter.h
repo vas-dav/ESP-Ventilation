@@ -12,15 +12,16 @@ class Counter
 {
 
 public:
-  Counter (int i, int up);
+  Counter (unsigned int i, unsigned int up);
   void inc ();
   void dec ();
-  int getCurrent ();
-  void setInit (int i);
+  unsigned int getCurrent ();
+  void setInit (unsigned int i);
   ~Counter () = default;
 
 private:
-  int init;
-  int up_lim;
+  unsigned int init;
+  unsigned int up_lim;
+  unsigned int down_lim;
 };
 #endif /* COUNTER_H_ */
