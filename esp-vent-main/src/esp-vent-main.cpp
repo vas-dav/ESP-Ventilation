@@ -19,6 +19,7 @@
 #include "DigitalIoPin.h"
 #include "LiquidCrystal.h"
 #include "StateHandler.h"
+#include "Timer.h"
 
 #include <cr_section_macros.h>
 
@@ -65,6 +66,8 @@ main (void)
 
   int16_t pressure = 1;
 
+  Timer glob_time;
+
   while (1)
     {
       if (b_up.read ())
@@ -101,6 +104,7 @@ main (void)
        * - Update current pressure to eTick
        */
       ventMachine.HandleState (Event (Event::eTick, pressure));
+      glob_time.tickCounter(1);
     }
 
   return 0;
