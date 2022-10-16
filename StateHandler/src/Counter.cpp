@@ -19,37 +19,38 @@ Counter::inc ()
 void
 Counter::dec ()
 {
-  if (init - 1 > 0)
+  if (init > down_lim)
     {
       --init;
     }
 }
 
-int
+unsigned int
 Counter::getCurrent ()
 {
   return this->init;
 }
 
-Counter::Counter (int i, int up)
+Counter::Counter (unsigned int down, unsigned int up)
 {
   up_lim = up;
-  if (i > up)
+  down_lim = down;
+  if (down > up)
     {
       init = up;
     }
-  else if (i < 0)
+  else if (down < 0)
     {
       init = 0;
     }
   else
     {
-      init = i;
+      init = down;
     }
 }
 
 void
-Counter::setInit (int i)
+Counter::setInit (unsigned int i)
 {
   init = i;
 }
