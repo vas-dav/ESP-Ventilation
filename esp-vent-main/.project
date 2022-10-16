@@ -9,6 +9,7 @@
 		<project>LiquidCrystal</project>
 		<project>I2C</project>
 		<project>StateHandler</project>
+		<project>Timer</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
