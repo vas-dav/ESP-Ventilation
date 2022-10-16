@@ -103,7 +103,8 @@ private:
   void SetState (state_pointer newstate);
   bool current_mode;
   Counter value[2] = { { 0, 100 }, { 0, 120 } };
-  int saved_set_value, saved_curr_value;
+  int saved_set_value[2] = { 0, 0 };
+  int saved_curr_value[2] = { 0, 0 };
   LiquidCrystal *_lcd;
 
   /** Initialization state
@@ -136,6 +137,14 @@ private:
    * @param button current button
    */
   void handleControlButtons (uint8_t button);
+
+  /** Save values to class' varibales
+   *
+   * @param eventValue value coming from an event
+   * @param counterValue value of the inner Counter
+   * @param mode current mode
+   */
+  void save (int eventValue, int counterValue, size_t mode);
 };
 
 #endif /* STATE_HANDLER_H_ */
