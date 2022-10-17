@@ -8,9 +8,14 @@
 #include <SwitchController.h>
 
 SwitchController::SwitchController (DigitalIoPin *button, Timer *timer,
-                                    StateHandler *handler)
+                                    StateHandler *handler, int button_mode)
 {
-  // TODO Auto-generated constructor stub
+  b = button;
+  t = timer;
+  h = handler;
+  b_state = false;
+  b_mode = button_mode;
+  t->resetCounter ();
 }
 
 SwitchController::~SwitchController ()
@@ -21,4 +26,13 @@ SwitchController::~SwitchController ()
 void
 SwitchController::listen ()
 {
+  if (b->read ())
+    {
+      b_state = true;
+    }
+  if (!b->read () && b_state)
+    {
+      h->HandleState (Event (Event::eKey, b_mode));
+      b_state = false;
+    }
 }
