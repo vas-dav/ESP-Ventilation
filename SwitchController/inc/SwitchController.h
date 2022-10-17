@@ -26,7 +26,7 @@ private:
   DigitalIoPin *b;
   Timer *t;
   StateHandler *h;
-  bool b_state;
+  bool b_pressed;
   int b_mode;
   void buttonOnHold ();
   void buttonInLoop ();

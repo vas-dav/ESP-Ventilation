@@ -13,7 +13,7 @@ SwitchController::SwitchController (DigitalIoPin *button, Timer *timer,
   b = button;
   t = timer;
   h = handler;
-  b_state = false;
+  b_pressed = false;
   b_mode = button_mode;
 }
 
@@ -27,20 +27,20 @@ SwitchController::listen ()
 {
   int timer = t->getCounter ();
   /** Button is pressed for the first time*/
-  if (b->read () && !b_state)
+  if (b->read () && !b_pressed)
     {
       t->resetCounter ();
-      b_state = true;
+      b_pressed = true;
     }
   /** Button is released before 2 seconds*/
-  if (!b->read () && b_state && timer < 2000)
+  if (!b->read () && b_pressed && timer < 2000)
     {
       h->HandleState (Event (Event::eKey, b_mode));
-      b_state = false;
+      b_pressed = false;
       t->resetCounter ();
     }
   /** Button is pressed after 2 seconds*/
-  if (b->read () && b_state && timer >= 2000)
+  if (b->read () && b_pressed && timer >= 2000)
     {
       buttonOnHold ();
     }
@@ -58,7 +58,7 @@ SwitchController::buttonOnHold ()
     {
       h->HandleState (Event (Event::eKey, b_mode));
     }
-  b_state = false;
+  b_pressed = false;
   t->resetCounter ();
 }
 
