@@ -8,7 +8,6 @@
 #ifndef PRESSUREWRAPPER_H_
 #define PRESSUREWRAPPER_H_
 
-#include "DigitalIoPin.h"
 #include "I2C.h"
 
 #define ADDRESS 0x40
@@ -23,21 +22,21 @@ typedef struct _PRESSURE{
 class PressureWrapper
 {
 public:
-  PressureWrapper (I2C *i2c);
+  PressureWrapper ();
   /**
    * @brief Get the Status object
    *
    * @return true
    * @return false
    */
-  bool getStatus ();
-  PRESSURE_DATA* getPressure ();
+  int getPressure ();
 
   virtual ~PressureWrapper ();
 
 private:
   I2C *i2c;
   PRESSURE_DATA data = {{0, 0}, 0};
+  PRESSURE_DATA* getRawPressure ();
 };
 
 #endif /* PRESSUREWRAPPER_H_ */
