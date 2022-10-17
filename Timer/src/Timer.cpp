@@ -55,11 +55,11 @@ Timer::Sleep (int ms)
 int
 Timer::getCounter ()
 {
-  return counter;
+  return counter.load (std::memory_order_relaxed);
 }
 
 void
 Timer::resetCounter ()
 {
-  counter = 0;
+  counter.store (0, std::memory_order_relaxed);
 }

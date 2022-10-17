@@ -28,6 +28,8 @@ private:
   StateHandler *h;
   bool b_state;
   int b_mode;
+  void buttonOnHold ();
+  void buttonInLoop ();
 };
 
 #endif /* SWITCHCONTROLLER_H_ */
