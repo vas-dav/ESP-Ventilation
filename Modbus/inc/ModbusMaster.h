@@ -53,6 +53,7 @@ Set to 1 to enable debugging features within class:
 #include "Arduino.h"
 #else
 //#include "WProgram.h"
+#include "SerialPort.h"
 #include <stdint.h>
 #include <cstddef>
 #endif
@@ -243,10 +244,10 @@ class ModbusMaster
     uint16_t _u16WriteAddress;                                   ///< slave register to which to write
     uint16_t _u16WriteQty;                                       ///< quantity of words to write
     uint16_t _u16TransmitBuffer[ku8MaxBufferSize];               ///< buffer containing data to transmit to Modbus slave; set via SetTransmitBuffer()
-    uint16_t* txBuffer; // from Wire.h -- need to clean this up Rx
+    uint16_t* txBuffer;
     uint8_t _u8TransmitBufferIndex;
     uint16_t u16TransmitBufferLength;
-    uint16_t* rxBuffer; // from Wire.h -- need to clean this up Rx
+    uint16_t* rxBuffer;
     uint8_t _u8ResponseBufferIndex;
     uint8_t _u8ResponseBufferLength;
 
@@ -255,6 +256,8 @@ class ModbusMaster
     static const uint8_t ku8MBReadDiscreteInputs         = 0x02; ///< Modbus function 0x02 Read Discrete Inputs
     static const uint8_t ku8MBWriteSingleCoil            = 0x05; ///< Modbus function 0x05 Write Single Coil
     static const uint8_t ku8MBWriteMultipleCoils         = 0x0F; ///< Modbus function 0x0F Write Multiple Coils
+    static const uint8_t ku8MBWriteMultipleRegisters     = 0x10; ///< Modbus function 0x10 Write Multiple Registers
+
 
     // Modbus function codes for 16 bit access
     static const uint8_t ku8MBReadHoldingRegisters       = 0x03; ///< Modbus function 0x03 Read Holding Registers
