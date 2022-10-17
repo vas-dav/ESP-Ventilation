@@ -80,12 +80,17 @@ public:
 
   /** Display values on LCD depending on current mode
    *
+   * MANUAL MODE: SPEED: XX% PRESSURE: XXPa
+   *
+   * AUTO MODE: P. SET: XXPa P. CURR: XXPa
+   *
    * @param value1 value to be displayed on LCD line 0
    * @param value2 value to be displayed on LCD line 1
    */
   void displaySet (unsigned int value1, unsigned int value2);
 
   /** Handle the given event of the current state
+   *
    * @param event event to be handled in the current state
    */
   void HandleState (const Event &event);
@@ -98,6 +103,8 @@ private:
   void SetState (state_pointer newstate);
   bool current_mode;
   Counter value[2] = { { 0, 100 }, { 0, 120 } };
+  int saved_set_value[2] = { 0, 0 };
+  int saved_curr_value[2] = { 0, 0 };
   LiquidCrystal *_lcd;
 
   /** Initialization state
@@ -124,6 +131,20 @@ private:
    * @param event
    */
   void stateAuto (const Event &event);
+
+  /** Hnadle button presses
+   *
+   * @param button current button
+   */
+  void handleControlButtons (uint8_t button);
+
+  /** Save values to class' varibales
+   *
+   * @param eventValue value coming from an event
+   * @param counterValue value of the inner Counter
+   * @param mode current mode
+   */
+  void save (int eventValue, int counterValue, size_t mode);
 };
 
 #endif /* STATE_HANDLER_H_ */

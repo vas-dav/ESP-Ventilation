@@ -8,19 +8,20 @@
 #ifndef COUNTER_H_
 #define COUNTER_H_
 
-class Counter {
+class Counter
+{
 
 public:
-    Counter(int i, int up);
-    void inc();
-    void dec();
-    int getCurrent();
-    void setInit(int i);
-    ~Counter() = default;
+  Counter (unsigned int i, unsigned int up);
+  void inc ();
+  void dec ();
+  unsigned int getCurrent ();
+  void setInit (unsigned int i);
+  ~Counter () = default;
 
 private:
-    int init;
-    int up_lim;
-
+  unsigned int init;
+  unsigned int up_lim;
+  unsigned int down_lim;
 };
 #endif /* COUNTER_H_ */

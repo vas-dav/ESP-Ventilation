@@ -7,39 +7,50 @@
 
 #include "Counter.h"
 
-void Counter::inc() {
-    if(init >= up_lim){
-        init = 0;
-    } else{
-        ++init;
+void
+Counter::inc ()
+{
+  if (init < up_lim)
+    {
+      ++init;
     }
 }
 
-void Counter::dec() {
-    if(init <= 0){
-        init = up_lim;
-    } else{
-        --init;
+void
+Counter::dec ()
+{
+  if (init > down_lim)
+    {
+      --init;
     }
 }
 
-
-int Counter::getCurrent(){
+unsigned int
+Counter::getCurrent ()
+{
   return this->init;
 }
 
-Counter::Counter(int i, int up) {
-    up_lim = up;
-    if(i > up){
-        init = up;
-    }else if(i < 0){
-        init = 0;
-    }else{
-        init = i;
+Counter::Counter (unsigned int down, unsigned int up)
+{
+  up_lim = up;
+  down_lim = down;
+  if (down > up)
+    {
+      init = up;
     }
-
+  else if (down < 0)
+    {
+      init = 0;
+    }
+  else
+    {
+      init = down;
+    }
 }
 
-void Counter::setInit(int i){
+void
+Counter::setInit (unsigned int i)
+{
   init = i;
 }
