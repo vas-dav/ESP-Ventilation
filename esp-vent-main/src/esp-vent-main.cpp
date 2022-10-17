@@ -21,6 +21,8 @@
 #include "StateHandler.h"
 #include "SwitchController.h"
 #include "Timer.h"
+#include "PressureWrapper.h"
+#include "I2C.h"
 
 #include <cr_section_macros.h>
 
@@ -70,7 +72,14 @@ main (void)
   SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
-  int16_t pressure = 1;
+//  NVIC_DisableIRQ(I2C0_IRQn);
+
+  I2C_config config;
+  I2C i2c(config);
+  PressureWrapper sens(&i2c);
+
+  PRESSURE_DATA *pressure;
+  pressure = sens.getPressure();
 
   while (1)
     {
