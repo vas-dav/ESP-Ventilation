@@ -19,6 +19,7 @@
 #include "DigitalIoPin.h"
 #include "LiquidCrystal.h"
 #include "StateHandler.h"
+#include "SwitchController.h"
 #include "Timer.h"
 #include "PressureWrapper.h"
 #include "I2C.h"
@@ -46,6 +47,7 @@ main (void)
 #endif
   /** Lcd & stateHandler */
   Chip_RIT_Init (LPC_RITIMER);
+  Timer glob_time;
   DigitalIoPin rs (0, 29, false, true, false);
   DigitalIoPin en (0, 9, false, true, false);
   DigitalIoPin d4 (0, 10, false, true, false);
@@ -60,11 +62,15 @@ main (void)
 
   /** Common pins */
   DigitalIoPin b_up (0, 7, true, true, true); // A5
-  bool b_up_state = false;
+  SwitchController sw_up (&b_up, &glob_time, &ventMachine, BUTTON_CONTROL_UP);
+
   DigitalIoPin b_down (0, 6, true, true, true); // A4
-  bool b_down_state = false;
+  SwitchController sw_down (&b_down, &glob_time, &ventMachine,
+                            BUTTON_CONTROL_DOWN);
+
   DigitalIoPin b_toggle (0, 5, true, true, true); // A3
-  bool b_toggle_state = false;
+  SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
+                              BUTTON_CONTROL_TOG_MODE);
 
 //  NVIC_DisableIRQ(I2C0_IRQn);
 
@@ -75,45 +81,18 @@ main (void)
   PRESSURE_DATA *pressure;
   pressure = sens.getPressure();
 
-  Timer glob_time;
-
   while (1)
     {
-      if (b_up.read ())
-        {
-          b_up_state = true;
-        }
-      if (!b_up.read () && b_up_state)
-        {
-          ventMachine.HandleState (Event (Event::eKey, BUTTON_CONTROL_UP));
-          b_up_state = false;
-        }
-      if (b_down.read ())
-        {
-          b_down_state = true;
-        }
-      if (!b_down.read () && b_down_state)
-        {
-          ventMachine.HandleState (Event (Event::eKey, BUTTON_CONTROL_DOWN));
-          b_down_state = false;
-        }
-      if (b_toggle.read ())
-        {
-          b_toggle_state = true;
-        }
-      if (!b_toggle.read () && b_toggle_state)
-        {
-          ventMachine.HandleState (
-              Event (Event::eKey, BUTTON_CONTROL_TOG_MODE));
-          b_toggle_state = false;
-        }
 
+      sw_up.listen ();
+      sw_down.listen ();
+      sw_toggle.listen ();
       /**
        * TODO:
        * - Update current pressure to eTick
        */
-      ventMachine.HandleState (Event (Event::eTick, pressure->rBuffer[1]));
-      glob_time.tickCounter(1);
+      ventMachine.HandleState (Event (Event::eTick, pressure));
+      glob_time.tickCounter (1);
     }
 
   return 0;
