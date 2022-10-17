@@ -9,6 +9,7 @@
 #define PRESSUREWRAPPER_H_
 
 #include "I2C.h"
+#include <cstdio>
 
 #define ADDRESS 0x40
 #define READADD 0x81
