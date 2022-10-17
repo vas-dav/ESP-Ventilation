@@ -20,6 +20,8 @@
 #include "LiquidCrystal.h"
 #include "StateHandler.h"
 #include "Timer.h"
+#include "PressureWrapper.h"
+#include "I2C.h"
 
 #include <cr_section_macros.h>
 
@@ -64,7 +66,14 @@ main (void)
   DigitalIoPin b_toggle (0, 5, true, true, true); // A3
   bool b_toggle_state = false;
 
-  int16_t pressure = 1;
+//  NVIC_DisableIRQ(I2C0_IRQn);
+
+  I2C_config config;
+  I2C i2c(config);
+  PressureWrapper sens(&i2c);
+
+  PRESSURE_DATA *pressure;
+  pressure = sens.getPressure();
 
   Timer glob_time;
 
@@ -103,7 +112,7 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
-      ventMachine.HandleState (Event (Event::eTick, pressure));
+      ventMachine.HandleState (Event (Event::eTick, pressure->rBuffer[1]));
       glob_time.tickCounter(1);
     }
 

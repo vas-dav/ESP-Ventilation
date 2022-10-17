@@ -10,6 +10,7 @@
 		<project>I2C</project>
 		<project>StateHandler</project>
 		<project>Timer</project>
+		<project>PressureWrapper</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

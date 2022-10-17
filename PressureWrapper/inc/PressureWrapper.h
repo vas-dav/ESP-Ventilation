@@ -15,10 +15,15 @@
 #define READADD 0x81
 #define WRITEADD 0x80
 
+typedef struct _PRESSURE{
+	uint8_t rBuffer[2];
+	uint8_t crc;
+}PRESSURE_DATA;
+
 class PressureWrapper
 {
 public:
-  PressureWrapper ();
+  PressureWrapper (I2C *i2c);
   /**
    * @brief Get the Status object
    *
@@ -26,12 +31,13 @@ public:
    * @return false
    */
   bool getStatus ();
-  int16_t getPressure ();
+  PRESSURE_DATA* getPressure ();
 
   virtual ~PressureWrapper ();
 
 private:
   I2C *i2c;
+  PRESSURE_DATA data = {{0, 0}, 0};
 };
 
 #endif /* PRESSUREWRAPPER_H_ */
