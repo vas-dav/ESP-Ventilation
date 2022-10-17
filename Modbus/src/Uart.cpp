@@ -1,7 +1,6 @@
 #include <cstring>
 #include "Uart.h"
 
-
 static LpcUart *u0;
 static LpcUart *u1;
 static LpcUart *u2;
@@ -13,28 +12,16 @@ extern "C" {
  */
 void UART0_IRQHandler(void)
 {
-	/* Want to handle any errors? Do it here. */
-
-	/* Use default ring buffer handler. Override this with your own
-	   code if you need more capability. */
 	if(u0) u0->isr();
 }
 
 void UART1_IRQHandler(void)
 {
-	/* Want to handle any errors? Do it here. */
-
-	/* Use default ring buffer handler. Override this with your own
-	   code if you need more capability. */
 	if(u1) u1->isr();
 }
 
 void UART2_IRQHandler(void)
 {
-	/* Want to handle any errors? Do it here. */
-
-	/* Use default ring buffer handler. Override this with your own
-	   code if you need more capability. */
 	if(u2) u2->isr();
 }
 

@@ -54,7 +54,7 @@ obtain a copy.
 
 #ifndef _UTIL_CRC16_H_
 #define _UTIL_CRC16_H_
-#include <chip.h>
+
 
 /** @ingroup util_crc16
     Processor-independent CRC-16 calculation.

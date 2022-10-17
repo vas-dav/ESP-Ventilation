@@ -1,7 +1,6 @@
 #include "SerialPort.h"
 
 
-
 SerialPort::SerialPort() {
 	if(!u) {
 		LpcPinMap none = {-1, -1}; // unused pin has negative values in it

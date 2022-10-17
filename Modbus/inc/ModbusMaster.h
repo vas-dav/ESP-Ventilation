@@ -56,7 +56,6 @@ Set to 1 to enable debugging features within class:
 #include <stdint.h>
 #include <cstddef>
 #endif
-#include <chip.h>
 
 uint32_t millis();
 #define BYTE 0xA5
@@ -72,6 +71,8 @@ uint32_t millis();
 // functions to manipulate words
 ///#include "util/word.h"
 #include "word.h"
+
+
 #include "SerialPort.h"
 
 /* _____CLASS DEFINITIONS____________________________________________________ */
