@@ -12,8 +12,12 @@
 #include <cstdio>
 
 #define ADDRESS 0x40
-#define READADD 0x81
-#define WRITEADD 0x80
+
+
+/**
+ * @brief structure to hold a raw data from
+ * the pressure sensor
+ */
 
 typedef struct _PRESSURE{
 	uint8_t rBuffer[2];
@@ -24,11 +28,8 @@ class PressureWrapper
 {
 public:
   PressureWrapper ();
-  /**
-   * @brief Get the Status object
-   *
-   * @return true
-   * @return false
+  /*
+   * @return pressure in Pascal
    */
   int getPressure ();
 
@@ -37,7 +38,11 @@ public:
 private:
   I2C *i2c;
   PRESSURE_DATA data = {{0, 0}, 0};
-  PRESSURE_DATA* getRawPressure ();
+  /*
+   * @return struct with pressure data in
+   * rBuffer and CRC check in crc
+   */
+  bool getRawPressure ();
 };
 
 #endif /* PRESSUREWRAPPER_H_ */
