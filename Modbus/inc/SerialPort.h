@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> bada194ebe7490c25ca7589366224d4ae0f80eab
 #ifndef SERIALPORT_H_
 #define SERIALPORT_H_
 
