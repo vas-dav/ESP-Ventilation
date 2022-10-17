@@ -1,7 +1,7 @@
 #ifndef MODBUSREGISTER_H_
 #define MODBUSREGISTER_H_
 
-#include "ModbusLeader.h"
+#include "ModbusMaster.h"
 
 class ModbusRegister {
 public:

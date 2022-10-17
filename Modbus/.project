@@ -3,8 +3,6 @@
 	<name>Modbus</name>
 	<comment></comment>
 	<projects>
-		<project>lpc_chip_15xx</project>
-		<project>DigitalIoPin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -22,7 +20,6 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.cdt.core.cnature</nature>
-		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>

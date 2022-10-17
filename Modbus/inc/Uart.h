@@ -8,7 +8,6 @@
 #ifndef LPCUART_H_
 #define LPCUART_H_
 
-#include <stdint.h>
 #include "chip.h"
 
 struct LpcPinMap {

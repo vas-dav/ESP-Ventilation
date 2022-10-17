@@ -35,7 +35,7 @@ This header file provides utility functions for manipulating words.
 
 #ifndef _UTIL_WORD_H_
 #define _UTIL_WORD_H_
-#include <stdint.h>
+
 
 /** @ingroup util_word
     Return low word of a 32-bit integer.
@@ -43,8 +43,9 @@ This header file provides utility functions for manipulating words.
     @param uint32_t ww (0x00000000..0xFFFFFFFF)
     @return low word of input (0x0000..0xFFFF)
 */
-static inline uint16_t lowWord(uint32_t ww) {
-return (uint16_t) ((ww) & 0xFFFF);
+static inline uint16_t lowWord(uint32_t ww)
+{
+  return (uint16_t) ((ww) & 0xFFFF);
 }
 
 
