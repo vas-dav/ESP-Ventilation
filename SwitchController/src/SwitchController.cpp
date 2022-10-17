@@ -15,7 +15,6 @@ SwitchController::SwitchController (DigitalIoPin *button, Timer *timer,
   h = handler;
   b_state = false;
   b_mode = button_mode;
-  t->resetCounter ();
 }
 
 SwitchController::~SwitchController ()

@@ -50,6 +50,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DigitalIoPin/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StateHandler/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LiquidCrystal/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.cpp.misc.dialect.1439270310" name="Language standard" superClass="com.crt.advproject.cpp.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c++11" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1836081321" superClass="com.crt.advproject.compiler.cpp.input"/>
@@ -75,6 +76,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DigitalIoPin/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StateHandler/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LiquidCrystal/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.c.misc.dialect.1562701315" name="Language standard" superClass="com.crt.advproject.c.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c11" valueType="enumerated"/>
 								<option id="com.crt.advproject.gcc.hdrlib.1858206733" name="Library headers" superClass="com.crt.advproject.gcc.hdrlib" useByScannerDiscovery="false" value="Newlib" valueType="enumerated"/>
@@ -93,6 +95,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DigitalIoPin/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StateHandler/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LiquidCrystal/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gas.hdrlib.679003420" name="Library headers" superClass="com.crt.advproject.gas.hdrlib" value="Newlib" valueType="enumerated"/>
 								<option id="com.crt.advproject.gas.specs.658181602" name="Specs" superClass="com.crt.advproject.gas.specs" value="com.crt.advproject.gas.specs.newlib" valueType="enumerated"/>
@@ -157,6 +160,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DigitalIoPin/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StateHandler/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LiquidCrystal/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.cpp.misc.dialect.637944562" name="Language standard" superClass="com.crt.advproject.cpp.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c++11" valueType="enumerated"/>
 								<option id="com.crt.advproject.cpp.hdrlib.538882538" name="Library headers" superClass="com.crt.advproject.cpp.hdrlib" useByScannerDiscovery="false" value="Newlib" valueType="enumerated"/>
@@ -183,6 +187,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DigitalIoPin/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StateHandler/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LiquidCrystal/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.c.misc.dialect.1049661750" name="Language standard" superClass="com.crt.advproject.c.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c11" valueType="enumerated"/>
 								<option id="com.crt.advproject.gcc.hdrlib.334400252" name="Library headers" superClass="com.crt.advproject.gcc.hdrlib" useByScannerDiscovery="false" value="Newlib" valueType="enumerated"/>
@@ -201,6 +206,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/DigitalIoPin/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StateHandler/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/LiquidCrystal/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.gas.hdrlib.280079471" name="Library headers" superClass="com.crt.advproject.gas.hdrlib" value="Newlib" valueType="enumerated"/>
 								<option id="com.crt.advproject.gas.specs.284770140" name="Specs" superClass="com.crt.advproject.gas.specs" value="com.crt.advproject.gas.specs.newlib" valueType="enumerated"/>
