@@ -36,13 +36,26 @@ PressureWrapper::~PressureWrapper ()
 }
 
 int PressureWrapper::getPressure() {
-
+	int16_t pressure = 0;
+	if(!getRawPressure ()) {
+		unsigned int i = 0;
+		while(i<7200000) i++;
+		getRawPressure ();
+		i = 0;
+	}
+	if(crc8(data.rBuffer, 2) != data.crc){
+	pressure = data.rBuffer[0];
+	pressure = pressure << 8;
+	pressure |= data.rBuffer[1];
+	float result = (float) pressure * 0.95 / 240;
+	return (int) result;
+	}
+	return -255;
 }
 
-PRESSURE_DATA* PressureWrapper::getRawPressure () {
+bool PressureWrapper::getRawPressure () {
 	uint8_t getMeasurementComm = 0xF1;
-	i2c->transaction(0x40, &getMeasurementComm, 1, data.rBuffer, 3);
-	return &data;
+	return (i2c->transaction(ADDRESS, &getMeasurementComm, 1, data.rBuffer, 3));
 }
 
 

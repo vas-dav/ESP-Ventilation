@@ -1,0 +1,8 @@
+/home/tylen/Desktop/Programming/Projects_Metropolia/ESP-Ventilation/lpc_chip_15xx/inc/core_cm3.h:1335:22:void NVIC_DisableIRQ(IRQn_Type)	16	static
+/home/tylen/Desktop/Programming/Projects_Metropolia/ESP-Ventilation/PressureWrapper/inc/I2C.h:18:2:I2C_config::I2C_config()	16	static
+../src/PressureWrapper.cpp:10:16:uint8_t crc8(uint8_t*, size_t)	24	static
+../src/PressureWrapper.cpp:24:1:PressureWrapper::PressureWrapper()	40	static
+../src/PressureWrapper.cpp:32:1:PressureWrapper::~PressureWrapper()	16	static
+../src/PressureWrapper.cpp:32:1:virtual PressureWrapper::~PressureWrapper()	16	static
+../src/PressureWrapper.cpp:37:5:int PressureWrapper::getPressure()	16	static
+../src/PressureWrapper.cpp:41:16:PRESSURE_DATA* PressureWrapper::getRawPressure()	32	static

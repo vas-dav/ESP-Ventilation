@@ -37,7 +37,7 @@
  * this code.
  */
 
-#include "../inc/I2C.h"
+#include "I2C.h"
 
 
 I2C::I2C(const I2C_config &cfg): device(nullptr) {
