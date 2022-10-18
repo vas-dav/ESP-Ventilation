@@ -104,6 +104,7 @@ StateHandler::stateManual (const Event &event)
     {
     case Event::eEnter:
       displaySet (saved_set_value[MANUAL], saved_curr_value[MANUAL]);
+      this->A01->write(this->value[FAN_SPEED].getCurrent ());
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -133,6 +134,13 @@ StateHandler::stateAuto (const Event &event)
       break;
     case Event::eTick:
       save (event.value, value[AUTO].getCurrent (), AUTO);
+      if(saved_curr_value[AUTO] < saved_set_value[AUTO]) {
+    	  fan_speed.inc();
+    	  this->A01->write(fan_speed.getCurrent());
+      } else if(saved_curr_value[AUTO] > saved_set_value[AUTO]){
+    	  fan_speed.dec();
+    	  this->A01->write(fan_speed.getCurrent());
+      }
       break;
     }
 }
@@ -172,3 +180,10 @@ StateHandler::save (int eventValue, int counterValue, size_t mode)
       displaySet (saved_set_value[mode], saved_curr_value[mode]);
     }
 }
+
+void StateHandler::pid () {
+	int integral = 0, error = 0;
+	error = saved_curr_value[AUTO] - saved_set_value[AUTO];
+
+}
+

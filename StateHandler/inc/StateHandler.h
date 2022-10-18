@@ -105,6 +105,7 @@ private:
   void SetState (state_pointer newstate);
   bool current_mode;
   Counter value[2] = { { 0, 100 }, { 0, 120 } };
+  Counter fan_speed = {80, 1000};
   int saved_set_value[2] = { 0, 0 };
   int saved_curr_value[2] = { 0, 0 };
   LiquidCrystal *_lcd;
@@ -148,6 +149,11 @@ private:
    * @param mode current mode
    */
   void save (int eventValue, int counterValue, size_t mode);
+
+  /** Calculates pid for fan control value
+   *
+   */
+  void pid ();
 };
 
 #endif /* STATE_HANDLER_H_ */
