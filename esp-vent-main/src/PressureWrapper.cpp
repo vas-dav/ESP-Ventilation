@@ -43,12 +43,12 @@ int PressureWrapper::getPressure() {
 		getRawPressure ();
 		i = 0;
 	}
-	if(crc8(data.rBuffer, 2) != data.crc){
-	pressure = data.rBuffer[0];
-	pressure = pressure << 8;
-	pressure |= data.rBuffer[1];
-	float result = (float) pressure * 0.95 / 240;
-	return (int) result;
+	if(crc8(data.rBuffer, 2) == data.crc){
+		pressure = data.rBuffer[0];
+		pressure = pressure << 8;
+		pressure |= data.rBuffer[1];
+		float result = (float) pressure * 0.95 / 240;
+		return (int) result;
 	}
 	return -255;
 }
