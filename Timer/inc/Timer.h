@@ -13,6 +13,7 @@
 #include <climits>
 
 static volatile std::atomic_int timer;
+static volatile unsigned int systicks = 0;
 
 extern "C"
 {
@@ -22,6 +23,9 @@ extern "C"
    */
   void SysTick_Handler (void);
 }
+
+uint32_t millis();
+
 
 class Timer
 {
