@@ -1,10 +1,3 @@
-/*
- * LpcUart.h
- *
- *  Created on: 4.2.2019
- *      Author: keijo
- */
-
 #ifndef LPCUART_H_
 #define LPCUART_H_
 
