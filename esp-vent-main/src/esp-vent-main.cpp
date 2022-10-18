@@ -72,7 +72,10 @@ main (void)
   SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
+
   PressureWrapper sens();
+
+
 
   while (1)
     {
@@ -84,7 +87,7 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
-      ventMachine.HandleState (Event (Event::eTick, 0));
+      ventMachine.HandleState (Event (Event::eTick));
       glob_time.tickCounter (1);
     }
 
