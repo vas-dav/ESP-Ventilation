@@ -51,10 +51,8 @@ obtain a copy.
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE. */
 
-
 #ifndef _UTIL_CRC16_H_
 #define _UTIL_CRC16_H_
-
 
 /** @ingroup util_crc16
     Processor-independent CRC-16 calculation.
@@ -68,21 +66,21 @@ obtain a copy.
     @param uint8_t a (0x00..0xFF)
     @return calculated CRC (0x0000..0xFFFF)
 */
-static uint16_t crc16_update(uint16_t crc, uint8_t a)
+static uint16_t
+crc16_update (uint16_t crc, uint8_t a)
 {
   int i;
 
   crc ^= a;
   for (i = 0; i < 8; ++i)
-  {
-    if (crc & 1)
-      crc = (crc >> 1) ^ 0xA001;
-    else
-      crc = (crc >> 1);
-  }
+    {
+      if (crc & 1)
+        crc = (crc >> 1) ^ 0xA001;
+      else
+        crc = (crc >> 1);
+    }
 
   return crc;
 }
-
 
 #endif /* _UTIL_CRC16_H_ */

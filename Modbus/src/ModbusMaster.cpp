@@ -1,6 +1,7 @@
 /**
 @file
-Arduino library for communicating with Modbus slaves over RS232/485 (via RTU protocol).
+Arduino library for communicating with Modbus slaves over RS232/485 (via RTU
+protocol).
 */
 /*
 
@@ -27,24 +28,26 @@ Arduino library for communicating with Modbus slaves over RS232/485 (via RTU pro
 
 */
 
-
-/* _____PROJECT INCLUDES_____________________________________________________ */
+/* _____PROJECT INCLUDES_____________________________________________________
+ */
 #include "ModbusMaster.h"
 #include "crc16.h"
 
-
-/* _____GLOBAL VARIABLES_____________________________________________________ */
+/* _____GLOBAL VARIABLES_____________________________________________________
+ */
 #if defined(ARDUINO_ARCH_AVR)
-  HardwareSerial* MBSerial = &Serial; ///< Pointer to Serial class object
+HardwareSerial *MBSerial = &Serial; ///< Pointer to Serial class object
 #elif defined(ARDUINO_ARCH_SAM)
-  UARTClass* MBSerial = &Serial; ///< Pointer to Serial class object
+UARTClass *MBSerial = &Serial; ///< Pointer to Serial class object
 #else
-//In the case of undefined Serial the code should still function
-//  #error "This library only supports boards with an AVR or SAM processor. Please open an issue at https://github.com/4-20ma/ModbusMaster/issues and indicate which processor/platform you're using."
+// In the case of undefined Serial the code should still function
+//  #error "This library only supports boards with an AVR or SAM processor.
+//  Please open an issue at https://github.com/4-20ma/ModbusMaster/issues and
+//  indicate which processor/platform you're using."
 #endif
 
-
-/* _____PUBLIC FUNCTIONS_____________________________________________________ */
+/* _____PUBLIC FUNCTIONS_____________________________________________________
+ */
 /**
 Constructor.
 
@@ -52,13 +55,12 @@ Creates class object using default serial port 0, Modbus slave ID 1.
 
 @ingroup setup
 */
-ModbusMaster::ModbusMaster(void)
+ModbusMaster::ModbusMaster (void)
 {
   _u8SerialPort = 0;
   _u8MBSlave = 1;
   _u16BaudRate = 0;
 }
-
 
 /**
 Constructor.
@@ -69,31 +71,30 @@ Creates class object using default serial port 0, specified Modbus slave ID.
 @param u8MBSlave Modbus slave ID (1..255)
 @ingroup setup
 */
-ModbusMaster::ModbusMaster(uint8_t u8MBSlave)
+ModbusMaster::ModbusMaster (uint8_t u8MBSlave)
 {
   _u8SerialPort = 0;
   _u8MBSlave = u8MBSlave;
   _u16BaudRate = 0;
 }
 
-
 /**
 Constructor.
 
 Creates class object using specified serial port, Modbus slave ID.
 
-@overload void ModbusMaster::ModbusMaster(uint8_t u8SerialPort, uint8_t u8MBSlave)
+@overload void ModbusMaster::ModbusMaster(uint8_t u8SerialPort, uint8_t
+u8MBSlave)
 @param u8SerialPort serial port (Serial, Serial1..Serial3)
 @param u8MBSlave Modbus slave ID (1..255)
 @ingroup setup
 */
-ModbusMaster::ModbusMaster(uint8_t u8SerialPort, uint8_t u8MBSlave)
+ModbusMaster::ModbusMaster (uint8_t u8SerialPort, uint8_t u8MBSlave)
 {
   _u8SerialPort = (u8SerialPort > 3) ? 0 : u8SerialPort;
   _u8MBSlave = u8MBSlave;
   _u16BaudRate = 0;
 }
-
 
 /**
 Initialize class object.
@@ -103,11 +104,11 @@ Call once class has been instantiated, typically within setup().
 
 @ingroup setup
 */
-void ModbusMaster::begin(void)
+void
+ModbusMaster::begin (void)
 {
-  begin(19200);
+  begin (19200);
 }
-
 
 /**
 Initialize class object.
@@ -119,9 +120,10 @@ Call once class has been instantiated, typically within setup().
 @param u16BaudRate baud rate, in standard increments (300..115200)
 @ingroup setup
 */
-void ModbusMaster::begin(uint16_t u16BaudRate)
+void
+ModbusMaster::begin (uint16_t u16BaudRate)
 {
-//  txBuffer = (uint16_t*) calloc(ku8MaxBufferSize, sizeof(uint16_t));
+  //  txBuffer = (uint16_t*) calloc(ku8MaxBufferSize, sizeof(uint16_t));
   _u8TransmitBufferIndex = 0;
   u16TransmitBufferLength = 0;
 
@@ -153,11 +155,13 @@ void ModbusMaster::begin(uint16_t u16BaudRate)
   }
 #endif
 
-  if(MBSerial == NULL) MBSerial = new SerialPort;
-  if(u16BaudRate !=  _u16BaudRate) {
-	  _u16BaudRate = u16BaudRate;
-	  MBSerial->begin(u16BaudRate);
-  }
+  if (MBSerial == NULL)
+    MBSerial = new SerialPort;
+  if (u16BaudRate != _u16BaudRate)
+    {
+      _u16BaudRate = u16BaudRate;
+      MBSerial->begin (u16BaudRate);
+    }
   _idle = NULL;
 
 #if __MODBUSMASTER_DEBUG__
@@ -166,8 +170,8 @@ void ModbusMaster::begin(uint16_t u16BaudRate)
 #endif
 }
 
-
-void ModbusMaster::beginTransmission(uint16_t u16Address)
+void
+ModbusMaster::beginTransmission (uint16_t u16Address)
 {
   _u16WriteAddress = u16Address;
   _u8TransmitBufferIndex = 0;
@@ -175,15 +179,17 @@ void ModbusMaster::beginTransmission(uint16_t u16Address)
 }
 
 // eliminate this function in favor of using existing MB request functions
-uint8_t ModbusMaster::requestFrom(uint16_t address, uint16_t quantity)
+uint8_t
+ModbusMaster::requestFrom (uint16_t address, uint16_t quantity)
 {
   uint8_t read;
-  read = 1; // krl: added this to prevent warning. This method is not called anywhere...
+  read = 1; // krl: added this to prevent warning. This method is not called
+            // anywhere...
   // clamp to buffer length
   if (quantity > ku8MaxBufferSize)
-  {
-    quantity = ku8MaxBufferSize;
-  }
+    {
+      quantity = ku8MaxBufferSize;
+    }
   // set rx buffer iterator vars
   _u8ResponseBufferIndex = 0;
   _u8ResponseBufferLength = read;
@@ -191,77 +197,63 @@ uint8_t ModbusMaster::requestFrom(uint16_t address, uint16_t quantity)
   return read;
 }
 
-
-void ModbusMaster::sendBit(bool data)
+void
+ModbusMaster::sendBit (bool data)
 {
   uint8_t txBitIndex = u16TransmitBufferLength % 16;
   if ((u16TransmitBufferLength >> 4) < ku8MaxBufferSize)
-  {
-    if (0 == txBitIndex)
     {
-      _u16TransmitBuffer[_u8TransmitBufferIndex] = 0;
+      if (0 == txBitIndex)
+        {
+          _u16TransmitBuffer[_u8TransmitBufferIndex] = 0;
+        }
+      bitWrite (_u16TransmitBuffer[_u8TransmitBufferIndex], txBitIndex, data);
+      u16TransmitBufferLength++;
+      _u8TransmitBufferIndex = u16TransmitBufferLength >> 4;
     }
-    bitWrite(_u16TransmitBuffer[_u8TransmitBufferIndex], txBitIndex, data);
-    u16TransmitBufferLength++;
-    _u8TransmitBufferIndex = u16TransmitBufferLength >> 4;
-  }
 }
 
-
-void ModbusMaster::send(uint16_t data)
+void
+ModbusMaster::send (uint16_t data)
 {
   if (_u8TransmitBufferIndex < ku8MaxBufferSize)
-  {
-    _u16TransmitBuffer[_u8TransmitBufferIndex++] = data;
-    u16TransmitBufferLength = _u8TransmitBufferIndex << 4;
-  }
+    {
+      _u16TransmitBuffer[_u8TransmitBufferIndex++] = data;
+      u16TransmitBufferLength = _u8TransmitBufferIndex << 4;
+    }
 }
 
-
-void ModbusMaster::send(uint32_t data)
+void
+ModbusMaster::send (uint32_t data)
 {
-  send(lowWord(data));
-  send(highWord(data));
+  send (lowWord (data));
+  send (highWord (data));
 }
 
-
-void ModbusMaster::send(uint8_t data)
+void
+ModbusMaster::send (uint8_t data)
 {
-  send(word(data));
+  send (word (data));
 }
 
-
-
-
-
-
-
-
-
-uint8_t ModbusMaster::available(void)
+uint8_t
+ModbusMaster::available (void)
 {
   return _u8ResponseBufferLength - _u8ResponseBufferIndex;
 }
 
-
-uint16_t ModbusMaster::receive(void)
+uint16_t
+ModbusMaster::receive (void)
 {
   if (_u8ResponseBufferIndex < _u8ResponseBufferLength)
-  {
-    return _u16ResponseBuffer[_u8ResponseBufferIndex++];
-  }
+    {
+      return _u16ResponseBuffer[_u8ResponseBufferIndex++];
+    }
   else
-  {
-    return 0xFFFF;
-  }
+    {
+      return 0xFFFF;
+    }
 }
-
-
-
-
-
-
-
 
 /**
 Set idle time callback function (cooperative multitasking).
@@ -273,11 +265,11 @@ serial ports, etc. is permitted within callback function.
 
 @see ModbusMaster::ModbusMasterTransaction()
 */
-void ModbusMaster::idle(void (*idle)())
+void
+ModbusMaster::idle (void (*idle) ())
 {
   _idle = idle;
 }
-
 
 /**
 Retrieve data from response buffer.
@@ -287,18 +279,18 @@ Retrieve data from response buffer.
 @return value in position u8Index of response buffer (0x0000..0xFFFF)
 @ingroup buffer
 */
-uint16_t ModbusMaster::getResponseBuffer(uint8_t u8Index)
+uint16_t
+ModbusMaster::getResponseBuffer (uint8_t u8Index)
 {
   if (u8Index < ku8MaxBufferSize)
-  {
-    return _u16ResponseBuffer[u8Index];
-  }
+    {
+      return _u16ResponseBuffer[u8Index];
+    }
   else
-  {
-    return 0xFFFF;
-  }
+    {
+      return 0xFFFF;
+    }
 }
-
 
 /**
 Clear Modbus response buffer.
@@ -306,39 +298,40 @@ Clear Modbus response buffer.
 @see ModbusMaster::getResponseBuffer(uint8_t u8Index)
 @ingroup buffer
 */
-void ModbusMaster::clearResponseBuffer()
+void
+ModbusMaster::clearResponseBuffer ()
 {
   uint8_t i;
 
   for (i = 0; i < ku8MaxBufferSize; i++)
-  {
-    _u16ResponseBuffer[i] = 0;
-  }
+    {
+      _u16ResponseBuffer[i] = 0;
+    }
 }
-
 
 /**
 Place data in transmit buffer.
 
 @see ModbusMaster::clearTransmitBuffer()
 @param u8Index index of transmit buffer array (0x00..0x3F)
-@param u16Value value to place in position u8Index of transmit buffer (0x0000..0xFFFF)
+@param u16Value value to place in position u8Index of transmit buffer
+(0x0000..0xFFFF)
 @return 0 on success; exception number on failure
 @ingroup buffer
 */
-uint8_t ModbusMaster::setTransmitBuffer(uint8_t u8Index, uint16_t u16Value)
+uint8_t
+ModbusMaster::setTransmitBuffer (uint8_t u8Index, uint16_t u16Value)
 {
   if (u8Index < ku8MaxBufferSize)
-  {
-    _u16TransmitBuffer[u8Index] = u16Value;
-    return ku8MBSuccess;
-  }
+    {
+      _u16TransmitBuffer[u8Index] = u16Value;
+      return ku8MBSuccess;
+    }
   else
-  {
-    return ku8MBIllegalDataAddress;
-  }
+    {
+      return ku8MBIllegalDataAddress;
+    }
 }
-
 
 /**
 Clear Modbus transmit buffer.
@@ -346,16 +339,16 @@ Clear Modbus transmit buffer.
 @see ModbusMaster::setTransmitBuffer(uint8_t u8Index, uint16_t u16Value)
 @ingroup buffer
 */
-void ModbusMaster::clearTransmitBuffer()
+void
+ModbusMaster::clearTransmitBuffer ()
 {
   uint8_t i;
 
   for (i = 0; i < ku8MaxBufferSize; i++)
-  {
-    _u16TransmitBuffer[i] = 0;
-  }
+    {
+      _u16TransmitBuffer[i] = 0;
+    }
 }
-
 
 /**
 Modbus function 0x01 Read Coils.
@@ -380,13 +373,13 @@ order end of the word).
 @return 0 on success; exception number on failure
 @ingroup discrete
 */
-uint8_t ModbusMaster::readCoils(uint16_t u16ReadAddress, uint16_t u16BitQty)
+uint8_t
+ModbusMaster::readCoils (uint16_t u16ReadAddress, uint16_t u16BitQty)
 {
   _u16ReadAddress = u16ReadAddress;
   _u16ReadQty = u16BitQty;
-  return ModbusMasterTransaction(ku8MBReadCoils);
+  return ModbusMasterTransaction (ku8MBReadCoils);
 }
-
 
 /**
 Modbus function 0x02 Read Discrete Inputs.
@@ -407,18 +400,18 @@ bits in the final data word will be padded with zeros (toward the high
 order end of the word).
 
 @param u16ReadAddress address of first discrete input (0x0000..0xFFFF)
-@param u16BitQty quantity of discrete inputs to read (1..2000, enforced by remote device)
+@param u16BitQty quantity of discrete inputs to read (1..2000, enforced by
+remote device)
 @return 0 on success; exception number on failure
 @ingroup discrete
 */
-uint8_t ModbusMaster::readDiscreteInputs(uint16_t u16ReadAddress,
-  uint16_t u16BitQty)
+uint8_t
+ModbusMaster::readDiscreteInputs (uint16_t u16ReadAddress, uint16_t u16BitQty)
 {
   _u16ReadAddress = u16ReadAddress;
   _u16ReadQty = u16BitQty;
-  return ModbusMasterTransaction(ku8MBReadDiscreteInputs);
+  return ModbusMasterTransaction (ku8MBReadDiscreteInputs);
 }
-
 
 /**
 Modbus function 0x03 Read Holding Registers.
@@ -432,18 +425,19 @@ The register data in the response buffer is packed as one word per
 register.
 
 @param u16ReadAddress address of the first holding register (0x0000..0xFFFF)
-@param u16ReadQty quantity of holding registers to read (1..125, enforced by remote device)
+@param u16ReadQty quantity of holding registers to read (1..125, enforced by
+remote device)
 @return 0 on success; exception number on failure
 @ingroup register
 */
-uint8_t ModbusMaster::readHoldingRegisters(uint16_t u16ReadAddress,
-  uint16_t u16ReadQty)
+uint8_t
+ModbusMaster::readHoldingRegisters (uint16_t u16ReadAddress,
+                                    uint16_t u16ReadQty)
 {
   _u16ReadAddress = u16ReadAddress;
   _u16ReadQty = u16ReadQty;
-  return ModbusMasterTransaction(ku8MBReadHoldingRegisters);
+  return ModbusMasterTransaction (ku8MBReadHoldingRegisters);
 }
-
 
 /**
 Modbus function 0x04 Read Input Registers.
@@ -457,18 +451,18 @@ The register data in the response buffer is packed as one word per
 register.
 
 @param u16ReadAddress address of the first input register (0x0000..0xFFFF)
-@param u16ReadQty quantity of input registers to read (1..125, enforced by remote device)
+@param u16ReadQty quantity of input registers to read (1..125, enforced by
+remote device)
 @return 0 on success; exception number on failure
 @ingroup register
 */
-uint8_t ModbusMaster::readInputRegisters(uint16_t u16ReadAddress,
-  uint8_t u16ReadQty)
+uint8_t
+ModbusMaster::readInputRegisters (uint16_t u16ReadAddress, uint8_t u16ReadQty)
 {
   _u16ReadAddress = u16ReadAddress;
   _u16ReadQty = u16ReadQty;
-  return ModbusMasterTransaction(ku8MBReadInputRegisters);
+  return ModbusMasterTransaction (ku8MBReadInputRegisters);
 }
-
 
 /**
 Modbus function 0x05 Write Single Coil.
@@ -484,13 +478,13 @@ address of the coil to be forced. Coils are addressed starting at zero.
 @return 0 on success; exception number on failure
 @ingroup discrete
 */
-uint8_t ModbusMaster::writeSingleCoil(uint16_t u16WriteAddress, uint8_t u8State)
+uint8_t
+ModbusMaster::writeSingleCoil (uint16_t u16WriteAddress, uint8_t u8State)
 {
   _u16WriteAddress = u16WriteAddress;
   _u16WriteQty = (u8State ? 0xFF00 : 0x0000);
-  return ModbusMasterTransaction(ku8MBWriteSingleCoil);
+  return ModbusMasterTransaction (ku8MBWriteSingleCoil);
 }
-
 
 /**
 Modbus function 0x06 Write Single Register.
@@ -504,15 +498,15 @@ written. Registers are addressed starting at zero.
 @return 0 on success; exception number on failure
 @ingroup register
 */
-uint8_t ModbusMaster::writeSingleRegister(uint16_t u16WriteAddress,
-  uint16_t u16WriteValue)
+uint8_t
+ModbusMaster::writeSingleRegister (uint16_t u16WriteAddress,
+                                   uint16_t u16WriteValue)
 {
   _u16WriteAddress = u16WriteAddress;
   _u16WriteQty = 0;
   _u16TransmitBuffer[0] = u16WriteValue;
-  return ModbusMasterTransaction(ku8MBWriteSingleRegister);
+  return ModbusMasterTransaction (ku8MBWriteSingleRegister);
 }
-
 
 /**
 Modbus function 0x0F Write Multiple Coils.
@@ -526,23 +520,24 @@ buffer. A logical '1' in a bit position of the buffer requests the
 corresponding output to be ON. A logical '0' requests it to be OFF.
 
 @param u16WriteAddress address of the first coil (0x0000..0xFFFF)
-@param u16BitQty quantity of coils to write (1..2000, enforced by remote device)
+@param u16BitQty quantity of coils to write (1..2000, enforced by remote
+device)
 @return 0 on success; exception number on failure
 @ingroup discrete
 */
-uint8_t ModbusMaster::writeMultipleCoils(uint16_t u16WriteAddress,
-  uint16_t u16BitQty)
+uint8_t
+ModbusMaster::writeMultipleCoils (uint16_t u16WriteAddress, uint16_t u16BitQty)
 {
   _u16WriteAddress = u16WriteAddress;
   _u16WriteQty = u16BitQty;
-  return ModbusMasterTransaction(ku8MBWriteMultipleCoils);
+  return ModbusMasterTransaction (ku8MBWriteMultipleCoils);
 }
-uint8_t ModbusMaster::writeMultipleCoils()
+uint8_t
+ModbusMaster::writeMultipleCoils ()
 {
   _u16WriteQty = u16TransmitBufferLength;
-  return ModbusMasterTransaction(ku8MBWriteMultipleCoils);
+  return ModbusMasterTransaction (ku8MBWriteMultipleCoils);
 }
-
 
 /**
 Modbus function 0x10 Write Multiple Registers.
@@ -554,25 +549,27 @@ The requested written values are specified in the transmit buffer. Data
 is packed as one word per register.
 
 @param u16WriteAddress address of the holding register (0x0000..0xFFFF)
-@param u16WriteQty quantity of holding registers to write (1..123, enforced by remote device)
+@param u16WriteQty quantity of holding registers to write (1..123, enforced by
+remote device)
 @return 0 on success; exception number on failure
 @ingroup register
 */
-uint8_t ModbusMaster::writeMultipleRegisters(uint16_t u16WriteAddress,
-  uint16_t u16WriteQty)
+uint8_t
+ModbusMaster::writeMultipleRegisters (uint16_t u16WriteAddress,
+                                      uint16_t u16WriteQty)
 {
   _u16WriteAddress = u16WriteAddress;
   _u16WriteQty = u16WriteQty;
-  return ModbusMasterTransaction(ku8MBWriteMultipleRegisters);
+  return ModbusMasterTransaction (ku8MBWriteMultipleRegisters);
 }
 
 // new version based on Wire.h
-uint8_t ModbusMaster::writeMultipleRegisters()
+uint8_t
+ModbusMaster::writeMultipleRegisters ()
 {
   _u16WriteQty = _u8TransmitBufferIndex;
-  return ModbusMasterTransaction(ku8MBWriteMultipleRegisters);
+  return ModbusMasterTransaction (ku8MBWriteMultipleRegisters);
 }
-
 
 /**
 Modbus function 0x16 Mask Write Register.
@@ -596,15 +593,15 @@ Result = (Current Contents && And_Mask) || (Or_Mask && (~And_Mask))
 @return 0 on success; exception number on failure
 @ingroup register
 */
-uint8_t ModbusMaster::maskWriteRegister(uint16_t u16WriteAddress,
-  uint16_t u16AndMask, uint16_t u16OrMask)
+uint8_t
+ModbusMaster::maskWriteRegister (uint16_t u16WriteAddress, uint16_t u16AndMask,
+                                 uint16_t u16OrMask)
 {
   _u16WriteAddress = u16WriteAddress;
   _u16TransmitBuffer[0] = u16AndMask;
   _u16TransmitBuffer[1] = u16OrMask;
-  return ModbusMasterTransaction(ku8MBMaskWriteRegister);
+  return ModbusMasterTransaction (ku8MBMaskWriteRegister);
 }
-
 
 /**
 Modbus function 0x17 Read Write Multiple Registers.
@@ -620,32 +617,38 @@ holding registers. The data to be written is specified in the transmit
 buffer.
 
 @param u16ReadAddress address of the first holding register (0x0000..0xFFFF)
-@param u16ReadQty quantity of holding registers to read (1..125, enforced by remote device)
+@param u16ReadQty quantity of holding registers to read (1..125, enforced by
+remote device)
 @param u16WriteAddress address of the first holding register (0x0000..0xFFFF)
-@param u16WriteQty quantity of holding registers to write (1..121, enforced by remote device)
+@param u16WriteQty quantity of holding registers to write (1..121, enforced by
+remote device)
 @return 0 on success; exception number on failure
 @ingroup register
 */
-uint8_t ModbusMaster::readWriteMultipleRegisters(uint16_t u16ReadAddress,
-  uint16_t u16ReadQty, uint16_t u16WriteAddress, uint16_t u16WriteQty)
+uint8_t
+ModbusMaster::readWriteMultipleRegisters (uint16_t u16ReadAddress,
+                                          uint16_t u16ReadQty,
+                                          uint16_t u16WriteAddress,
+                                          uint16_t u16WriteQty)
 {
   _u16ReadAddress = u16ReadAddress;
   _u16ReadQty = u16ReadQty;
   _u16WriteAddress = u16WriteAddress;
   _u16WriteQty = u16WriteQty;
-  return ModbusMasterTransaction(ku8MBReadWriteMultipleRegisters);
+  return ModbusMasterTransaction (ku8MBReadWriteMultipleRegisters);
 }
-uint8_t ModbusMaster::readWriteMultipleRegisters(uint16_t u16ReadAddress,
-  uint16_t u16ReadQty)
+uint8_t
+ModbusMaster::readWriteMultipleRegisters (uint16_t u16ReadAddress,
+                                          uint16_t u16ReadQty)
 {
   _u16ReadAddress = u16ReadAddress;
   _u16ReadQty = u16ReadQty;
   _u16WriteQty = _u8TransmitBufferIndex;
-  return ModbusMasterTransaction(ku8MBReadWriteMultipleRegisters);
+  return ModbusMasterTransaction (ku8MBReadWriteMultipleRegisters);
 }
 
-
-/* _____PRIVATE FUNCTIONS____________________________________________________ */
+/* _____PRIVATE FUNCTIONS____________________________________________________
+ */
 /**
 Modbus transaction engine.
 Sequence:
@@ -659,7 +662,8 @@ Sequence:
 @param u8MBFunction Modbus function (0x01..0xFF)
 @return 0 on success; exception number on failure
 */
-uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
+uint8_t
+ModbusMaster::ModbusMasterTransaction (uint8_t u8MBFunction)
 {
   uint8_t u8ModbusADU[256];
   uint8_t u8ModbusADUSize = 0;
@@ -673,98 +677,102 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
   u8ModbusADU[u8ModbusADUSize++] = _u8MBSlave;
   u8ModbusADU[u8ModbusADUSize++] = u8MBFunction;
 
-  switch(u8MBFunction)
-  {
+  switch (u8MBFunction)
+    {
     case ku8MBReadCoils:
     case ku8MBReadDiscreteInputs:
     case ku8MBReadInputRegisters:
     case ku8MBReadHoldingRegisters:
     case ku8MBReadWriteMultipleRegisters:
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16ReadAddress);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadAddress);
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16ReadQty);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16ReadQty);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16ReadAddress);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16ReadAddress);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16ReadQty);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16ReadQty);
       break;
-  }
+    }
 
-  switch(u8MBFunction)
-  {
+  switch (u8MBFunction)
+    {
     case ku8MBWriteSingleCoil:
     case ku8MBMaskWriteRegister:
     case ku8MBWriteMultipleCoils:
     case ku8MBWriteSingleRegister:
     case ku8MBWriteMultipleRegisters:
     case ku8MBReadWriteMultipleRegisters:
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16WriteAddress);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16WriteAddress);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16WriteAddress);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16WriteAddress);
       break;
-  }
+    }
 
-  switch(u8MBFunction)
-  {
+  switch (u8MBFunction)
+    {
     case ku8MBWriteSingleCoil:
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16WriteQty);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16WriteQty);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16WriteQty);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16WriteQty);
       break;
 
     case ku8MBWriteSingleRegister:
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16TransmitBuffer[0]);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16TransmitBuffer[0]);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16TransmitBuffer[0]);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16TransmitBuffer[0]);
       break;
 
     case ku8MBWriteMultipleCoils:
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16WriteQty);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16WriteQty);
-      u8Qty = (_u16WriteQty % 8) ? ((_u16WriteQty >> 3) + 1) : (_u16WriteQty >> 3);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16WriteQty);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16WriteQty);
+      u8Qty = (_u16WriteQty % 8) ? ((_u16WriteQty >> 3) + 1)
+                                 : (_u16WriteQty >> 3);
       u8ModbusADU[u8ModbusADUSize++] = u8Qty;
       for (i = 0; i < u8Qty; i++)
-      {
-        switch(i % 2)
         {
-          case 0: // i is even
-            u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16TransmitBuffer[i >> 1]);
-            break;
+          switch (i % 2)
+            {
+            case 0: // i is even
+              u8ModbusADU[u8ModbusADUSize++]
+                  = lowByte (_u16TransmitBuffer[i >> 1]);
+              break;
 
-          case 1: // i is odd
-            u8ModbusADU[u8ModbusADUSize++] = highByte(_u16TransmitBuffer[i >> 1]);
-            break;
+            case 1: // i is odd
+              u8ModbusADU[u8ModbusADUSize++]
+                  = highByte (_u16TransmitBuffer[i >> 1]);
+              break;
+            }
         }
-      }
       break;
 
     case ku8MBWriteMultipleRegisters:
     case ku8MBReadWriteMultipleRegisters:
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16WriteQty);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16WriteQty);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16WriteQty << 1);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16WriteQty);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16WriteQty);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16WriteQty << 1);
 
-      for (i = 0; i < lowByte(_u16WriteQty); i++)
-      {
-        u8ModbusADU[u8ModbusADUSize++] = highByte(_u16TransmitBuffer[i]);
-        u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16TransmitBuffer[i]);
-      }
+      for (i = 0; i < lowByte (_u16WriteQty); i++)
+        {
+          u8ModbusADU[u8ModbusADUSize++] = highByte (_u16TransmitBuffer[i]);
+          u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16TransmitBuffer[i]);
+        }
       break;
 
     case ku8MBMaskWriteRegister:
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16TransmitBuffer[0]);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16TransmitBuffer[0]);
-      u8ModbusADU[u8ModbusADUSize++] = highByte(_u16TransmitBuffer[1]);
-      u8ModbusADU[u8ModbusADUSize++] = lowByte(_u16TransmitBuffer[1]);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16TransmitBuffer[0]);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16TransmitBuffer[0]);
+      u8ModbusADU[u8ModbusADUSize++] = highByte (_u16TransmitBuffer[1]);
+      u8ModbusADU[u8ModbusADUSize++] = lowByte (_u16TransmitBuffer[1]);
       break;
-  }
+    }
 
   // append CRC
   u16CRC = 0xFFFF;
   for (i = 0; i < u8ModbusADUSize; i++)
-  {
-    u16CRC = crc16_update(u16CRC, u8ModbusADU[i]);
-  }
-  u8ModbusADU[u8ModbusADUSize++] = lowByte(u16CRC);
-  u8ModbusADU[u8ModbusADUSize++] = highByte(u16CRC);
+    {
+      u16CRC = crc16_update (u16CRC, u8ModbusADU[i]);
+    }
+  u8ModbusADU[u8ModbusADUSize++] = lowByte (u16CRC);
+  u8ModbusADU[u8ModbusADUSize++] = highByte (u16CRC);
   u8ModbusADU[u8ModbusADUSize] = 0;
 
   // flush receive buffer before transmitting request
-  while (MBSerial->read() != -1);
+  while (MBSerial->read () != -1)
+    ;
 
 #if 0
   // transmit request
@@ -777,159 +785,165 @@ uint8_t ModbusMaster::ModbusMasterTransaction(uint8_t u8MBFunction)
 #endif
   }
 #else
-  MBSerial->write((char *)u8ModbusADU, u8ModbusADUSize);
+  MBSerial->write ((char *)u8ModbusADU, u8ModbusADUSize);
 #endif
-  //printf("TX: %02X\n", u8ModbusADU[0]);
+  // printf("TX: %02X\n", u8ModbusADU[0]);
   u8ModbusADUSize = 0;
-  MBSerial->flush();    // flush transmit buffer
+  MBSerial->flush (); // flush transmit buffer
 
   // loop until we run out of time or bytes, or an error occurs
-  u32StartTime = millis();
+  u32StartTime = millis ();
   while (u8BytesLeft && !u8MBStatus)
-  {
-    if (MBSerial->available())
     {
+      if (MBSerial->available ())
+        {
 #if __MODBUSMASTER_DEBUG__
-      digitalWrite(4, true);
+          digitalWrite (4, true);
 #endif
-      u8ModbusADU[u8ModbusADUSize++] = MBSerial->read();
-      u8BytesLeft--;
+          u8ModbusADU[u8ModbusADUSize++] = MBSerial->read ();
+          u8BytesLeft--;
 #if __MODBUSMASTER_DEBUG__
-      digitalWrite(4, false);
+          digitalWrite (4, false);
 #endif
-    }
-    else
-    {
+        }
+      else
+        {
 #if __MODBUSMASTER_DEBUG__
-      digitalWrite(5, true);
+          digitalWrite (5, true);
 #endif
-      if (_idle)
-      {
-        _idle();
-      }
+          if (_idle)
+            {
+              _idle ();
+            }
 #if __MODBUSMASTER_DEBUG__
-      digitalWrite(5, false);
+          digitalWrite (5, false);
 #endif
+        }
+
+      // evaluate slave ID, function code once enough bytes have been read
+      if (u8ModbusADUSize == 5)
+        {
+          // verify response is for correct Modbus slave
+          if (u8ModbusADU[0] != _u8MBSlave)
+            {
+              u8MBStatus = ku8MBInvalidSlaveID;
+              break;
+            }
+
+          // verify response is for correct Modbus function code (mask
+          // exception bit 7)
+          if ((u8ModbusADU[1] & 0x7F) != u8MBFunction)
+            {
+              u8MBStatus = ku8MBInvalidFunction;
+              break;
+            }
+
+          // check whether Modbus exception occurred; return Modbus Exception
+          // Code
+          if (bitRead (u8ModbusADU[1], 7))
+            {
+              u8MBStatus = u8ModbusADU[2];
+              break;
+            }
+
+          // evaluate returned Modbus function code
+          switch (u8ModbusADU[1])
+            {
+            case ku8MBReadCoils:
+            case ku8MBReadDiscreteInputs:
+            case ku8MBReadInputRegisters:
+            case ku8MBReadHoldingRegisters:
+            case ku8MBReadWriteMultipleRegisters:
+              u8BytesLeft = u8ModbusADU[2];
+              break;
+
+            case ku8MBWriteSingleCoil:
+            case ku8MBWriteMultipleCoils:
+            case ku8MBWriteSingleRegister:
+            case ku8MBWriteMultipleRegisters:
+              u8BytesLeft = 3;
+              break;
+
+            case ku8MBMaskWriteRegister:
+              u8BytesLeft = 5;
+              break;
+            }
+        }
+      if ((millis () - u32StartTime) > ku16MBResponseTimeout)
+        {
+          u8MBStatus = ku8MBResponseTimedOut;
+        }
     }
-
-    // evaluate slave ID, function code once enough bytes have been read
-    if (u8ModbusADUSize == 5)
-    {
-      // verify response is for correct Modbus slave
-      if (u8ModbusADU[0] != _u8MBSlave)
-      {
-        u8MBStatus = ku8MBInvalidSlaveID;
-        break;
-      }
-
-      // verify response is for correct Modbus function code (mask exception bit 7)
-      if ((u8ModbusADU[1] & 0x7F) != u8MBFunction)
-      {
-        u8MBStatus = ku8MBInvalidFunction;
-        break;
-      }
-
-      // check whether Modbus exception occurred; return Modbus Exception Code
-      if (bitRead(u8ModbusADU[1], 7))
-      {
-        u8MBStatus = u8ModbusADU[2];
-        break;
-      }
-
-      // evaluate returned Modbus function code
-      switch(u8ModbusADU[1])
-      {
-        case ku8MBReadCoils:
-        case ku8MBReadDiscreteInputs:
-        case ku8MBReadInputRegisters:
-        case ku8MBReadHoldingRegisters:
-        case ku8MBReadWriteMultipleRegisters:
-          u8BytesLeft = u8ModbusADU[2];
-          break;
-
-        case ku8MBWriteSingleCoil:
-        case ku8MBWriteMultipleCoils:
-        case ku8MBWriteSingleRegister:
-        case ku8MBWriteMultipleRegisters:
-          u8BytesLeft = 3;
-          break;
-
-        case ku8MBMaskWriteRegister:
-          u8BytesLeft = 5;
-          break;
-      }
-    }
-    if ((millis() - u32StartTime) > ku16MBResponseTimeout)
-    {
-      u8MBStatus = ku8MBResponseTimedOut;
-    }
-  }
 
   // verify response is large enough to inspect further
   if (!u8MBStatus && u8ModbusADUSize >= 5)
-  {
-    // calculate CRC
-    u16CRC = 0xFFFF;
-    for (i = 0; i < (u8ModbusADUSize - 2); i++)
     {
-      u16CRC = crc16_update(u16CRC, u8ModbusADU[i]);
-    }
+      // calculate CRC
+      u16CRC = 0xFFFF;
+      for (i = 0; i < (u8ModbusADUSize - 2); i++)
+        {
+          u16CRC = crc16_update (u16CRC, u8ModbusADU[i]);
+        }
 
-    // verify CRC
-    if (!u8MBStatus && (lowByte(u16CRC) != u8ModbusADU[u8ModbusADUSize - 2] ||
-      highByte(u16CRC) != u8ModbusADU[u8ModbusADUSize - 1]))
-    {
-      u8MBStatus = ku8MBInvalidCRC;
+      // verify CRC
+      if (!u8MBStatus
+          && (lowByte (u16CRC) != u8ModbusADU[u8ModbusADUSize - 2]
+              || highByte (u16CRC) != u8ModbusADU[u8ModbusADUSize - 1]))
+        {
+          u8MBStatus = ku8MBInvalidCRC;
+        }
     }
-  }
 
   // disassemble ADU into words
   if (!u8MBStatus)
-  {
-    // evaluate returned Modbus function code
-    switch(u8ModbusADU[1])
     {
-      case ku8MBReadCoils:
-      case ku8MBReadDiscreteInputs:
-        // load bytes into word; response bytes are ordered L, H, L, H, ...
-        for (i = 0; i < (u8ModbusADU[2] >> 1); i++)
+      // evaluate returned Modbus function code
+      switch (u8ModbusADU[1])
         {
-          if (i < ku8MaxBufferSize)
-          {
-            _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 4], u8ModbusADU[2 * i + 3]);
-          }
+        case ku8MBReadCoils:
+        case ku8MBReadDiscreteInputs:
+          // load bytes into word; response bytes are ordered L, H, L, H, ...
+          for (i = 0; i < (u8ModbusADU[2] >> 1); i++)
+            {
+              if (i < ku8MaxBufferSize)
+                {
+                  _u16ResponseBuffer[i]
+                      = word (u8ModbusADU[2 * i + 4], u8ModbusADU[2 * i + 3]);
+                }
 
-          _u8ResponseBufferLength = i;
+              _u8ResponseBufferLength = i;
+            }
+
+          // in the event of an odd number of bytes, load last byte into
+          // zero-padded word
+          if (u8ModbusADU[2] % 2)
+            {
+              if (i < ku8MaxBufferSize)
+                {
+                  _u16ResponseBuffer[i] = word (0, u8ModbusADU[2 * i + 3]);
+                }
+
+              _u8ResponseBufferLength = i + 1;
+            }
+          break;
+
+        case ku8MBReadInputRegisters:
+        case ku8MBReadHoldingRegisters:
+        case ku8MBReadWriteMultipleRegisters:
+          // load bytes into word; response bytes are ordered H, L, H, L, ...
+          for (i = 0; i < (u8ModbusADU[2] >> 1); i++)
+            {
+              if (i < ku8MaxBufferSize)
+                {
+                  _u16ResponseBuffer[i]
+                      = word (u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
+                }
+
+              _u8ResponseBufferLength = i;
+            }
+          break;
         }
-
-        // in the event of an odd number of bytes, load last byte into zero-padded word
-        if (u8ModbusADU[2] % 2)
-        {
-          if (i < ku8MaxBufferSize)
-          {
-            _u16ResponseBuffer[i] = word(0, u8ModbusADU[2 * i + 3]);
-          }
-
-          _u8ResponseBufferLength = i + 1;
-        }
-        break;
-
-      case ku8MBReadInputRegisters:
-      case ku8MBReadHoldingRegisters:
-      case ku8MBReadWriteMultipleRegisters:
-        // load bytes into word; response bytes are ordered H, L, H, L, ...
-        for (i = 0; i < (u8ModbusADU[2] >> 1); i++)
-        {
-          if (i < ku8MaxBufferSize)
-          {
-            _u16ResponseBuffer[i] = word(u8ModbusADU[2 * i + 3], u8ModbusADU[2 * i + 4]);
-          }
-
-          _u8ResponseBufferLength = i;
-        }
-        break;
     }
-  }
 
   _u8TransmitBufferIndex = 0;
   u16TransmitBufferLength = 0;
