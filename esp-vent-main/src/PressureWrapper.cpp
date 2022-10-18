@@ -6,6 +6,7 @@
  */
 
 #include "PressureWrapper.h"
+#include <cstdio>
 
 static uint8_t crc8(uint8_t *data, size_t size) {
 	uint8_t crc = 0x00;

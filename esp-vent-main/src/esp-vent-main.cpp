@@ -72,14 +72,10 @@ main (void)
   SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
-//  NVIC_DisableIRQ(I2C0_IRQn);
 
-  I2C_config config;
-  I2C i2c(config);
-  PressureWrapper sens(&i2c);
+  PressureWrapper sens();
 
-  PRESSURE_DATA *pressure;
-  pressure = sens.getPressure();
+
 
   while (1)
     {
@@ -91,7 +87,7 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
-      ventMachine.HandleState (Event (Event::eTick, pressure));
+      ventMachine.HandleState (Event (Event::eTick));
       glob_time.tickCounter (1);
     }
 
