@@ -19,6 +19,8 @@
 #include "DigitalIoPin.h"
 #include "Event.h"
 #include "LiquidCrystal.h"
+#include "ModbusMaster.h"
+#include "ModbusRegister.h"
 
 /** Buttons enumeration
  *
@@ -63,7 +65,7 @@ typedef void (StateHandler::*state_pointer) (const Event &);
 class StateHandler
 {
 public:
-  StateHandler (LiquidCrystal *lcd);
+  StateHandler (LiquidCrystal *lcd, ModbusRegister *A01);
   virtual ~StateHandler ();
 
   /** Get currently set pressure
@@ -106,6 +108,7 @@ private:
   int saved_set_value[2] = { 0, 0 };
   int saved_curr_value[2] = { 0, 0 };
   LiquidCrystal *_lcd;
+  ModbusRegister *A01;
 
   /** Initialization state
    *

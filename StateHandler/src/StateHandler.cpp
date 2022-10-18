@@ -7,9 +7,10 @@
 
 #include <StateHandler.h>
 
-StateHandler::StateHandler (LiquidCrystal *lcd)
+StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01)
 {
   this->_lcd = lcd;
+  this->A01 = A01;
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
   current_mode = MANUAL;
@@ -143,9 +144,13 @@ StateHandler::handleControlButtons (uint8_t button)
     {
     case BUTTON_CONTROL_DOWN:
       this->value[(current_mode) ? AUTO : MANUAL].dec ();
+      if(current_mode == MANUAL)
+    	  this->A01->write(value[(current_mode) ? AUTO : MANUAL].getCurrent() * 10);
       break;
     case BUTTON_CONTROL_UP:
       this->value[(current_mode) ? AUTO : MANUAL].inc ();
+      if(current_mode == MANUAL)
+    	  this->A01->write(value[(current_mode) ? AUTO : MANUAL].getCurrent() * 10);
       break;
     case BUTTON_CONTROL_TOG_MODE:
       current_mode = !current_mode;
