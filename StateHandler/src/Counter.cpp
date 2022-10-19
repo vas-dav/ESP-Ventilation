@@ -50,7 +50,15 @@ Counter::Counter (unsigned int down, unsigned int up)
 }
 
 void
-Counter::setInit (unsigned int i)
+Counter::setInit (unsigned int newInit)
 {
-  init = i;
+  if(newInit > up_lim){
+	  init = up_lim;
+  }
+  else if(newInit < down_lim){
+	  init = down_lim;
+  }
+  else{
+	  init = newInit;
+  }
 }
