@@ -93,7 +93,7 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
-      if(pressure_time == 100) {
+      if(pressure_time == 80) {
 		  pressure = sens.getPressure();
 		  pressure_time = 0;
       }

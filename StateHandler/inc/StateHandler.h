@@ -105,7 +105,14 @@ private:
   void SetState (state_pointer newstate);
   bool current_mode;
   Counter value[2] = { { 0, 100 }, { 0, 120 } };
-  Counter fan_speed = {80, 1000};
+  /* motor of fan starts at value 90. probably because of some
+   * weigh of fan, so voltage within range of 0-89 is not
+   * sufficient to start motor.
+   * TODO: Value 89 should be scaled to 0 at some point */
+  Counter fan_speed = {89, 1000};
+  /*integral controller for PID. should be global, since it
+   * accumulates error signals encountered since startup*/
+  int integral = 0;
   int saved_set_value[2] = { 0, 0 };
   int saved_curr_value[2] = { 0, 0 };
   LiquidCrystal *_lcd;
