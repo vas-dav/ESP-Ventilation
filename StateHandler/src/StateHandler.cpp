@@ -134,8 +134,18 @@ StateHandler::stateAuto (const Event &event)
       break;
     case Event::eTick:
       save (event.value, value[AUTO].getCurrent (), AUTO);
-      pid();
-      this->A01->write(fan_speed.getCurrent());
+      int i = 0;
+//      pid();
+//      this->A01->write(fan_speed.getCurrent());
+      if(saved_curr_value[AUTO] < saved_set_value[AUTO]) {
+		  fan_speed.inc();
+		  this->A01->write(fan_speed.getCurrent());
+	  } else if(saved_curr_value[AUTO] > saved_set_value[AUTO]){
+		  fan_speed.dec();
+		  while(i<720) i++;
+		  i = 0;
+		  this->A01->write(fan_speed.getCurrent());
+	  	 }
       break;
     }
 }
@@ -177,9 +187,9 @@ StateHandler::save (int eventValue, int counterValue, size_t mode)
 }
 
 void StateHandler::pid () {
-	float kP = 0.7, kI = 0.7, kD = 0.7;
+	float kP = 0.001, kI = 0.001, kD = 0.001;
 	int error = 0, last_error = 0, derivative = 0;
-	error = saved_curr_value[AUTO] - saved_set_value[AUTO];
+	error = saved_set_value[AUTO] - saved_curr_value[AUTO];
 	last_error = error;
 	integral += error;
 	derivative = error - last_error;

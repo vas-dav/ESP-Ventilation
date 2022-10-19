@@ -63,7 +63,8 @@ main (void)
   ModbusMaster fan(1);
   fan.begin(9600);
   ModbusRegister A01(&fan, 0);
-  ModbusRegister DI1(&fan, 4, false);
+//  ModbusRegister DI1(&fan, 4, false);
+
 
   StateHandler ventMachine (&lcd, &A01);
   /** Common pins */
@@ -78,8 +79,6 @@ main (void)
   SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
-
-
   PressureWrapper sens;
   int pressure = 0, pressure_time = 0;
 
@@ -93,7 +92,7 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
-      if(pressure_time == 80) {
+      if(pressure_time == 5) {
 		  pressure = sens.getPressure();
 		  pressure_time = 0;
       }

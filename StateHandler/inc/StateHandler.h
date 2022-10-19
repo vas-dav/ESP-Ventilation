@@ -109,7 +109,7 @@ private:
    * weigh of fan, so voltage within range of 0-89 is not
    * sufficient to start motor.
    * TODO: Value 89 should be scaled to 0 at some point */
-  Counter fan_speed = {89, 1000};
+  Counter fan_speed = {20, 1000};
   /*integral controller for PID. should be global, since it
    * accumulates error signals encountered since startup*/
   int integral = 0;
