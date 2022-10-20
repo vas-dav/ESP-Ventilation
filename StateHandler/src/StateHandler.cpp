@@ -139,6 +139,8 @@ StateHandler::stateAuto (const Event &event)
 //      this->A01->write(fan_speed.getCurrent());
       if(saved_curr_value[AUTO] < saved_set_value[AUTO]) {
 		  fan_speed.inc();
+		  while(i<720) i++;
+		  i = 0;
 		  this->A01->write(fan_speed.getCurrent());
 	  } else if(saved_curr_value[AUTO] > saved_set_value[AUTO]){
 		  fan_speed.dec();
@@ -149,6 +151,7 @@ StateHandler::stateAuto (const Event &event)
       break;
     }
 }
+
 
 void
 StateHandler::handleControlButtons (uint8_t button)

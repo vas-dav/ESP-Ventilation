@@ -21,6 +21,8 @@
 #include "LiquidCrystal.h"
 #include "ModbusMaster.h"
 #include "ModbusRegister.h"
+#include "GMP252.h"
+#include "HMP60.h"
 
 /** Buttons enumeration
  *
@@ -117,6 +119,12 @@ private:
   int saved_curr_value[2] = { 0, 0 };
   LiquidCrystal *_lcd;
   ModbusRegister *A01;
+
+  /* CO2 sensor object */
+  GMP252 co2;
+
+  /* Humidity and temperature sensor object */
+  HMP60 humidity;
 
   /** Initialization state
    *
