@@ -7,10 +7,11 @@
 
 #include <StateHandler.h>
 
-StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01)
+StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01, PressureWrapper *pressure)
 {
   this->_lcd = lcd;
   this->A01 = A01;
+  this->pressure = pressure;
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
   current_mode = MANUAL;
@@ -77,6 +78,7 @@ StateHandler::stateInit (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
+    	SetState(&StateHandler::stateSensors);
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -152,6 +154,37 @@ StateHandler::stateAuto (const Event &event)
     }
 }
 
+void
+StateHandler::stateSensors (const Event &event)
+{
+  switch (event.type)
+	{
+	case Event::eEnter:
+	  break;
+	case Event::eExit:
+	  break;
+	case Event::eKey:
+	  break;
+	case Event::eTick:
+	  sensors_data[PRESSUREDAT] = pressure->getPressure();
+	  sensors_data[TEMPERATURE] = humidity.readT();
+	  sensors_data[HUMIDITY] = humidity.readRH();
+	  sensors_data[CO2] = co2.read();
+	  char line_up[16] = { 0 };
+	  char line_down[16] = { 0 };
+
+	  snprintf (line_up, 16, "PRE:%02dPa TEM:%02dC", sensors_data[PRESSUREDAT],sensors_data[TEMPERATURE]);
+	  snprintf (line_down, 16, "HUM:%02d CO2:%02d", sensors_data[HUMIDITY], sensors_data[CO2]);
+
+	  _lcd->clear ();
+	  _lcd->setCursor (0, 0);
+	  _lcd->print (line_up);
+	  _lcd->setCursor (0, 1);
+	  _lcd->print (line_down);
+		SetState (&StateHandler::stateManual);
+	  break;
+	}
+}
 
 void
 StateHandler::handleControlButtons (uint8_t button)

@@ -23,6 +23,7 @@
 #include "ModbusRegister.h"
 #include "GMP252.h"
 #include "HMP60.h"
+#include "PressureWrapper.h"
 
 /** Buttons enumeration
  *
@@ -61,13 +62,21 @@ enum _mode
   AUTO
 };
 
+enum _sensors
+{
+  PRESSUREDAT,
+  TEMPERATURE,
+  HUMIDITY,
+  CO2
+};
+
 class StateHandler;
 typedef void (StateHandler::*state_pointer) (const Event &);
 
 class StateHandler
 {
 public:
-  StateHandler (LiquidCrystal *lcd, ModbusRegister *A01);
+  StateHandler (LiquidCrystal *lcd, ModbusRegister *A01, PressureWrapper *pressure);
   virtual ~StateHandler ();
 
   /** Get currently set pressure
@@ -117,9 +126,10 @@ private:
   int integral = 0;
   int saved_set_value[2] = { 0, 0 };
   int saved_curr_value[2] = { 0, 0 };
+  int sensors_data[4] = {0};
   LiquidCrystal *_lcd;
   ModbusRegister *A01;
-
+  PressureWrapper * pressure;
   /* CO2 sensor object */
   GMP252 co2;
 
@@ -151,7 +161,15 @@ private:
    */
   void stateAuto (const Event &event);
 
-  /** Hnadle button presses
+  /** Sensors state
+   *
+   * - print current sensrs readings
+   *
+   * @param event
+   */
+  void stateSensors (const Event &event);
+
+  /** Handle button presses
    *
    * @param button current button
    */

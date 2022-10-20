@@ -65,8 +65,10 @@ main (void)
   ModbusRegister A01(&fan, 0);
 //  ModbusRegister DI1(&fan, 4, false);
 
+  PressureWrapper sens;
 
-  StateHandler ventMachine (&lcd, &A01);
+
+  StateHandler ventMachine (&lcd, &A01, &sens);
   /** Common pins */
   DigitalIoPin b_up (0, 7, true, true, true); // A5
   SwitchController sw_up (&b_up, &glob_time, &ventMachine, BUTTON_CONTROL_UP);
@@ -79,7 +81,6 @@ main (void)
   SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
-  PressureWrapper sens;
   int pressure = 0, pressure_time = 0;
 
   while (1)
