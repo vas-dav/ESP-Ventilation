@@ -39,7 +39,7 @@ int PressureWrapper::getPressure() {
 	int16_t pressure = 0;
 	if(!getRawPressure ()) {
 		unsigned int i = 0;
-		while(i<7200000) i++;
+		while(i<7200) i++;
 		getRawPressure ();
 		i = 0;
 	}

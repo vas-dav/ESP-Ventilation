@@ -55,11 +55,20 @@ main (void)
   DigitalIoPin d6 (1, 3, false, true, false);
   DigitalIoPin d7 (0, 0, false, true, false);
   LiquidCrystal lcd (&rs, &en, &d4, &d5, &d6, &d7);
-  StateHandler ventMachine (&lcd);
   //
   lcd.setCursor (0, 0);
   lcd.print ("Test");
 
+  /* FAN object */
+  ModbusMaster fan(1);
+  fan.begin(9600);
+  ModbusRegister A01(&fan, 0);
+//  ModbusRegister DI1(&fan, 4, false);
+
+  PressureWrapper sens;
+
+
+  StateHandler ventMachine (&lcd, &A01, &sens);
   /** Common pins */
   DigitalIoPin b_up (0, 7, true, true, true); // A5
   SwitchController sw_up (&b_up, &glob_time, &ventMachine, BUTTON_CONTROL_UP);
@@ -73,10 +82,7 @@ main (void)
                               BUTTON_CONTROL_TOG_MODE);
 
 
-  PressureWrapper sens();
-
-
-
+  int pressure = 0, pressure_time = 0;
   while (1)
     {
 
@@ -87,7 +93,14 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
-      ventMachine.HandleState (Event (Event::eTick));
+#if 0
+      if(pressure_time == 5) {
+		  pressure = sens.getPressure();
+		  pressure_time = 0;
+      }
+      ++pressure_time;
+#endif
+	  ventMachine.HandleState (Event (Event::eTick, pressure));
       glob_time.tickCounter (1);
     }
 

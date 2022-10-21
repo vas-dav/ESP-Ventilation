@@ -6,10 +6,13 @@
  */
 
 #include <StateHandler.h>
+#define PID 0
 
-StateHandler::StateHandler (LiquidCrystal *lcd)
+StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01, PressureWrapper *pressure)
 {
   this->_lcd = lcd;
+  this->A01 = A01;
+  this->pressure = pressure;
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
   current_mode = MANUAL;
@@ -76,6 +79,7 @@ StateHandler::stateInit (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
+    	SetState(&StateHandler::stateSensors);
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -103,15 +107,17 @@ StateHandler::stateManual (const Event &event)
     {
     case Event::eEnter:
       displaySet (saved_set_value[MANUAL], saved_curr_value[MANUAL]);
+      this->A01->write(this->value[FAN_SPEED].getCurrent ());
       break;
     case Event::eExit:
       _lcd->clear ();
       break;
     case Event::eKey:
       handleControlButtons (event.value);
+      this->A01->write(value[MANUAL].getCurrent() * 10);
       break;
     case Event::eTick:
-      save (event.value, value[MANUAL].getCurrent (), MANUAL);
+      save (event.value, MANUAL);
       break;
     }
 }
@@ -131,9 +137,55 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      save (event.value, value[AUTO].getCurrent (), AUTO);
+      save (event.value, AUTO);
+#if PID
+      pid();
+      this->A01->write(fan_speed.getCurrent());
+#endif
+#if !PID
+      if(saved_curr_value[AUTO] < saved_set_value[AUTO]) {
+		  fan_speed.inc();
+		  this->A01->write(fan_speed.getCurrent());
+	  } else if(saved_curr_value[AUTO] > saved_set_value[AUTO]){
+		  fan_speed.dec();
+		  this->A01->write(fan_speed.getCurrent());
+	  	 }
+#endif
       break;
     }
+}
+
+void
+StateHandler::stateSensors (const Event &event)
+{
+  switch (event.type)
+	{
+	case Event::eEnter:
+	  break;
+	case Event::eExit:
+	  break;
+	case Event::eKey:
+	  break;
+	case Event::eTick:
+	  sensors_data[PRESSUREDAT] = pressure->getPressure();
+	  sensors_data[TEMPERATURE] = humidity.readT();
+	  sensors_data[HUMIDITY] = humidity.readRH();
+	  sensors_data[CO2] = co2.read();
+#if 1
+	  char line_up[16] = { 0 };
+	  char line_down[16] = { 0 };
+	  snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],sensors_data[TEMPERATURE]);
+	  snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY], sensors_data[CO2]);
+
+	  _lcd->clear ();
+	  _lcd->setCursor (0, 0);
+	  _lcd->print (line_up);
+	  _lcd->setCursor (0, 1);
+	  _lcd->print (line_down);
+#endif
+	  SetState (current_mode? &StateHandler::stateAuto : &StateHandler::stateManual);
+	  break;
+	}
 }
 
 void
@@ -157,8 +209,17 @@ StateHandler::handleControlButtons (uint8_t button)
 }
 
 void
-StateHandler::save (int eventValue, int counterValue, size_t mode)
+StateHandler::save (int eventValue, size_t mode)
 {
+  /* if pressure is not provided from main it checks it in following if{}*/
+  if(!eventValue) {
+   	  /* Small delay for modbus communications with pressure sensor */
+	  int i = 0;
+	  while(i<720) i++;
+	  i = 0;
+	  eventValue = pressure->getPressure();
+  }
+  int counterValue = value[mode].getCurrent ();
   if (saved_curr_value[mode] != eventValue
       || saved_set_value[mode] != counterValue)
     {
@@ -167,3 +228,14 @@ StateHandler::save (int eventValue, int counterValue, size_t mode)
       displaySet (saved_set_value[mode], saved_curr_value[mode]);
     }
 }
+
+void StateHandler::pid () {
+	float kP = 0.1, kI = 0.01, kD = 0.01;
+	int error = 0, last_error = 0, derivative = 0;
+	error = saved_set_value[AUTO] - saved_curr_value[AUTO];
+	last_error = error;
+	integral += error;
+	derivative = error - last_error;
+	fan_speed.setInit((kP*error) + (kI*integral) + (kD * derivative));
+}
+
