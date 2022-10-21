@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="style.css" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" defer></script>
     <script src="main.js" defer></script>
-    
+    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript" defer></script>
 </head>
-<header class="mainheader">
-    <h1>ESP-Ventilation</h1>
-</header>
-<body onload="updateChart()">
-    <div class="split left">
+<body onload="updateChart(), sendPressure()">
+    <header>
+        <h1>ESP-Ventilation</h1>
+    </header>
+    <main>
         <div class="modes">
             <br>
             <div class="buttons">
@@ -47,44 +48,60 @@
         <div class="get_values">
             <div class="field">                                       
                 <div class="ifield">
-                    <h3>Pressure</h3>
+                    <h3>Pressure</h3>                    
                     <output class="get_output" id="get_press">0</output>
+                    <h4>Pa</h4>
                 </div>                
             </div>
             <div class="field">                                              
                 <div class="ifield">
                     <h3>Fan speed</h3>
                     <output class="get_output" id="get_speed">0</output>
+                    <h4>%</h4>
                 </div> 
             </div>    
             <div class="field">                                              
                 <div class="ifield">
                     <h3>CO2</h3>
                     <output class="get_output" id="get_co">0</output>
+                    <h4>ppm</h4>
                 </div> 
             </div>  
             <div class="field">                                              
                 <div class="ifield">
                     <h3>Temperature</h3>
                     <output class="get_output" id="get_temp">0</output>
+                    <h4>&#8451</h4>
                 </div> 
             </div>   
             <div class="field">                                              
                 <div class="ifield">
-                    <h3>RH</h3>
+                    <h3>Relative Humidity</h3>
                     <output class="get_output" id="get_rh">0</output>
+                    <h4>%</h4>
                 </div> 
             </div>                 
         </div>
-    </div>
+    </main>
     
 
-    <div class="split right">
-        <br><br>
+    <aside>
+        <br>
+        <h2>Data history</h2>
+        <br>
         <div class="chart-container">
+            <div class="dropdown">
+            <label for="data">Filter data:</label>
+            <select name="data" id="data">
+                <option value="all">All</option>
+                <option value="hour">Last hour</option>
+                <option value="day">Last 24 hours</option>
+                <option value="week">Last week</option>
+            </select>
+            </div>
             <canvas id="dataChart" width="600px" height="300px"></canvas>
         </div>
-    </div>
+    </aside>
     
     
 </body>
