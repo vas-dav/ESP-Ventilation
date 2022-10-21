@@ -114,6 +114,7 @@ StateHandler::stateManual (const Event &event)
       break;
     case Event::eKey:
       handleControlButtons (event.value);
+      this->A01->write(value[MANUAL].getCurrent() * 10);
       break;
     case Event::eTick:
       save (event.value, MANUAL);
@@ -194,13 +195,9 @@ StateHandler::handleControlButtons (uint8_t button)
     {
     case BUTTON_CONTROL_DOWN:
       this->value[(current_mode) ? AUTO : MANUAL].dec ();
-      if(current_mode == MANUAL)
-    	  this->A01->write(value[(current_mode) ? AUTO : MANUAL].getCurrent() * 10);
       break;
     case BUTTON_CONTROL_UP:
       this->value[(current_mode) ? AUTO : MANUAL].inc ();
-      if(current_mode == MANUAL)
-    	  this->A01->write(value[(current_mode) ? AUTO : MANUAL].getCurrent() * 10);
       break;
     case BUTTON_CONTROL_TOG_MODE:
       current_mode = !current_mode;
