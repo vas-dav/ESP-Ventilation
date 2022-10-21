@@ -81,8 +81,8 @@ main (void)
   SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
-  int pressure = 0, pressure_time = 0;
 
+  int pressure = 0, pressure_time = 0;
   while (1)
     {
 
@@ -93,13 +93,15 @@ main (void)
        * TODO:
        * - Update current pressure to eTick
        */
+#if 0
       if(pressure_time == 5) {
 		  pressure = sens.getPressure();
 		  pressure_time = 0;
       }
+      ++pressure_time;
+#endif
 	  ventMachine.HandleState (Event (Event::eTick, pressure));
       glob_time.tickCounter (1);
-      ++pressure_time;
     }
 
   return 0;

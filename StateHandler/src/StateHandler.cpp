@@ -6,6 +6,7 @@
  */
 
 #include <StateHandler.h>
+#define PID 0
 
 StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01, PressureWrapper *pressure)
 {
@@ -115,7 +116,7 @@ StateHandler::stateManual (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      save (event.value, value[MANUAL].getCurrent (), MANUAL);
+      save (event.value, MANUAL);
       break;
     }
 }
@@ -135,19 +136,16 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      save (event.value, value[AUTO].getCurrent (), AUTO);
-      int i = 0;
-//      pid();
-//      this->A01->write(fan_speed.getCurrent());
+      save (event.value, AUTO);
+#if PID
+      pid();
+      this->A01->write(fan_speed.getCurrent());
+#endif
       if(saved_curr_value[AUTO] < saved_set_value[AUTO]) {
 		  fan_speed.inc();
-		  while(i<720) i++;
-		  i = 0;
 		  this->A01->write(fan_speed.getCurrent());
 	  } else if(saved_curr_value[AUTO] > saved_set_value[AUTO]){
 		  fan_speed.dec();
-		  while(i<720) i++;
-		  i = 0;
 		  this->A01->write(fan_speed.getCurrent());
 	  	 }
       break;
@@ -181,7 +179,7 @@ StateHandler::stateSensors (const Event &event)
 	  _lcd->print (line_up);
 	  _lcd->setCursor (0, 1);
 	  _lcd->print (line_down);
-		SetState (&StateHandler::stateManual);
+	  SetState (current_mode? &StateHandler::stateAuto : &StateHandler::stateManual);
 	  break;
 	}
 }
@@ -211,8 +209,17 @@ StateHandler::handleControlButtons (uint8_t button)
 }
 
 void
-StateHandler::save (int eventValue, int counterValue, size_t mode)
+StateHandler::save (int eventValue, size_t mode)
 {
+  /* if pressure is not provided from main it checks it in following if{}*/
+  if(!eventValue) {
+   	  /* Small delay for modbus communications with pressure sensor */
+	  int i = 0;
+	  while(i<7200) i++;
+	  i = 0;
+	  eventValue = pressure->getPressure();
+  }
+  int counterValue = value[mode].getCurrent ();
   if (saved_curr_value[mode] != eventValue
       || saved_set_value[mode] != counterValue)
     {

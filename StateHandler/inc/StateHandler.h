@@ -181,7 +181,7 @@ private:
    * @param counterValue value of the inner Counter
    * @param mode current mode
    */
-  void save (int eventValue, int counterValue, size_t mode);
+  void save (int eventValue, size_t mode);
 
   /** Calculates pid for fan control value
    *
