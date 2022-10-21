@@ -9,11 +9,12 @@
 #define PID 0
 
 StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
-                            PressureWrapper *pressure)
+                            PressureWrapper *pressure, Timer *global)
 {
   this->_lcd = lcd;
   this->A01 = A01;
   this->pressure = pressure;
+  this->state_timer = global;
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
   current_mode = MANUAL;
@@ -222,10 +223,7 @@ StateHandler::save (int eventValue, size_t mode)
   if (!eventValue)
     {
       /* Small delay for modbus communications with pressure sensor */
-      int i = 0;
-      while (i < 720)
-        i++;
-      i = 0;
+      state_timer->tickCounter (1);
       eventValue = pressure->getPressure ();
     }
   int counterValue = value[mode].getCurrent ();

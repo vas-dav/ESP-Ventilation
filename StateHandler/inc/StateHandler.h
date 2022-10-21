@@ -24,6 +24,7 @@
 #include "ModbusMaster.h"
 #include "ModbusRegister.h"
 #include "PressureWrapper.h"
+#include "Timer.h"
 
 /** Buttons enumeration
  *
@@ -77,7 +78,7 @@ class StateHandler
 {
 public:
   StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
-                PressureWrapper *pressure);
+                PressureWrapper *pressure, Timer *global);
   virtual ~StateHandler ();
 
   /** Get currently set pressure
@@ -131,6 +132,7 @@ private:
   LiquidCrystal *_lcd;
   ModbusRegister *A01;
   PressureWrapper *pressure;
+  Timer *state_timer;
   /* CO2 sensor object */
   GMP252 co2;
 
