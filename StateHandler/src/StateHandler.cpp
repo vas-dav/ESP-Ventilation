@@ -141,6 +141,7 @@ StateHandler::stateAuto (const Event &event)
       pid();
       this->A01->write(fan_speed.getCurrent());
 #endif
+#if !PID
       if(saved_curr_value[AUTO] < saved_set_value[AUTO]) {
 		  fan_speed.inc();
 		  this->A01->write(fan_speed.getCurrent());
@@ -148,6 +149,7 @@ StateHandler::stateAuto (const Event &event)
 		  fan_speed.dec();
 		  this->A01->write(fan_speed.getCurrent());
 	  	 }
+#endif
       break;
     }
 }
@@ -168,17 +170,18 @@ StateHandler::stateSensors (const Event &event)
 	  sensors_data[TEMPERATURE] = humidity.readT();
 	  sensors_data[HUMIDITY] = humidity.readRH();
 	  sensors_data[CO2] = co2.read();
+#if 1
 	  char line_up[16] = { 0 };
 	  char line_down[16] = { 0 };
-
-	  snprintf (line_up, 16, "PRE:%02dPa TEM:%02dC", sensors_data[PRESSUREDAT],sensors_data[TEMPERATURE]);
-	  snprintf (line_down, 16, "HUM:%02d CO2:%02d", sensors_data[HUMIDITY], sensors_data[CO2]);
+	  snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],sensors_data[TEMPERATURE]);
+	  snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY], sensors_data[CO2]);
 
 	  _lcd->clear ();
 	  _lcd->setCursor (0, 0);
 	  _lcd->print (line_up);
 	  _lcd->setCursor (0, 1);
 	  _lcd->print (line_down);
+#endif
 	  SetState (current_mode? &StateHandler::stateAuto : &StateHandler::stateManual);
 	  break;
 	}
@@ -215,7 +218,7 @@ StateHandler::save (int eventValue, size_t mode)
   if(!eventValue) {
    	  /* Small delay for modbus communications with pressure sensor */
 	  int i = 0;
-	  while(i<7200) i++;
+	  while(i<720) i++;
 	  i = 0;
 	  eventValue = pressure->getPressure();
   }
@@ -230,7 +233,7 @@ StateHandler::save (int eventValue, size_t mode)
 }
 
 void StateHandler::pid () {
-	float kP = 0.001, kI = 0.001, kD = 0.001;
+	float kP = 0.1, kI = 0.01, kD = 0.01;
 	int error = 0, last_error = 0, derivative = 0;
 	error = saved_set_value[AUTO] - saved_curr_value[AUTO];
 	last_error = error;
