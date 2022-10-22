@@ -25,6 +25,7 @@ Timer::Timer (uint32_t freq) : freq (freq)
   SysTick_Config (sysTickRate / freq);
   counter = 0;
   timer = 0;
+  systicks = 0;
 }
 
 Timer::~Timer ()
