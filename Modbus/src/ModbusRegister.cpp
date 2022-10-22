@@ -25,7 +25,5 @@ void ModbusRegister::write(int value)
 	volatile uint8_t error = 15;
 	if(hr)
 		error = m->writeSingleRegister(addr, value);
-	error++;
-	error--;
 
 }
