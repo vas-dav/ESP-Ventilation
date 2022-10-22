@@ -18,12 +18,13 @@
 #include "Counter.h"
 #include "DigitalIoPin.h"
 #include "Event.h"
+#include "GMP252.h"
+#include "HMP60.h"
 #include "LiquidCrystal.h"
 #include "ModbusMaster.h"
 #include "ModbusRegister.h"
-#include "GMP252.h"
-#include "HMP60.h"
 #include "PressureWrapper.h"
+#include "Timer.h"
 
 /** Buttons enumeration
  *
@@ -76,7 +77,8 @@ typedef void (StateHandler::*state_pointer) (const Event &);
 class StateHandler
 {
 public:
-  StateHandler (LiquidCrystal *lcd, ModbusRegister *A01, PressureWrapper *pressure);
+  StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
+                PressureWrapper *pressure, Timer *global);
   virtual ~StateHandler ();
 
   /** Get currently set pressure
@@ -120,16 +122,17 @@ private:
    * weigh of fan, so voltage within range of 0-89 is not
    * sufficient to start motor.
    * TODO: Value 89 should be scaled to 0 at some point */
-  Counter fan_speed = {20, 1000};
+  Counter fan_speed = { 20, 1000 };
   /*integral controller for PID. should be global, since it
    * accumulates error signals encountered since startup*/
   int integral = 0;
   int saved_set_value[2] = { 0, 0 };
   int saved_curr_value[2] = { 0, 0 };
-  int sensors_data[4] = {0};
+  int sensors_data[4] = { 0 };
   LiquidCrystal *_lcd;
   ModbusRegister *A01;
-  PressureWrapper * pressure;
+  PressureWrapper *pressure;
+  Timer *state_timer;
   /* CO2 sensor object */
   GMP252 co2;
 

@@ -6,6 +6,7 @@
 		<project>lpc_chip_15xx</project>
 		<project>DigitalIoPin</project>
 		<project>LiquidCrystal</project>
+		<project>Timer</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

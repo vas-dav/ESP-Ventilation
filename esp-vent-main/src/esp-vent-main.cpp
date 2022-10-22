@@ -17,12 +17,12 @@
 #endif
 
 #include "DigitalIoPin.h"
+#include "I2C.h"
 #include "LiquidCrystal.h"
+#include "PressureWrapper.h"
 #include "StateHandler.h"
 #include "SwitchController.h"
 #include "Timer.h"
-#include "PressureWrapper.h"
-#include "I2C.h"
 
 #include <cr_section_macros.h>
 
@@ -60,15 +60,14 @@ main (void)
   lcd.print ("Test");
 
   /* FAN object */
-  ModbusMaster fan(1);
-  fan.begin(9600);
-  ModbusRegister A01(&fan, 0);
-//  ModbusRegister DI1(&fan, 4, false);
+  ModbusMaster fan (1);
+  fan.begin (9600);
+  ModbusRegister A01 (&fan, 0);
+  //  ModbusRegister DI1(&fan, 4, false);
 
   PressureWrapper sens;
 
-
-  StateHandler ventMachine (&lcd, &A01, &sens);
+  StateHandler ventMachine (&lcd, &A01, &sens, &glob_time);
   /** Common pins */
   DigitalIoPin b_up (0, 7, true, true, true); // A5
   SwitchController sw_up (&b_up, &glob_time, &ventMachine, BUTTON_CONTROL_UP);
@@ -80,7 +79,6 @@ main (void)
   DigitalIoPin b_toggle (0, 5, true, true, true); // A3
   SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
-
 
   int pressure = 0, pressure_time = 0;
   while (1)
@@ -100,7 +98,7 @@ main (void)
       }
       ++pressure_time;
 #endif
-	  ventMachine.HandleState (Event (Event::eTick, pressure));
+      ventMachine.HandleState (Event (Event::eTick, pressure));
       glob_time.tickCounter (1);
     }
 
