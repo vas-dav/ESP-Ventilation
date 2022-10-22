@@ -11,15 +11,17 @@
 #include "ModbusMaster.h"
 #include "ModbusRegister.h"
 
-class GMP252 {
+class GMP252
+{
 public:
-	GMP252();
-	int read();
-	virtual ~GMP252();
+  GMP252 ();
+  int read ();
+  virtual ~GMP252 ();
+
 private:
-	ModbusMaster sens;
-	ModbusRegister regInt;
-	ModbusRegister regFloat;
+  ModbusMaster sens;
+  ModbusRegister regInt;
+  ModbusRegister regFloat;
 };
 
 #endif /* GMP252_H_ */
