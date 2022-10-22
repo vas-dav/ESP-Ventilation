@@ -22,6 +22,8 @@ int ModbusRegister::read() {
 void ModbusRegister::write(int value)
 {
 	// write only if not
-	if(hr) m->writeSingleRegister(addr, value); // not checking if write succeeds
+	volatile uint8_t error = 15;
+	if(hr)
+		error = m->writeSingleRegister(addr, value);
 
 }
