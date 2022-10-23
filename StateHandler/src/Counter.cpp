@@ -52,13 +52,16 @@ Counter::Counter (unsigned int down, unsigned int up)
 void
 Counter::setInit (unsigned int newInit)
 {
-  if(newInit > up_lim){
-	  init = up_lim;
-  }
-  else if(newInit < down_lim){
-	  init = down_lim;
-  }
-  else{
-	  init = newInit;
-  }
+  if (newInit > up_lim)
+    {
+      init = up_lim;
+    }
+  else if (newInit < down_lim)
+    {
+      init = down_lim;
+    }
+  else
+    {
+      init = newInit;
+    }
 }

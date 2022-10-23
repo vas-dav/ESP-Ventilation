@@ -12,7 +12,7 @@ extern "C"
   void
   SysTick_Handler (void)
   {
-	systicks++;
+    systicks++;
     if (timer > 0)
       timer--;
   }
@@ -25,6 +25,7 @@ Timer::Timer (uint32_t freq) : freq (freq)
   SysTick_Config (sysTickRate / freq);
   counter = 0;
   timer = 0;
+  systicks = 0;
 }
 
 Timer::~Timer ()
@@ -65,6 +66,8 @@ Timer::resetCounter ()
   counter.store (0, std::memory_order_relaxed);
 }
 
-uint32_t millis() {
-	return systicks;
+uint32_t
+millis ()
+{
+  return systicks;
 }

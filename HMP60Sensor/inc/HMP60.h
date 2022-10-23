@@ -11,17 +11,19 @@
 #include "ModbusMaster.h"
 #include "ModbusRegister.h"
 
-class HMP60 {
+class HMP60
+{
 public:
-	HMP60();
-	int readRH();
-	int readT();
-	virtual ~HMP60();
+  HMP60 ();
+  int readRH ();
+  int readT ();
+  virtual ~HMP60 ();
+
 private:
-	ModbusMaster sens;
-	ModbusRegister regRHint;
-	ModbusRegister regRHfloat;
-	ModbusRegister regTint;
+  ModbusMaster sens;
+  ModbusRegister regRHint;
+  ModbusRegister regRHfloat;
+  ModbusRegister regTint;
 };
 
 #endif /* HMP60_H_ */
