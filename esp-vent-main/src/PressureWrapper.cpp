@@ -47,11 +47,7 @@ PressureWrapper::getPressure ()
   int16_t pressure = 0;
   if (!getRawPressure ())
     {
-      unsigned int i = 0;
-      while (i < 7200)
-        i++;
-      getRawPressure ();
-      i = 0;
+	  return -255;
     }
   if (crc8 (data.rBuffer, 2) == data.crc)
     {
@@ -61,18 +57,19 @@ PressureWrapper::getPressure ()
       float result = (float)pressure * 0.95 / 240;
       return (int)result;
     }
-  return -255;
 }
 
 bool
 PressureWrapper::isAwake ()
 {
-  return true;
+  return getRawPressure();
 }
 
 void
 PressureWrapper::wakeUp ()
 {
+  uint8_t getMeasurementComm = 0xFE;
+  i2c->transaction (ADDRESS, &getMeasurementComm, 1, data.rBuffer, 3);
 }
 
 bool
