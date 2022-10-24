@@ -198,6 +198,8 @@ private:
    *
    */
   void pid ();
+
+  int fan_speed_normalized();
 };
 
 #endif /* STATE_HANDLER_H_ */

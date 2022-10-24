@@ -108,15 +108,12 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      displaySet (saved_set_value[MANUAL], saved_curr_value[MANUAL]);
-      this->A01->write (this->value[FAN_SPEED].getCurrent ());
+      this->A01->write (fan_speed_normalized());
       break;
     case Event::eExit:
-      _lcd->clear ();
       break;
     case Event::eKey:
       handleControlButtons (event.value);
-      this->A01->write (value[MANUAL].getCurrent () * 10);
       break;
     case Event::eTick:
       if (event.value > 500)
@@ -251,6 +248,14 @@ StateHandler::save (int eventValue, size_t mode)
       saved_set_value[mode] = counterValue;
       displaySet (saved_set_value[mode], saved_curr_value[mode]);
     }
+}
+
+int
+StateHandler::fan_speed_normalized() {
+	int speed = value[MANUAL].getCurrent();
+	if(speed <=92)
+		speed += 8;
+	return speed * 10;
 }
 
 void
