@@ -119,8 +119,12 @@ StateHandler::stateManual (const Event &event)
       this->A01->write (value[MANUAL].getCurrent () * 10);
       break;
     case Event::eTick:
-      SetState (&StateHandler::stateGetPressure);
-      break;
+      if (event.value > 500)
+        {
+          SetState (&StateHandler::stateGetPressure);
+          state_timer->resetCounter ();
+          break;
+        }
     }
 }
 

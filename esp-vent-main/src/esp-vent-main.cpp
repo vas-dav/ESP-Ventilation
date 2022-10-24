@@ -35,7 +35,7 @@ main (void)
 
 #if defined(__USE_LPCOPEN)
   // Read clock settings and update SystemCoreClock variable
-   SystemCoreClockUpdate ();
+  SystemCoreClockUpdate ();
 #if !defined(NO_BOARD_LIB)
   // Set b_up_state and initialize all required blocks and
   // functions related to the board hardware
@@ -47,7 +47,7 @@ main (void)
   /** Lcd & stateHandler */
   Chip_RIT_Init (LPC_RITIMER);
   Timer glob_time;
-  Timer switch_time(false);
+  Timer switch_time (false);
   DigitalIoPin rs (0, 29, false, true, false);
   DigitalIoPin en (0, 9, false, true, false);
   DigitalIoPin d4 (0, 10, false, true, false);
@@ -66,7 +66,7 @@ main (void)
   //  ModbusRegister DI1(&fan, 4, false);
 
   PressureWrapper sens;
-  glob_time.Sleep(1000);
+  glob_time.Sleep (1000);
 
   StateHandler ventMachine (&lcd, &A01, &sens, &glob_time);
   /** Common pins */
@@ -74,25 +74,19 @@ main (void)
   SwitchController sw_up (&b_up, &ventMachine, BUTTON_CONTROL_UP);
 
   DigitalIoPin b_down (0, 6, true, true, true); // A4
-  SwitchController sw_down (&b_down, &ventMachine,
-                            BUTTON_CONTROL_DOWN);
+  SwitchController sw_down (&b_down, &ventMachine, BUTTON_CONTROL_DOWN);
 
   DigitalIoPin b_toggle (0, 5, true, true, true); // A3
   SwitchController sw_toggle (&b_toggle, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
-  int pressure = 0;
   while (1)
     {
 
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();
-      if(glob_time.getCounter() > 3) {
-		  pressure = sens.getPressure();
-		  glob_time.resetCounter();
-      }
-      ventMachine.HandleState (Event (Event::eTick, pressure));
+      ventMachine.HandleState (Event (Event::eTick, glob_time.getCounter ()));
       glob_time.tickCounter (1);
     }
 
