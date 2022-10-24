@@ -81,7 +81,7 @@ StateHandler::stateInit (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      //SetState (&StateHandler::stateSensors);
+      // SetState (&StateHandler::stateSensors);
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -192,6 +192,23 @@ StateHandler::stateSensors (const Event &event)
 #endif
       SetState (current_mode ? &StateHandler::stateAuto
                              : &StateHandler::stateManual);
+      break;
+    }
+}
+
+void
+StateHandler::stateGetPressure (const Event &event)
+{
+  switch (event.type)
+    {
+    case Event::eEnter:
+	  break;
+    case Event::eExit:
+      break;
+    case Event::eKey:
+      break;
+    case Event::eTick:
+
       break;
     }
 }

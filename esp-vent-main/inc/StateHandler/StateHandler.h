@@ -172,6 +172,13 @@ private:
    */
   void stateSensors (const Event &event);
 
+  /**
+   * @brief Get pressure with the state
+   *
+   * @param event
+   */
+  void stateGetPressure (const Event &event);
+
   /** Handle button presses
    *
    * @param button current button
