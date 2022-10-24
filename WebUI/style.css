@@ -1,23 +1,62 @@
 
-.mainheader {
+body {
+    background: lightgray;
+    margin: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
+    overflow: auto;
+    font-family: "Franklin Gothic Book", serif;
+    font-style: normal;
+    color: black;
+    padding-bottom: 5px;
+}
+main {
+    margin: 0;
+    padding-bottom: 20px;
+    display: block;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+aside {
+    width: 100%;
+    background-color: lightgray;
+}
+
+header {
+    width: 100%;
     height: 150px;
 }
-.split{
-    height: 100%;
-    width: 50%;
-    position: fixed;
+h1 {
+    padding-top: 40px;
+    
+    background: #6A041D;
+    color: white;
+    text-align: center;
+    text-shadow: 4px 4px 5px black;
+    font-weight: bold;
+    font-size: 50px;
+    margin-top: 0;
+    height: 100px;
 }
-.left{
-    background-color: wheat;
-    left: 0;
+
+h2{
+    text-align: center;  
 }
-.right{
-    background-color: white;
-    right: 0;
+
+h3{
+    text-align: center;   
 }
+
+h4{
+    text-align: center;
+}
+
+.dropdown{
+    position: relative;
+    float: right;
+}
+
 .set_output{
     display: block;
     width: 10ch;
@@ -116,5 +155,23 @@
 
 canvas{
     border: 1px solid black;
+    background-color: white;
     
+}
+
+output {
+    background-color: white;
+}
+
+@media only screen and (min-width: 1000px) {
+    header {
+        width: 100%;
+    }
+    main {
+        width: 50%;
+    }
+    aside {
+        background: lightgray;
+        width: 50%;
+    }
 }
