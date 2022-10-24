@@ -1,5 +1,0 @@
-../src/Counter.cpp:12:6:void Counter::inc()	16	static
-../src/Counter.cpp:20:6:void Counter::dec()	16	static
-../src/Counter.cpp:29:5:int Counter::getInit()	16	static
-../src/Counter.cpp:33:1:Counter::Counter(int, int)	24	static
-../src/Counter.cpp:45:6:void Counter::setInit(int)	16	static

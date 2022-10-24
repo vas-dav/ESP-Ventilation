@@ -17,10 +17,9 @@
 #endif
 
 #include "DigitalIoPin.h"
-#include "I2C.h"
 #include "LiquidCrystal.h"
 #include "PressureWrapper.h"
-#include "StateHandler.h"
+#include "StateHandler/StateHandler.h"
 #include "SwitchController.h"
 #include "Timer.h"
 
