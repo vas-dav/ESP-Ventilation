@@ -13,16 +13,16 @@
 
 #define ADDRESS 0x40
 
-
 /**
  * @brief structure to hold a raw data from
  * the pressure sensor
  */
 
-typedef struct _PRESSURE{
-	uint8_t rBuffer[2];
-	uint8_t crc;
-}PRESSURE_DATA;
+typedef struct _PRESSURE
+{
+  uint8_t rBuffer[2];
+  uint8_t crc;
+} PRESSURE_DATA;
 
 class PressureWrapper
 {
@@ -33,11 +33,25 @@ public:
    */
   int getPressure ();
 
+  /**
+   * @brief Check if sensor is ready
+   *
+   * @return true if awake
+   * @return false if asleep
+   */
+  bool isAwake ();
+
+  /**
+   * @brief Wake the sensor up
+   *
+   */
+  void wakeUp ();
+
   virtual ~PressureWrapper ();
 
 private:
   I2C *i2c;
-  PRESSURE_DATA data = {{0, 0}, 0};
+  PRESSURE_DATA data = { { 0, 0 }, 0 };
   /*
    * @return struct with pressure data in
    * rBuffer and CRC check in crc

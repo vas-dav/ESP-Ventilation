@@ -202,13 +202,22 @@ StateHandler::stateGetPressure (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-	  break;
+      pressure_status = pressure->isAwake ();
+      break;
     case Event::eExit:
       break;
     case Event::eKey:
+      handleControlButtons (event.value);
       break;
     case Event::eTick:
-
+      if (pressure_status)
+        {
+          save (pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
+        }
+      else
+        {
+          pressure->wakeUp ();
+        }
       break;
     }
 }

@@ -132,6 +132,7 @@ private:
   LiquidCrystal *_lcd;
   ModbusRegister *A01;
   PressureWrapper *pressure;
+  bool pressure_status;
   Timer *state_timer;
   /* CO2 sensor object */
   GMP252 co2;
