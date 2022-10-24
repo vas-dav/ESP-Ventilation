@@ -6,7 +6,7 @@
  */
 
 #include "StateHandler/StateHandler.h"
-#define PID 0
+#define PID 1
 
 StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
                             PressureWrapper *pressure, Timer *global)
@@ -81,7 +81,7 @@ StateHandler::stateInit (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      SetState (&StateHandler::stateSensors);
+      //SetState (&StateHandler::stateSensors);
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -219,13 +219,6 @@ StateHandler::handleControlButtons (uint8_t button)
 void
 StateHandler::save (int eventValue, size_t mode)
 {
-  /* if pressure is not provided from main it checks it in following if{}*/
-  if (!eventValue)
-    {
-      /* Small delay for modbus communications with pressure sensor */
-      state_timer->tickCounter (1);
-      eventValue = pressure->getPressure ();
-    }
   int counterValue = value[mode].getCurrent ();
   if (saved_curr_value[mode] != eventValue
       || saved_set_value[mode] != counterValue)

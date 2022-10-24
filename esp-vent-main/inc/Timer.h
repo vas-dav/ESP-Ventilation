@@ -13,7 +13,7 @@
 #include <climits>
 
 static volatile std::atomic_int timer;
-static volatile std::atomic_int systicks;
+static volatile std::atomic<uint32_t> systicks;
 
 extern "C"
 {
@@ -34,6 +34,8 @@ public:
    *
    */
   Timer (uint32_t freq = 1000);
+
+  Timer (bool mode);
   virtual ~Timer ();
 
   /**
@@ -75,6 +77,7 @@ public:
 private:
   volatile std::atomic_int counter;
   uint32_t freq;
+  bool mode;
 };
 
 #endif /* TIMER_H_ */

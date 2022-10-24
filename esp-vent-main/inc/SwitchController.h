@@ -15,7 +15,7 @@
 class SwitchController
 {
 public:
-  SwitchController (DigitalIoPin *button, Timer *timer, StateHandler *handler,
+  SwitchController (DigitalIoPin *button, StateHandler *handler,
                     int button_mode);
   virtual ~SwitchController ();
   /** Listen to switch button
@@ -24,7 +24,6 @@ public:
 
 private:
   DigitalIoPin *b;
-  Timer *t;
   StateHandler *h;
   bool b_pressed;
   int b_mode;

@@ -15,7 +15,7 @@ struct I2C_config {
 	unsigned int speed;
 	unsigned int clock_divider;
 	unsigned int i2c_mode;
-	I2C_config(): device_number(0), speed(100000), clock_divider(40), i2c_mode(IOCON_SFI2C_EN) {};
+	I2C_config(unsigned int dn, unsigned int sp, unsigned int cd): device_number(dn), speed(sp), clock_divider(cd), i2c_mode(IOCON_SFI2C_EN) {};
 };
 
 class I2C {

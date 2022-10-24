@@ -35,7 +35,7 @@ main (void)
 
 #if defined(__USE_LPCOPEN)
   // Read clock settings and update SystemCoreClock variable
-  SystemCoreClockUpdate ();
+   SystemCoreClockUpdate ();
 #if !defined(NO_BOARD_LIB)
   // Set b_up_state and initialize all required blocks and
   // functions related to the board hardware
@@ -47,6 +47,7 @@ main (void)
   /** Lcd & stateHandler */
   Chip_RIT_Init (LPC_RITIMER);
   Timer glob_time;
+  Timer switch_time(false);
   DigitalIoPin rs (0, 29, false, true, false);
   DigitalIoPin en (0, 9, false, true, false);
   DigitalIoPin d4 (0, 10, false, true, false);
@@ -56,7 +57,7 @@ main (void)
   LiquidCrystal lcd (&rs, &en, &d4, &d5, &d6, &d7);
   //
   lcd.setCursor (0, 0);
-  lcd.print ("Test");
+  lcd.print ("Vent-Machine");
 
   /* FAN object */
   ModbusMaster fan (1);
@@ -65,38 +66,32 @@ main (void)
   //  ModbusRegister DI1(&fan, 4, false);
 
   PressureWrapper sens;
+  glob_time.Sleep(1000);
 
   StateHandler ventMachine (&lcd, &A01, &sens, &glob_time);
   /** Common pins */
   DigitalIoPin b_up (0, 7, true, true, true); // A5
-  SwitchController sw_up (&b_up, &glob_time, &ventMachine, BUTTON_CONTROL_UP);
+  SwitchController sw_up (&b_up, &ventMachine, BUTTON_CONTROL_UP);
 
   DigitalIoPin b_down (0, 6, true, true, true); // A4
-  SwitchController sw_down (&b_down, &glob_time, &ventMachine,
+  SwitchController sw_down (&b_down, &ventMachine,
                             BUTTON_CONTROL_DOWN);
 
   DigitalIoPin b_toggle (0, 5, true, true, true); // A3
-  SwitchController sw_toggle (&b_toggle, &glob_time, &ventMachine,
+  SwitchController sw_toggle (&b_toggle, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
 
-  int pressure = 0, pressure_time = 0;
+  int pressure = 0;
   while (1)
     {
 
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();
-      /**
-       * TODO:
-       * - Update current pressure to eTick
-       */
-#if 0
-      if(pressure_time == 5) {
+      if(glob_time.getCounter() > 3) {
 		  pressure = sens.getPressure();
-		  pressure_time = 0;
+		  glob_time.resetCounter();
       }
-      ++pressure_time;
-#endif
       ventMachine.HandleState (Event (Event::eTick, pressure));
       glob_time.tickCounter (1);
     }

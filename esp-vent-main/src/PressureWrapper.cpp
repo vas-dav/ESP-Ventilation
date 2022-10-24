@@ -25,7 +25,7 @@ static uint8_t crc8(uint8_t *data, size_t size) {
 PressureWrapper::PressureWrapper ()
 {
 	NVIC_DisableIRQ(I2C0_IRQn);
-	I2C_config config;
+	I2C_config config(0, 55000, 1309);
 	I2C i2c_c(config);
 	i2c = &i2c_c;
 }
