@@ -119,7 +119,7 @@ StateHandler::stateManual (const Event &event)
       this->A01->write (value[MANUAL].getCurrent () * 10);
       break;
     case Event::eTick:
-      save (event.value, MANUAL);
+      SetState (&StateHandler::stateGetPressure);
       break;
     }
 }
@@ -139,12 +139,7 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      save (event.value, AUTO);
-#if PID
-      pid ();
-      this->A01->write (fan_speed.getCurrent ());
-#endif
-#if !PID
+      SetState (&StateHandler::stateGetPressure);
       if (saved_curr_value[AUTO] < saved_set_value[AUTO])
         {
           fan_speed.inc ();
@@ -155,7 +150,6 @@ StateHandler::stateAuto (const Event &event)
           fan_speed.dec ();
           this->A01->write (fan_speed.getCurrent ());
         }
-#endif
       break;
     }
 }
@@ -210,14 +204,14 @@ StateHandler::stateGetPressure (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      if (pressure_status)
-        {
-          save (pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
-        }
-      else
+      if (!pressure_status)
         {
           pressure->wakeUp ();
+          break;
         }
+      save (pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
+      SetState (current_mode ? &StateHandler::stateAuto
+                             : &StateHandler::stateManual);
       break;
     }
 }
