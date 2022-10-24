@@ -48,6 +48,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.cpp.misc.dialect.1893636131" name="Language standard" superClass="com.crt.advproject.cpp.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c++11" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.1024506123" superClass="com.crt.advproject.compiler.cpp.input"/>
@@ -79,6 +80,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.c.misc.dialect.1885316467" name="Language standard" superClass="com.crt.advproject.c.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c11" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.input.1491212950" superClass="com.crt.advproject.compiler.input"/>
@@ -100,6 +102,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/inc}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.486566022" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.255980151" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
@@ -133,7 +136,7 @@
 									<listOptionValue builtIn="false" value="StateHandler"/>
 									<listOptionValue builtIn="false" value="Timer"/>
 									<listOptionValue builtIn="false" value="SwitchController"/>
-									<listOptionValue builtIn="false" value="PressureWrapper"/>
+									<listOptionValue builtIn="false" value="SDP600Sensor"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.paths.804461696" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_board_nxp_lpcxpresso_1549/Debug}&quot;"/>
@@ -145,6 +148,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/Debug}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.link.cpp.crpenable.8641361" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.cpp.crpenable"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.849613399" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
@@ -212,6 +216,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.cpp.misc.dialect.1640449237" name="Language standard" superClass="com.crt.advproject.cpp.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c++11" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.cpp.input.812988440" superClass="com.crt.advproject.compiler.cpp.input"/>
@@ -243,6 +248,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/inc}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.c.misc.dialect.1383624929" name="Language standard" superClass="com.crt.advproject.c.misc.dialect" useByScannerDiscovery="true" value="com.crt.advproject.misc.dialect.c11" valueType="enumerated"/>
 								<inputType id="com.crt.advproject.compiler.input.391538574" superClass="com.crt.advproject.compiler.input"/>
@@ -264,6 +270,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/inc}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1169670567" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.956763731" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
@@ -298,6 +305,7 @@
 									<listOptionValue builtIn="false" value="Timer"/>
 									<listOptionValue builtIn="false" value="SwitchController"/>
 									<listOptionValue builtIn="false" value="PressureWrapper"/>
+									<listOptionValue builtIn="false" value="SDP600Sensor"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.paths.245096214" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/lpc_board_nxp_lpcxpresso_1549/Release}&quot;"/>
@@ -309,6 +317,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Timer/Release}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SwitchController/Release}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PressureWrapper/Release}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/SDP600Sensor/Release}&quot;"/>
 								</option>
 								<option id="com.crt.advproject.link.cpp.crpenable.209534913" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.cpp.crpenable"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1513506142" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
