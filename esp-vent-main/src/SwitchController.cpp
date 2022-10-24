@@ -24,17 +24,15 @@ SwitchController::~SwitchController ()
 void
 SwitchController::listen ()
 {
-  /** Button is pressed for the first time*/
+  /** Button is pressed for the first time */
   if (b->read () && !b_pressed)
     {
+      h->HandleState (Event (Event::eKey, b_mode));
       b_pressed = true;
     }
-  /** Button is released before 2 seconds*/
+  /** Button is released */
   if (!b->read () && b_pressed)
     {
-      h->HandleState (Event (Event::eKey, b_mode));
       b_pressed = false;
     }
-
 }
-
