@@ -171,14 +171,6 @@ private:
    */
   void stateAuto (const Event &event);
 
-  /** Sensors state
-   *
-   * - print current sensrs readings
-   *
-   * @param event
-   */
-  void stateSensors (const Event &event);
-
   /**
    * @brief Get pressure with the state
    *
@@ -206,6 +198,8 @@ private:
   void pid ();
 
   int fan_speed_normalized ();
+
+  void updateSensorValues ();
 };
 
 #endif /* STATE_HANDLER_H_ */

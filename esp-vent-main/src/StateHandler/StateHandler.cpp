@@ -6,7 +6,6 @@
  */
 
 #include "StateHandler/StateHandler.h"
-#define PID 1
 
 StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
                             PressureWrapper *pressure, Timer *global)
@@ -128,7 +127,7 @@ StateHandler::stateManual (const Event &event)
     case Event::eTick:
       if (event.value % 5000 == 0)
         {
-          SetState (&StateHandler::stateSensors);
+    	  updateSensorValues ();
           displaySet (SENSORS);
         }
       if (event.value % 500 == 0)
@@ -153,38 +152,17 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      if (event.value % 2 == 0)
+      if (event.value % 5000 == 0)
+        {
+    	  updateSensorValues ();
+          displaySet (SENSORS);
+        }
+      if (event.value % 500 == 0)
         {
           SetState (&StateHandler::stateGetPressure);
         }
-      if (event.value % 150 == 0)
-        {
-          SetState (&StateHandler::stateSensors);
-          //				displaySens ();
-        }
       pid ();
       this->A01->write (fan_speed.getCurrent ());
-      break;
-    }
-}
-
-void
-StateHandler::stateSensors (const Event &event)
-{
-  switch (event.type)
-    {
-    case Event::eEnter:
-      sensors_data[TEMPERATURE] = humidity.readT ();
-      sensors_data[PRESSUREDAT] = pressure->getPressure ();
-      sensors_data[CO2] = co2.read ();
-      state_timer->tickCounter(5);
-      sensors_data[HUMIDITY] = humidity.readRH ();
-      break;
-    case Event::eExit:
-      break;
-    case Event::eKey:
-      break;
-    case Event::eTick:
       break;
     }
 }
@@ -257,6 +235,7 @@ StateHandler::fan_speed_normalized ()
   return speed * 10;
 }
 
+
 void
 StateHandler::pid ()
 {
@@ -268,3 +247,15 @@ StateHandler::pid ()
   derivative = error - last_error;
   fan_speed.setInit ((kP * error) + (kI * integral) + (kD * derivative));
 }
+
+void
+StateHandler::updateSensorValues ()
+{
+
+	  sensors_data[TEMPERATURE] = humidity.readT ();
+	  sensors_data[PRESSUREDAT] = pressure->getPressure ();
+	  sensors_data[CO2] = co2.read ();
+	  state_timer->tickCounter(5);
+	  sensors_data[HUMIDITY] = humidity.readRH ();
+}
+

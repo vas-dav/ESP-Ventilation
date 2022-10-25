@@ -79,14 +79,14 @@ main (void)
   DigitalIoPin b_toggle (0, 5, true, true, true); // A3
   SwitchController sw_toggle (&b_toggle, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
-
+  int getcounterValue = 0;
   while (1)
     {
-
+	  getcounterValue = glob_time.getCounter();
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();
-      ventMachine.HandleState (Event (Event::eTick, glob_time.getCounter ()));
+      ventMachine.HandleState (Event (Event::eTick, getcounterValue));
       glob_time.tickCounter (1);
     }
 
