@@ -177,20 +177,14 @@ StateHandler::stateSensors (const Event &event)
       sensors_data[TEMPERATURE] = humidity.readT ();
       sensors_data[PRESSUREDAT] = pressure->getPressure ();
       sensors_data[CO2] = co2.read ();
-      state_timer->Sleep(10);
+      state_timer->tickCounter(5);
       sensors_data[HUMIDITY] = humidity.readRH ();
-      //      displaySens ();
       break;
     case Event::eExit:
       break;
     case Event::eKey:
-      handleControlButtons (event.value);
       break;
     case Event::eTick:
-      //      save (pressure->getPressure (), ((current_mode) ? AUTO :
-      //      MANUAL));
-      SetState (current_mode ? &StateHandler::stateAuto
-                             : &StateHandler::stateManual);
       break;
     }
 }

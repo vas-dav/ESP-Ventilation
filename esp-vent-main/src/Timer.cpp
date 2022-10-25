@@ -47,9 +47,9 @@ Timer::tickCounter (int ms)
 {
   if (counter >= INT_MAX)
     {
-      counter = 0;
+      resetCounter();
     }
-  counter++;
+  counter.fetch_add(ms, std::memory_order_relaxed);
   Sleep (ms);
 }
 
