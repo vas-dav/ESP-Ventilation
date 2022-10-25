@@ -23,8 +23,8 @@
 #include "SwitchController.h"
 #include "Timer.h"
 #include "systick.h"
-#include "MQTTPacket.h"
-#include "esp8266_socket.h"
+#include <MQTT/MQTTPacket.h>
+#include "../inc/MQTT/esp8266_socket.h"
 
 #include <cr_section_macros.h>
 
@@ -63,7 +63,7 @@ main (void)
   DigitalIoPin d6 (1, 3, false, true, false);
   DigitalIoPin d7 (0, 0, false, true, false);
   LiquidCrystal lcd (&rs, &en, &d4, &d5, &d6, &d7);
-  //
+
   lcd.setCursor (0, 0);
   lcd.print ("Vent-Machine");
 
@@ -90,7 +90,6 @@ main (void)
 
   while (1)
     {
-
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();
@@ -101,32 +100,42 @@ main (void)
   return 0;
 }
 
-void socketTest()
+//Status message example:
+//{
+//"nr": 96,
+//"speed": 18,
+//"setpoint": 18,
+//"pressure": 5,
+//"auto": false,
+//"error": false,
+//"co2": 300,
+//"rh": 37,
+//"temp": 20
+//}
+
+void socket_exchange(int pressure,int co2, int temperature, int speed, int setpoint, int rh, int count, bool mode, bool err)
 {
-
 	esp_socket(SSID, PASSWORD);
+	std::string str_mode = mode? "true" : "false";
+	std::string str_err = err? "true" : "false";
 
-	const char *http_request = "GET / HTTP/1.0\r\n\r\n"; // HTTP requires cr-lf to end a line
+	const char *push_data = "{\"nr\":96,\"speed\":18,\"setpoint\":18,\"pressure\":5,\"auto\":false,\"error\":false,\"co2\": 300,\"rh\":37,\"temp\":20}";
 
 	for(int i = 0; i < 2; ++i) {
-		printf("\nopen socket\n");
-		esp_connect(1,  "www.metropolia.fi", 80);
-		printf("\nsend request\n");
-		esp_write(1, http_request, strlen(http_request));
-
+		esp_connect(1,  "http://localhost:", 3000);
+		//push data to server
+		esp_write(1, push_data, strlen(push_data));
 		uint32_t now = get_ticks();
-		printf("\nreply:\n");
-
+		//response from server
 		while(get_ticks() - now < 3000) {
 			char buffer[64];
 			memset(buffer, 0, 64);
 			if(esp_read(1, buffer, 63) > 0) {
-				fputs(buffer,stdout);
+				//fputs(buffer,stdout); << data needs to be parsed still
 			}
 		}
+		//socket closure
 		esp_close(1);
-
-		printf("\nsocket closed\n");
 	}
 
 }

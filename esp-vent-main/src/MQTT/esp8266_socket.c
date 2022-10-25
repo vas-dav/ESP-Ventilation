@@ -17,7 +17,7 @@
 
 #include "ring_buffer.h"
 
-#include "esp8266_socket.h"
+#include "../inc/MQTT/esp8266_socket.h"
 
 #include "serial_port.h"
 

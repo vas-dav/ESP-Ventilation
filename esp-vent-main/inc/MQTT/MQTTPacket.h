@@ -92,7 +92,7 @@ int MQTTstrlen(MQTTString mqttstring);
 #include "MQTTPublish.h"
 #include "MQTTSubscribe.h"
 #include "MQTTUnsubscribe.h"
-#include "../src/MQTTFormat.h"
+#include "../inc/MQTT/MQTTFormat.h"
 
 DLLExport int MQTTSerialize_ack(unsigned char* buf, int buflen, unsigned char type, unsigned char dup, unsigned short packetid);
 DLLExport int MQTTDeserialize_ack(unsigned char* packettype, unsigned char* dup, unsigned short* packetid, unsigned char* buf, int buflen);

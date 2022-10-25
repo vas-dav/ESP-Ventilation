@@ -15,11 +15,10 @@
  *    Ian Craggs - convert to FreeRTOS
  *******************************************************************************/
 
+#include <MQTT/MQTT_lpc1549.h>
 #include <string.h>
-#include "MQTT_lpc1549.h"
-
 #include "systick.h"
-#include "esp8266_socket.h"
+#include "../inc/MQTT/esp8266_socket.h"
 
 
 

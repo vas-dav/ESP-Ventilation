@@ -15,9 +15,8 @@
  *    Sergio R. Caprile - non-blocking packet read functions for stream transport
  *******************************************************************************/
 
-#include "StackTrace.h"
-#include "MQTTPacket.h"
-
+#include <MQTT/MQTTPacket.h>
+#include "../inc/MQTT/StackTrace.h"
 #include <string.h>
 
 /**
