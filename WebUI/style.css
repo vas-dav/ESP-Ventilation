@@ -1,6 +1,6 @@
-
+  
 body {
-    background: lightgray;
+    background: #F6FFF8;
     margin: 0;
     display: flex;
     flex-wrap: wrap;
@@ -11,7 +11,7 @@ body {
     padding-bottom: 5px;
 }
 main {
-    margin: 0;
+    margin-top: 100px;
     padding-bottom: 20px;
     display: block;
     position: relative;
@@ -20,7 +20,7 @@ main {
 }
 aside {
     width: 100%;
-    background-color: lightgray;
+    background-color: #F6FFF8;
 }
 
 header {
@@ -28,9 +28,8 @@ header {
     height: 150px;
 }
 h1 {
-    padding-top: 40px;
-    
-    background: #6A041D;
+    padding-top: 40px;    
+    background: #6B9080;
     color: white;
     text-align: center;
     text-shadow: 4px 4px 5px black;
@@ -56,6 +55,81 @@ h4{
     position: relative;
     float: right;
 }
+.logout{
+    margin-left: 20px;
+}
+#btn_log_out{
+    margin-bottom: 10px;
+    background-color: #6B9080;
+    font-weight: bolder;
+    color: white;
+    height: 30px;
+    border-radius: 10px;
+    display: none;
+}
+
+#user{
+    display: none;
+    font-weight: bolder;
+}
+
+#btn_login{
+    background-color: red;
+}
+
+#login-form:valid #btn_login{
+    background-color: mediumseagreen;
+}
+
+#login-form{
+    background-color: white;
+    width: 60%;
+    text-align: center;
+    margin: auto;
+    font-weight: bolder;
+    border-radius: 10px;
+    display: none;
+}
+
+#acc{
+    width: 70%;
+    margin: auto;
+}
+
+#mon-warn{
+    height: 20px;
+    text-align: center;
+    color: red;
+    font-weight: bolder;
+    font-size: 20px;
+    display: none;
+}
+
+#pwd-warn{
+    color: red;
+    display: none;
+}
+
+#form-warn{
+    color: red;
+    display: none;
+}
+
+#monitor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 20px;
+    padding: 20px;
+    width: 80%;
+}
+
+fieldset {
+    border-radius: 10px;
+    background: #CCE3DE;
+    border: 0.5px solid;
+}
 
 .set_output{
     display: block;
@@ -72,7 +146,7 @@ h4{
 .ofield{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center;    
 }
 
 .slider{
@@ -91,8 +165,8 @@ h4{
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width:30px;
-    height: 20px;
+    width:10px;
+    height: 30px;
     border-radius: 10px;
     background: black;
     box-shadow: 1px 2px 3px rgba(0,0,0,0.6);
@@ -118,14 +192,22 @@ h4{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly
+    justify-content: space-evenly;
 }
 
 .get_values{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly
+    justify-content: space-evenly;
+}
+
+#set_press{
+    margin: auto;
+}
+
+#set_speed{
+    margin: auto;
 }
 
 .get_output{
@@ -144,19 +226,40 @@ h4{
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 150px;
 }
 
 .chart-container{
     position: relative;
     width: 700px;
-    height: 700px;
+    height: 350px;
     margin: auto;
 }
 
 canvas{
+    border-radius: 10px;
     border: 1px solid black;
     background-color: white;
     
+}
+
+.user-table{
+    margin-bottom: 50px;
+}
+
+table{
+    background-color: #CCE3DE;
+    width: 700px;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid;
+}
+
+td{
+    text-align: center;
 }
 
 output {
@@ -171,7 +274,40 @@ output {
         width: 50%;
     }
     aside {
-        background: lightgray;
+        margin-top: 100px;
+        background: #F6FFF8;
         width: 50%;
     }
+}
+
+input[type="radio"] {
+    height: 1rem;
+    width: 1rem;
+    margin-right: 0.5rem;
+    appearance: none;
+    /* Safari support */
+    -webkit-appearance: none;
+    border: 0.2rem solid #fff;
+    background-color: #A4C3B2;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px black;
+}
+
+input[type="radio"]:focus-visible {
+    outline-offset: 0;
+}
+
+input[type="radio"]:hover{
+    border-width: 0;
+}
+
+input[type="radio"]:checked {
+    box-shadow: 0 0 0 1px black;
+    background-color: black;
+    border-width: 0.2rem;
+}
+
+label {
+    cursor: pointer;
+    margin-top: 0.2em;
 }

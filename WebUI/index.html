@@ -11,41 +11,74 @@
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript" defer></script>
 </head>
-<body onload="updateChart(), sendPressure()">
+<body onload="updateChart(), checkMode(), getStartValues()">
     <header>
         <h1>ESP-Ventilation</h1>
+        <div class="logout">
+            <p id="user"></p>
+            <form id="log_out" method="post" action="/logout">
+                <input id="btn_log_out" type="submit" value="Log out">
+            </form>
+        </div>
     </header>
     <main>
         <div class="modes">
-            <br>
+            <br>            
             <div class="buttons">
-                <input type="radio" id="m_auto" name="mode" value="Automatic" checked="true">
-                <label for="auto">Automatic</label><br>
+                
+                <input type="radio" class="custom-radio" id="m_auto" name="mode" value="Automatic" checked="true">
+            
+                <label for="m_auto">Automatic</label><br>
             </div>            
             <div class="buttons">
-                <input type="radio" id="m_man" name="mode" value="Manual">
-                <label for="man">Manual</label><br>         
+                
+                <input type="radio" class="custom-radio" id="m_man" name="mode" value="Manual">
+            
+                <label for="m_man">Manual</label><br><br>       
             </div>           
         </div>
+        <div class="login">
+            <form id="login-form" method="post" action="/">
+                <br>
+                <p id="pwd-warn">Wrong username or password</p>
+                <p id="form-warn">All fields must be filled!</p>
+                <p>You must log in to access manual mode<br>Please give your credentials:</p>
+                <input type="text" name="username" id="username" placeholder="Username" required>
+                <br><br>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <br><br>
+                <input type="submit" name="btn_login" id="btn_login" value="Login">
+                <br>
+                <p id="acc" style="font-weight:normal">If you don't have account, please contact the site administrator</p>
+                <br>
+            </form>
+        </div>
+        <br>
+    <p id="mon-warn">Fan is not settled in required time!</p>
         <div class="set_values">
             <div class="field">                                             
                 <div class="ofield">
-                    <h3>Set pressure value</h3>  
-                    <output class="set_output" id="set_press">10 Pa</output>
-                    <input class="slider" id="pressure" type="range" value="10" max="120" oninput="set_press.value = this.value + ' Pa'">
+                    <div id="pr_div">
+                        <h3>Set pressure value</h3>  
+                        <output class="set_output" id="set_press">10 Pa</output>
+                        <input class="slider" id="pressure" type="range" value="10" max="120" oninput="set_press.value = this.value + ' Pa'">
+                    </div>
                 </div>                
             </div>
             <div class="field">                                              
                 <div class="ofield">
-                    <h3>Set fan speed</h3>
-                    <output class="set_output" id="set_speed">0 %</output>
-                    <input class="slider" id="speed" type="range" value="0" max="100" oninput="set_speed.value = this.value + ' %'" disabled="true">
+                    <div id="sp_div">
+                        <h3>Set fan speed</h3>
+                        <output class="set_output" id="set_speed">0 %</output>
+                        <input class="slider" id="speed" type="range" value="0" max="100" oninput="set_speed.value = this.value + ' %'" disabled="true">
+                    </div> 
                 </div> 
             </div>                             
         </div>
         <br><br>
-    
         <div class="get_values">
+            <fieldset id="monitor">
+                <legend style="font-size: 20px;"><b>Monitor</b></legend>                 
             <div class="field">                                       
                 <div class="ifield">
                     <h3>Pressure</h3>                    
@@ -80,29 +113,45 @@
                     <output class="get_output" id="get_rh">0</output>
                     <h4>%</h4>
                 </div> 
-            </div>                 
+            </div>  
+        </fieldset>               
         </div>
     </main>
     
 
     <aside>
         <br>
-        <h2>Data history</h2>
+        <h2>Data History</h2>
         <br>
         <div class="chart-container">
+            <span id="chart_warning" style="display:none; color: red;">Not enough data to show the chosen period. Showing all values.</span>
             <div class="dropdown">
-            <label for="data">Filter data:</label>
+            <label for="data">Select period:</label>
             <select name="data" id="data">
-                <option value="all">All</option>
-                <option value="hour">Last hour</option>
-                <option value="day">Last 24 hours</option>
-                <option value="week">Last week</option>
+                <option value="0">All</option>
+                <option value="1">10 min</option>
+                <option value="2">30 min</option>
+                <option value="3">60 min</option>
             </select>
             </div>
             <canvas id="dataChart" width="600px" height="300px"></canvas>
         </div>
-    </aside>
-    
-    
+        <br><br>
+        <div class="user-table">
+            <h2>User Log History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Login time</th>
+                        <th>Logout time</th>
+                    </tr>
+                </thead>
+                <tbody id="table-output">                        
+                </tbody>
+            </table>
+        </div>
+        <br><br>
+    </aside>    
 </body>
 </html>
