@@ -26,29 +26,31 @@ StateHandler::~StateHandler ()
 }
 
 void
-StateHandler::displaySet (bool sensors)
+StateHandler::displaySet (size_t mode)
 {
   char line_up[16] = { 0 };
   char line_down[16] = { 0 };
 
-  if (sensors)
+  switch (mode)
     {
+    case MANUAL:
+      snprintf (line_up, 16, "SPEED: %02d%", saved_set_value[current_mode]);
+      snprintf (line_down, 16, "PRESSURE: %02dPa",
+                saved_curr_value[current_mode]);
+      break;
+    case AUTO:
+      snprintf (line_up, 16, "P. SET: %02dPa", saved_set_value[current_mode]);
+      snprintf (line_down, 16, "P. CURR: %02dPa",
+                saved_curr_value[current_mode]);
+      break;
+    case SENSORS:
       snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],
                 sensors_data[TEMPERATURE]);
       snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
                 sensors_data[CO2]);
-    }
-  else if (current_mode == MANUAL)
-    {
-      snprintf (line_up, 16, "SPEED: %02d%", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "PRESSURE: %02dPa",
-                saved_curr_value[current_mode]);
-    }
-  else if (current_mode == AUTO)
-    {
-      snprintf (line_up, 16, "P. SET: %02dPa", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "P. CURR: %02dPa",
-                saved_curr_value[current_mode]);
+      break;
+    default:
+      break;
     }
 
   _lcd->clear ();
@@ -247,7 +249,7 @@ StateHandler::save (int eventValue, size_t mode)
     {
       saved_curr_value[mode] = eventValue;
       saved_set_value[mode] = counterValue;
-      displaySet (MODES);
+      displaySet ((current_mode) ? AUTO : MANUAL);
     }
 }
 

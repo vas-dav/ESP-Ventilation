@@ -60,12 +60,7 @@ enum _bars
 enum _mode
 {
   MANUAL,
-  AUTO
-};
-
-enum _display
-{
-  MODES,
+  AUTO,
   SENSORS
 };
 
@@ -105,9 +100,9 @@ public:
    *
    * AUTO MODE: P. SET: XXPa P. CURR: XXPa
    *
-   * @param sensors the current printing mode
+   * @param mode the current printing mode
    */
-  void displaySet (bool sensors);
+  void displaySet (size_t mode);
 
   /** Handle the given event of the current state
    *
