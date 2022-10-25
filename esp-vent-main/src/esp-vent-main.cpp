@@ -15,23 +15,15 @@
 #include "board.h"
 #endif
 #endif
-#include <string.h>
+
 #include "DigitalIoPin.h"
 #include "LiquidCrystal.h"
 #include "PressureWrapper.h"
 #include "StateHandler/StateHandler.h"
 #include "SwitchController.h"
 #include "Timer.h"
-#include "systick.h"
-#include "MQTTPacket.h"
-#include "esp8266_socket.h"
 
 #include <cr_section_macros.h>
-
-#define SSID        "SmartIotMQTT"
-#define PASSWORD    "SmartIot"
-#define BROKER_IP   "192.168.1.254"
-#define BROKER_PORT  1883
 
 // TODO: insert other include files here
 
@@ -100,35 +92,3 @@ main (void)
 
   return 0;
 }
-
-void socketTest()
-{
-
-	esp_socket(SSID, PASSWORD);
-
-	const char *http_request = "GET / HTTP/1.0\r\n\r\n"; // HTTP requires cr-lf to end a line
-
-	for(int i = 0; i < 2; ++i) {
-		printf("\nopen socket\n");
-		esp_connect(1,  "www.metropolia.fi", 80);
-		printf("\nsend request\n");
-		esp_write(1, http_request, strlen(http_request));
-
-		uint32_t now = get_ticks();
-		printf("\nreply:\n");
-
-		while(get_ticks() - now < 3000) {
-			char buffer[64];
-			memset(buffer, 0, 64);
-			if(esp_read(1, buffer, 63) > 0) {
-				fputs(buffer,stdout);
-			}
-		}
-		esp_close(1);
-
-		printf("\nsocket closed\n");
-	}
-
-}
-
-
