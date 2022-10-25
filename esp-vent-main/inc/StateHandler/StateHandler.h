@@ -104,14 +104,10 @@ public:
    * MANUAL MODE: SPEED: XX% PRESSURE: XXPa
    *
    * AUTO MODE: P. SET: XXPa P. CURR: XXPa
+   *
+   * @param sensors the current printing mode
    */
   void displaySet (bool sensors);
-
-  /** Display values of sensors readings on LCD
-   * needed only for Debug purposes
-   * can be removed in production
-   */
-  void displaySens ();
 
   /** Handle the given event of the current state
    *
@@ -127,14 +123,19 @@ private:
   void SetState (state_pointer newstate);
   bool current_mode;
   Counter value[2] = { { 0, 100 }, { 0, 120 } };
-  /* motor of fan starts at value 90. probably because of some
+
+  /* Motor of fan starts at value 90. probably because of some
    * weigh of fan, so voltage within range of 0-89 is not
    * sufficient to start motor.
-   * TODO: Value 89 should be scaled to 0 at some point */
+   * TODO: Value 89 should be scaled to 0 at some point
+   */
   Counter fan_speed = { 80, 1000 };
-  /*integral controller for PID. should be global, since it
-   * accumulates error signals encountered since startup*/
+
+  /* Integral controller for PID. should be global, since it
+   * accumulates error signals encountered since startup
+   */
   int integral = 0;
+
   int saved_set_value[2] = { 0, 0 };
   int saved_curr_value[2] = { 0, 0 };
   int sensors_data[4] = { 0 };
@@ -143,6 +144,7 @@ private:
   PressureWrapper *pressure;
   bool pressure_status;
   Timer *state_timer;
+
   /* CO2 sensor object */
   GMP252 co2;
 
@@ -208,7 +210,7 @@ private:
    */
   void pid ();
 
-  int fan_speed_normalized();
+  int fan_speed_normalized ();
 };
 
 #endif /* STATE_HANDLER_H_ */

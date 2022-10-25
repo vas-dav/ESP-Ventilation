@@ -31,20 +31,24 @@ StateHandler::displaySet (bool sensors)
   char line_up[16] = { 0 };
   char line_down[16] = { 0 };
 
-  if(sensors) {
-    snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],
-              sensors_data[TEMPERATURE]);
-    snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
-              sensors_data[CO2]);
-
-  } else if (current_mode == MANUAL)
+  if (sensors)
+    {
+      snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],
+                sensors_data[TEMPERATURE]);
+      snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
+                sensors_data[CO2]);
+    }
+  else if (current_mode == MANUAL)
     {
       snprintf (line_up, 16, "SPEED: %02d%", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "PRESSURE: %02dPa", saved_curr_value[current_mode]);
-    } else if(current_mode == AUTO)
+      snprintf (line_down, 16, "PRESSURE: %02dPa",
+                saved_curr_value[current_mode]);
+    }
+  else if (current_mode == AUTO)
     {
       snprintf (line_up, 16, "P. SET: %02dPa", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "P. CURR: %02dPa", saved_curr_value[current_mode]);
+      snprintf (line_down, 16, "P. CURR: %02dPa",
+                saved_curr_value[current_mode]);
     }
 
   _lcd->clear ();
@@ -52,11 +56,6 @@ StateHandler::displaySet (bool sensors)
   _lcd->print (line_up);
   _lcd->setCursor (0, 1);
   _lcd->print (line_down);
-}
-void
-StateHandler::displaySens ()
-{
-
 }
 
 unsigned int
@@ -117,7 +116,7 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->A01->write (fan_speed_normalized());
+      this->A01->write (fan_speed_normalized ());
       break;
     case Event::eExit:
       break;
@@ -125,10 +124,11 @@ StateHandler::stateManual (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-    	if(event.value % 5000 == 0) {
-			SetState(&StateHandler::stateSensors);
-			displaySet(SENSORS);
-    	}
+      if (event.value % 5000 == 0)
+        {
+          SetState (&StateHandler::stateSensors);
+          displaySet (SENSORS);
+        }
       if (event.value % 500 == 0)
         {
           SetState (&StateHandler::stateGetPressure);
@@ -143,7 +143,7 @@ StateHandler::stateAuto (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-	  this->A01->write (fan_speed.getCurrent ());
+      this->A01->write (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -152,15 +152,16 @@ StateHandler::stateAuto (const Event &event)
       break;
     case Event::eTick:
       if (event.value % 2 == 0)
-		  {
-			SetState (&StateHandler::stateGetPressure);
-		  }
-	  if(event.value % 150 == 0) {
-				SetState(&StateHandler::stateSensors);
-//				displaySens ();
-		}
-	  pid();
-          this->A01->write (fan_speed.getCurrent ());
+        {
+          SetState (&StateHandler::stateGetPressure);
+        }
+      if (event.value % 150 == 0)
+        {
+          SetState (&StateHandler::stateSensors);
+          //				displaySens ();
+        }
+      pid ();
+      this->A01->write (fan_speed.getCurrent ());
       break;
     }
 }
@@ -175,15 +176,16 @@ StateHandler::stateSensors (const Event &event)
       sensors_data[TEMPERATURE] = humidity.readT ();
       sensors_data[HUMIDITY] = humidity.readRH ();
       sensors_data[CO2] = co2.read ();
-//      displaySens ();
+      //      displaySens ();
       break;
     case Event::eExit:
       break;
     case Event::eKey:
-    	handleControlButtons (event.value);
+      handleControlButtons (event.value);
       break;
     case Event::eTick:
-//      save (pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
+      //      save (pressure->getPressure (), ((current_mode) ? AUTO :
+      //      MANUAL));
       SetState (current_mode ? &StateHandler::stateAuto
                              : &StateHandler::stateManual);
       break;
@@ -250,11 +252,12 @@ StateHandler::save (int eventValue, size_t mode)
 }
 
 int
-StateHandler::fan_speed_normalized() {
-	int speed = value[MANUAL].getCurrent();
-	if(speed <=92)
-		speed += 8;
-	return speed * 10;
+StateHandler::fan_speed_normalized ()
+{
+  int speed = value[MANUAL].getCurrent ();
+  if (speed <= 92)
+    speed += 8;
+  return speed * 10;
 }
 
 void
