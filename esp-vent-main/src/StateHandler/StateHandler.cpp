@@ -174,10 +174,11 @@ StateHandler::stateSensors (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      sensors_data[PRESSUREDAT] = pressure->getPressure ();
       sensors_data[TEMPERATURE] = humidity.readT ();
-      sensors_data[HUMIDITY] = humidity.readRH ();
+      sensors_data[PRESSUREDAT] = pressure->getPressure ();
       sensors_data[CO2] = co2.read ();
+      state_timer->Sleep(10);
+      sensors_data[HUMIDITY] = humidity.readRH ();
       //      displaySens ();
       break;
     case Event::eExit:
