@@ -26,20 +26,25 @@ StateHandler::~StateHandler ()
 }
 
 void
-StateHandler::displaySet (unsigned int value1, unsigned int value2)
+StateHandler::displaySet (bool sensors)
 {
   char line_up[16] = { 0 };
   char line_down[16] = { 0 };
 
-  if (current_mode == MANUAL)
+  if(sensors) {
+    snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],
+              sensors_data[TEMPERATURE]);
+    snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
+              sensors_data[CO2]);
+
+  } else if (current_mode == MANUAL)
     {
-      snprintf (line_up, 16, "SPEED: %02d%", value1);
-      snprintf (line_down, 16, "PRESSURE: %02dPa", value2);
-    }
-  else
+      snprintf (line_up, 16, "SPEED: %02d%", saved_set_value[current_mode]);
+      snprintf (line_down, 16, "PRESSURE: %02dPa", saved_curr_value[current_mode]);
+    } else if(current_mode == AUTO)
     {
-      snprintf (line_up, 16, "P. SET: %02dPa", value1);
-      snprintf (line_down, 16, "P. CURR: %02dPa", value2);
+      snprintf (line_up, 16, "P. SET: %02dPa", saved_set_value[current_mode]);
+      snprintf (line_down, 16, "P. CURR: %02dPa", saved_curr_value[current_mode]);
     }
 
   _lcd->clear ();
@@ -51,18 +56,7 @@ StateHandler::displaySet (unsigned int value1, unsigned int value2)
 void
 StateHandler::displaySens ()
 {
-    char line_up[16] = { 0 };
-    char line_down[16] = { 0 };
-    snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],
-              sensors_data[TEMPERATURE]);
-    snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
-              sensors_data[CO2]);
 
-    _lcd->clear ();
-    _lcd->setCursor (0, 0);
-    _lcd->print (line_up);
-    _lcd->setCursor (0, 1);
-    _lcd->print (line_down);
 }
 
 unsigned int
@@ -97,7 +91,6 @@ StateHandler::stateInit (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-//       SetState (&StateHandler::stateSensors);
       break;
     case Event::eExit:
       _lcd->clear ();
@@ -134,12 +127,11 @@ StateHandler::stateManual (const Event &event)
     case Event::eTick:
     	if(event.value % 5000 == 0) {
 			SetState(&StateHandler::stateSensors);
-//			displaySens ();
+			displaySet(SENSORS);
     	}
       if (event.value % 500 == 0)
         {
           SetState (&StateHandler::stateGetPressure);
-//          state_timer->resetCounter ();
           break;
         }
     }
@@ -162,25 +154,13 @@ StateHandler::stateAuto (const Event &event)
       if (event.value % 2 == 0)
 		  {
 			SetState (&StateHandler::stateGetPressure);
-//			state_timer->resetCounter ();
-//			break;
 		  }
-	  if(event.value % 153 == 0) {
+	  if(event.value % 150 == 0) {
 				SetState(&StateHandler::stateSensors);
 //				displaySens ();
 		}
 	  pid();
           this->A01->write (fan_speed.getCurrent ());
-//      if (saved_curr_value[AUTO] < saved_set_value[AUTO])
-//        {
-//          fan_speed.inc ();
-//          this->A01->write (fan_speed.getCurrent ());
-//        }
-//      else if (saved_curr_value[AUTO] > saved_set_value[AUTO])
-//        {
-//          fan_speed.dec ();
-//          this->A01->write (fan_speed.getCurrent ());
-//        }
       break;
     }
 }
@@ -265,7 +245,7 @@ StateHandler::save (int eventValue, size_t mode)
     {
       saved_curr_value[mode] = eventValue;
       saved_set_value[mode] = counterValue;
-      displaySet (saved_set_value[mode], saved_curr_value[mode]);
+      displaySet (MODES);
     }
 }
 

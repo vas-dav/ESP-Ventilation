@@ -63,6 +63,12 @@ enum _mode
   AUTO
 };
 
+enum _display
+{
+  MODES,
+  SENSORS
+};
+
 enum _sensors
 {
   PRESSUREDAT,
@@ -98,11 +104,8 @@ public:
    * MANUAL MODE: SPEED: XX% PRESSURE: XXPa
    *
    * AUTO MODE: P. SET: XXPa P. CURR: XXPa
-   *
-   * @param value1 value to be displayed on LCD line 0
-   * @param value2 value to be displayed on LCD line 1
    */
-  void displaySet (unsigned int value1, unsigned int value2);
+  void displaySet (bool sensors);
 
   /** Display values of sensors readings on LCD
    * needed only for Debug purposes
