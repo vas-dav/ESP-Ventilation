@@ -104,6 +104,12 @@ public:
    */
   void displaySet (unsigned int value1, unsigned int value2);
 
+  /** Display values of sensors readings on LCD
+   * needed only for Debug purposes
+   * can be removed in production
+   */
+  void displaySens ();
+
   /** Handle the given event of the current state
    *
    * @param event event to be handled in the current state
