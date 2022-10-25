@@ -22,7 +22,7 @@
 #include "StateHandler/StateHandler.h"
 #include "SwitchController.h"
 #include "Timer.h"
-
+#include "MQTTPacket.h"
 #include <cr_section_macros.h>
 
 // TODO: insert other include files here
@@ -92,3 +92,37 @@ main (void)
 
   return 0;
 }
+
+#if 0  // example of opening a plain socket
+void socketTest()
+{
+
+	esp_socket(SSID, PASSWORD);
+
+	const char *http_request = "GET / HTTP/1.0\r\n\r\n"; // HTTP requires cr-lf to end a line
+
+	for(int i = 0; i < 2; ++i) {
+		printf("\nopen socket\n");
+		esp_connect(1,  "www.metropolia.fi", 80);
+		printf("\nsend request\n");
+		esp_write(1, http_request, strlen(http_request));
+
+		uint32_t now = get_ticks();
+		printf("\nreply:\n");
+
+		while(get_ticks() - now < 3000) {
+			char buffer[64];
+			memset(buffer, 0, 64);
+			if(esp_read(1, buffer, 63) > 0) {
+				fputs(buffer,stdout);
+			}
+		}
+		esp_close(1);
+
+		printf("\nsocket closed\n");
+	}
+
+}
+#endif
+
+
