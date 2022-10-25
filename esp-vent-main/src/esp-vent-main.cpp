@@ -15,15 +15,23 @@
 #include "board.h"
 #endif
 #endif
-
+#include <string.h>
 #include "DigitalIoPin.h"
 #include "LiquidCrystal.h"
 #include "PressureWrapper.h"
 #include "StateHandler/StateHandler.h"
 #include "SwitchController.h"
 #include "Timer.h"
+#include "systick.h"
 #include "MQTTPacket.h"
+#include "esp8266_socket.h"
+
 #include <cr_section_macros.h>
+
+#define SSID        "SmartIotMQTT"
+#define PASSWORD    "SmartIot"
+#define BROKER_IP   "192.168.1.254"
+#define BROKER_PORT  1883
 
 // TODO: insert other include files here
 
@@ -93,7 +101,6 @@ main (void)
   return 0;
 }
 
-#if 0  // example of opening a plain socket
 void socketTest()
 {
 
@@ -123,6 +130,5 @@ void socketTest()
 	}
 
 }
-#endif
 
 
