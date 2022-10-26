@@ -184,6 +184,12 @@ private:
    */
   void handleControlButtons (uint8_t button);
 
+  /** Handle the timer value of eTick event
+   *
+   * @param value current event value
+   */
+  void handleTickValue (int value);
+
   /** Save values to class' varibales
    *
    * @param eventValue value coming from an event

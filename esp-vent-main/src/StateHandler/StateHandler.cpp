@@ -130,22 +130,7 @@ StateHandler::stateManual (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      if (event.value % 5000 == 0)
-        {
-          updateSensorValues ();
-          displaySet (SENSORS);
-        }
-      if (event.value % 500 == 0)
-        {
-          SetState (&StateHandler::stateGetPressure);
-        }
-      if (event.value < 0)
-        {
-          displaySet (ERROR_TIMEOUT);
-          fan_speed.setInit (0);
-          value[(current_mode)].setInit (0);
-          SetState (&StateHandler::stateInit);
-        }
+      handleTickValue (event.value);
       break;
     }
 }
@@ -164,22 +149,7 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      if (event.value % 5000 == 0)
-        {
-          updateSensorValues ();
-          displaySet (SENSORS);
-        }
-      if (event.value % 500 == 0)
-        {
-          SetState (&StateHandler::stateGetPressure);
-        }
-      if (event.value < 0)
-        {
-          displaySet (ERROR_TIMEOUT);
-          fan_speed.setInit (0);
-          value[(current_mode)].setInit (0);
-          SetState (&StateHandler::stateInit);
-        }
+      handleTickValue (event.value);
       pid ();
       this->A01->write (fan_speed.getCurrent ());
       break;
@@ -229,6 +199,27 @@ StateHandler::handleControlButtons (uint8_t button)
       break;
     default:
       break;
+    }
+}
+
+void
+StateHandler::handleTickValue (int value)
+{
+  if (value % 5000 == 0)
+    {
+      updateSensorValues ();
+      displaySet (SENSORS);
+    }
+  if (value % 500 == 0)
+    {
+      SetState (&StateHandler::stateGetPressure);
+    }
+  if (value < 0)
+    {
+      displaySet (ERROR_TIMEOUT);
+      this->fan_speed.setInit (0);
+      this->value[(current_mode)].setInit (0);
+      SetState (&StateHandler::stateInit);
     }
 }
 
