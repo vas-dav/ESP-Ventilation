@@ -7,11 +7,11 @@
 
 #include "StateHandler/StateHandler.h"
 
-StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *_A01,
+StateHandler::StateHandler (LiquidCrystal *lcd, Fan *propeller,
                             PressureWrapper *pressure, Timer *global)
 {
   this->_lcd = lcd;
-  this->_A01 = _A01;
+  this->_propeller = propeller;
   this->_pressure = pressure;
   this->state_timer = global;
   current = &StateHandler::stateInit;
@@ -120,7 +120,7 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->_A01->write (fan_speed.getCurrent ());
+      this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -139,7 +139,7 @@ StateHandler::stateAuto (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->_A01->write (fan_speed.getCurrent ());
+      this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -149,7 +149,7 @@ StateHandler::stateAuto (const Event &event)
     case Event::eTick:
       handleTickValue (event.value);
       pid ();
-      this->_A01->write (fan_speed.getCurrent ());
+      this->_propeller->spin (fan_speed.getCurrent ());
       break;
     }
 }

@@ -6,17 +6,20 @@
  */
 
 #include "Modbus/ModbusRegister.h"
+#include <assert.h>
 
 #ifndef FAN_H_
 #define FAN_H_
 
-class Fan {
+class Fan
+{
 public:
-	Fan(ModbusRegister * A01);
-	virtual ~Fan();
+  Fan (ModbusRegister *A01);
+  virtual ~Fan ();
+  void spin (int speed);
 
 private:
-	ModbusRegister * _A01;
+  ModbusRegister *_A01;
 };
 
 #endif /* FAN_H_ */

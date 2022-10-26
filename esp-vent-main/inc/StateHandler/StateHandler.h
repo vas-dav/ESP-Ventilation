@@ -16,11 +16,10 @@
 #include "Counter.h"
 #include "DigitalIoPin.h"
 #include "Event.h"
+#include "Fan.h"
 #include "GMP252.h"
 #include "HMP60.h"
 #include "LiquidCrystal.h"
-#include "Modbus/ModbusMaster.h"
-#include "Modbus/ModbusRegister.h"
 #include "PressureWrapper.h"
 #include "Timer.h"
 #include "nlohmann/json.hpp"
@@ -78,8 +77,8 @@ typedef void (StateHandler::*state_pointer) (const Event &);
 class StateHandler
 {
 public:
-  StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
-                PressureWrapper *pressure, Timer *global);
+  StateHandler (LiquidCrystal *lcd, Fan *propeller, PressureWrapper *pressure,
+                Timer *global);
   virtual ~StateHandler ();
 
   /** Get currently set pressure
@@ -135,7 +134,7 @@ private:
   int saved_curr_value[2] = { 0, 0 };
   int sensors_data[4] = { 0 };
   LiquidCrystal *_lcd;
-  ModbusRegister *_A01;
+  Fan *_propeller;
   PressureWrapper *_pressure;
   bool pressure_status;
   Timer *state_timer;

@@ -17,6 +17,7 @@
 #endif
 
 #include "DigitalIoPin.h"
+#include "Fan.h"
 #include "LiquidCrystal.h"
 #include "PressureWrapper.h"
 #include "StateHandler/StateHandler.h"
@@ -62,13 +63,12 @@ main (void)
   /* FAN object */
   ModbusMaster fan (1);
   fan.begin (9600);
-  ModbusRegister A01 (&fan, 0);
-  //  ModbusRegister DI1(&fan, 4, false);
+  Fan propeller (new ModbusRegister (&fan, 0));
 
   PressureWrapper sens;
   glob_time.Sleep (1000);
 
-  StateHandler ventMachine (&lcd, &A01, &sens, &glob_time);
+  StateHandler ventMachine (&lcd, &propeller, &sens, &glob_time);
   /** Common pins */
   DigitalIoPin b_up (0, 7, true, true, true); // A5
   SwitchController sw_up (&b_up, &ventMachine, BUTTON_CONTROL_UP);
