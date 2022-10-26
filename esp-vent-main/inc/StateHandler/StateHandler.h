@@ -135,8 +135,8 @@ private:
   int saved_curr_value[2] = { 0, 0 };
   int sensors_data[4] = { 0 };
   LiquidCrystal *_lcd;
-  ModbusRegister *A01;
-  PressureWrapper *pressure;
+  ModbusRegister *_A01;
+  PressureWrapper *_pressure;
   bool pressure_status;
   Timer *state_timer;
 

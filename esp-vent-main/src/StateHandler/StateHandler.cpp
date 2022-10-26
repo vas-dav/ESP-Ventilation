@@ -7,12 +7,12 @@
 
 #include "StateHandler/StateHandler.h"
 
-StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
+StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *_A01,
                             PressureWrapper *pressure, Timer *global)
 {
   this->_lcd = lcd;
-  this->A01 = A01;
-  this->pressure = pressure;
+  this->_A01 = _A01;
+  this->_pressure = pressure;
   this->state_timer = global;
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
@@ -122,7 +122,7 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->A01->write (fan_speed.getCurrent ());
+      this->_A01->write (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -141,7 +141,7 @@ StateHandler::stateAuto (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->A01->write (fan_speed.getCurrent ());
+      this->_A01->write (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -151,7 +151,7 @@ StateHandler::stateAuto (const Event &event)
     case Event::eTick:
       handleTickValue (event.value);
       pid ();
-      this->A01->write (fan_speed.getCurrent ());
+      this->_A01->write (fan_speed.getCurrent ());
       break;
     }
 }
@@ -162,7 +162,7 @@ StateHandler::stateGetPressure (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      pressure_status = pressure->isAwake ();
+      pressure_status = _pressure->isAwake ();
       break;
     case Event::eExit:
       break;
@@ -172,10 +172,10 @@ StateHandler::stateGetPressure (const Event &event)
     case Event::eTick:
       if (!pressure_status)
         {
-          pressure->wakeUp ();
+          _pressure->wakeUp ();
           break;
         }
-      save (pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
+      save (_pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
       SetState (current_mode ? &StateHandler::stateAuto
                              : &StateHandler::stateManual);
       break;
@@ -262,7 +262,7 @@ StateHandler::updateSensorValues ()
 {
 
   sensors_data[TEMPERATURE] = humidity.readT ();
-  sensors_data[PRESSUREDAT] = pressure->getPressure ();
+  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
   sensors_data[CO2] = co2.read ();
   state_timer->tickCounter (5);
   sensors_data[HUMIDITY] = humidity.readRH ();
