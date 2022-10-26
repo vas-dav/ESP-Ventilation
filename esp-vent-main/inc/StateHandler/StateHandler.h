@@ -25,6 +25,7 @@
 #include "Modbus/ModbusRegister.h"
 #include "PressureWrapper.h"
 #include "Timer.h"
+#include "nlohmann/json.hpp"
 
 /** Buttons enumeration
  *
