@@ -27,30 +27,32 @@ StateHandler::~StateHandler ()
 void
 StateHandler::displaySet (size_t mode)
 {
-  char line_up[16] = { 0 };
-  char line_down[16] = { 0 };
+  char line_up[LCD_SIZE] = { 0 };
+  char line_down[LCD_SIZE] = { 0 };
 
   switch (mode)
     {
     case MANUAL:
-      snprintf (line_up, 16, "SPEED: %02d%", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "PRESSURE: %02dPa",
+      snprintf (line_up, LCD_SIZE, "SPEED: %02d%",
+                saved_set_value[current_mode]);
+      snprintf (line_down, LCD_SIZE, "PRESSURE: %02dPa",
                 saved_curr_value[current_mode]);
       break;
     case AUTO:
-      snprintf (line_up, 16, "P. SET: %02dPa", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "P. CURR: %02dPa",
+      snprintf (line_up, LCD_SIZE, "P. SET: %02dPa",
+                saved_set_value[current_mode]);
+      snprintf (line_down, LCD_SIZE, "P. CURR: %02dPa",
                 saved_curr_value[current_mode]);
       break;
     case SENSORS:
-      snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],
-                sensors_data[TEMPERATURE]);
-      snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
-                sensors_data[CO2]);
+      snprintf (line_up, LCD_SIZE, "PRE:%02d  TEM:%02d",
+                sensors_data[PRESSUREDAT], sensors_data[TEMPERATURE]);
+      snprintf (line_down, LCD_SIZE, "HUM:%02d  CO2:%02d",
+                sensors_data[HUMIDITY], sensors_data[CO2]);
       break;
     case ERROR_TIMEOUT:
-      snprintf (line_up, 16, "  FORCE STOP  ");
-      snprintf (line_down, 16, "REASON: TIMEOUT");
+      snprintf (line_up, LCD_SIZE, "  FORCE STOP  ");
+      snprintf (line_down, LCD_SIZE, "REASON: TIMEOUT");
       break;
     default:
       break;
@@ -203,16 +205,16 @@ StateHandler::handleControlButtons (uint8_t button)
 void
 StateHandler::handleTickValue (int value)
 {
-  if (value % 5000 == 0)
+  if (value % TIMER_SENSORS_TIMEOUT == 0)
     {
       updateSensorValues ();
       displaySet (SENSORS);
     }
-  if (value % 500 == 0)
+  if (value % TIMER_PRESSURE_TIMEOUT == 0)
     {
       SetState (&StateHandler::stateGetPressure);
     }
-  if (value < 0)
+  if (value == TIMER_ERROR_VALUE)
     {
       displaySet (ERROR_TIMEOUT);
       this->fan_speed.setInit (0);

@@ -22,6 +22,7 @@
 #include "LiquidCrystal.h"
 #include "PressureWrapper.h"
 #include "Timer.h"
+#include "common_control_values.h"
 #include "nlohmann/json.hpp"
 
 /** Buttons enumeration
@@ -30,8 +31,7 @@
  * from main to StateHandler through
  * a keyEvent. Enumeration determines the state
  * of the particular button.
- * */
-
+ */
 enum _buttons
 {
   /** Raises the bar up */
@@ -93,6 +93,39 @@ public:
    */
   unsigned int getSetSpeed ();
 
+  /** Handle the given event of the current state
+   *
+   * @param event event to be handled in the current state
+   */
+  void HandleState (const Event &event);
+
+private:
+  state_pointer current;
+  bool current_mode;
+  Counter value[2] = { { 0, 100 }, { 0, 120 } };
+  /* Motor of fan starts at value 90. probably because of some
+   * weigh of fan, so voltage within range of 0-89 is not
+   * sufficient to start motor.
+   * TODO: Value 89 should be scaled to 0 at some point
+   */
+  Counter fan_speed = { 0, 1000 };
+  /* Integral controller for PID. should be global, since it
+   * accumulates error signals encountered since startup
+   */
+  int integral = 0;
+  int saved_set_value[2] = { 0, 0 };
+  int saved_curr_value[2] = { 0, 0 };
+  int sensors_data[4] = { 0 };
+  LiquidCrystal *_lcd;
+  Fan *_propeller;
+  PressureWrapper *_pressure;
+  bool pressure_status;
+  Timer *state_timer;
+  /* CO2 sensor object */
+  GMP252 co2;
+  /* Humidity and temperature sensor object */
+  HMP60 humidity;
+
   /** Display values on LCD depending on current mode
    *
    * MANUAL MODE: SPEED: XX% PRESSURE: XXPa
@@ -103,47 +136,10 @@ public:
    */
   void displaySet (size_t mode);
 
-  /** Handle the given event of the current state
-   *
-   * @param event event to be handled in the current state
-   */
-  void HandleState (const Event &event);
-
-private:
-  state_pointer current;
   /** Set a new curremt state
    * @param newstate new state to be set to current
    */
   void SetState (state_pointer newstate);
-  bool current_mode;
-  Counter value[2] = { { 0, 100 }, { 0, 120 } };
-
-  /* Motor of fan starts at value 90. probably because of some
-   * weigh of fan, so voltage within range of 0-89 is not
-   * sufficient to start motor.
-   * TODO: Value 89 should be scaled to 0 at some point
-   */
-  Counter fan_speed = { 0, 1000 };
-
-  /* Integral controller for PID. should be global, since it
-   * accumulates error signals encountered since startup
-   */
-  int integral = 0;
-
-  int saved_set_value[2] = { 0, 0 };
-  int saved_curr_value[2] = { 0, 0 };
-  int sensors_data[4] = { 0 };
-  LiquidCrystal *_lcd;
-  Fan *_propeller;
-  PressureWrapper *_pressure;
-  bool pressure_status;
-  Timer *state_timer;
-
-  /* CO2 sensor object */
-  GMP252 co2;
-
-  /* Humidity and temperature sensor object */
-  HMP60 humidity;
 
   /** Initialization state
    *

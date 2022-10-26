@@ -5,11 +5,11 @@
  *      Author: tylen
  */
 
-#include "Modbus/ModbusRegister.h"
-#include <assert.h>
-
 #ifndef FAN_H_
 #define FAN_H_
+
+#include "Modbus/ModbusRegister.h"
+#include <assert.h>
 
 class Fan
 {
