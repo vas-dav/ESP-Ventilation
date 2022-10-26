@@ -117,7 +117,7 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->A01->write (fan_speed_normalized ());
+      this->A01->write (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;

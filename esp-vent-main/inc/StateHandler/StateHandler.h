@@ -124,7 +124,7 @@ private:
    * sufficient to start motor.
    * TODO: Value 89 should be scaled to 0 at some point
    */
-  Counter fan_speed = { 80, 1000 };
+  Counter fan_speed = { 0, 1000 };
 
   /* Integral controller for PID. should be global, since it
    * accumulates error signals encountered since startup
