@@ -20,21 +20,21 @@ extern "C"
 
 Timer::Timer (uint32_t freq) : freq (freq)
 {
-mode = true;
+  mode = true;
   Chip_Clock_SetSysTickClockDiv (1);
   uint32_t sysTickRate = Chip_Clock_GetSysTickClockRate ();
   SysTick_Config (sysTickRate / freq);
-  resetCounter();
+  resetCounter ();
   timer = 0;
   systicks.store (0, std::memory_order_relaxed);
 }
 
-Timer::Timer(bool mode)
+Timer::Timer (bool mode)
 {
-	this->mode = false;
-	  resetCounter();
-	  timer = 0;
-	  systicks.store (0, std::memory_order_relaxed);
+  this->mode = false;
+  resetCounter ();
+  timer = 0;
+  systicks.store (0, std::memory_order_relaxed);
 }
 
 Timer::~Timer ()
@@ -47,9 +47,9 @@ Timer::tickCounter (int ms)
 {
   if (counter >= INT_MAX)
     {
-      resetCounter();
+      resetCounter ();
     }
-  counter.fetch_add(ms, std::memory_order_relaxed);
+  counter.fetch_add (ms, std::memory_order_relaxed);
   Sleep (ms);
 }
 
@@ -78,5 +78,5 @@ Timer::resetCounter ()
 uint32_t
 millis ()
 {
-  return systicks.load(std::memory_order_relaxed);
+  return systicks.load (std::memory_order_relaxed);
 }

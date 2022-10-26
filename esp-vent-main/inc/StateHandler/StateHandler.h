@@ -7,8 +7,6 @@
  * Purpose of this class is to store and pass
  * the events of the current mode to further process.
  *
- * Current goal is to make it to operate on interrupts
- * caused by button presses.
  *
  */
 
@@ -18,13 +16,14 @@
 #include "Counter.h"
 #include "DigitalIoPin.h"
 #include "Event.h"
+#include "Fan.h"
 #include "GMP252.h"
 #include "HMP60.h"
 #include "LiquidCrystal.h"
-#include "Modbus/ModbusMaster.h"
-#include "Modbus/ModbusRegister.h"
 #include "PressureWrapper.h"
 #include "Timer.h"
+#include "common_control_values.h"
+#include "nlohmann/json.hpp"
 
 /** Buttons enumeration
  *
@@ -32,8 +31,7 @@
  * from main to StateHandler through
  * a keyEvent. Enumeration determines the state
  * of the particular button.
- * */
-
+ */
 enum _buttons
 {
   /** Raises the bar up */
@@ -61,7 +59,8 @@ enum _mode
 {
   MANUAL,
   AUTO,
-  SENSORS
+  SENSORS,
+  ERROR_TIMEOUT
 };
 
 enum _sensors
@@ -78,8 +77,8 @@ typedef void (StateHandler::*state_pointer) (const Event &);
 class StateHandler
 {
 public:
-  StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
-                PressureWrapper *pressure, Timer *global);
+  StateHandler (LiquidCrystal *lcd, Fan *propeller, PressureWrapper *pressure,
+                Timer *global);
   virtual ~StateHandler ();
 
   /** Get currently set pressure
@@ -94,6 +93,39 @@ public:
    */
   unsigned int getSetSpeed ();
 
+  /** Handle the given event of the current state
+   *
+   * @param event event to be handled in the current state
+   */
+  void HandleState (const Event &event);
+
+private:
+  state_pointer current;
+  bool current_mode;
+  Counter value[2] = { { 0, 100 }, { 0, 120 } };
+  /* Motor of fan starts at value 90. probably because of some
+   * weigh of fan, so voltage within range of 0-89 is not
+   * sufficient to start motor.
+   * TODO: Value 89 should be scaled to 0 at some point
+   */
+  Counter fan_speed = { 0, 1000 };
+  /* Integral controller for PID. should be global, since it
+   * accumulates error signals encountered since startup
+   */
+  int integral = 0;
+  int saved_set_value[2] = { 0, 0 };
+  int saved_curr_value[2] = { 0, 0 };
+  int sensors_data[4] = { 0 };
+  LiquidCrystal *_lcd;
+  Fan *_propeller;
+  PressureWrapper *_pressure;
+  bool pressure_status;
+  Timer *state_timer;
+  /* CO2 sensor object */
+  GMP252 co2;
+  /* Humidity and temperature sensor object */
+  HMP60 humidity;
+
   /** Display values on LCD depending on current mode
    *
    * MANUAL MODE: SPEED: XX% PRESSURE: XXPa
@@ -104,47 +136,10 @@ public:
    */
   void displaySet (size_t mode);
 
-  /** Handle the given event of the current state
-   *
-   * @param event event to be handled in the current state
-   */
-  void HandleState (const Event &event);
-
-private:
-  state_pointer current;
   /** Set a new curremt state
    * @param newstate new state to be set to current
    */
   void SetState (state_pointer newstate);
-  bool current_mode;
-  Counter value[2] = { { 0, 100 }, { 0, 120 } };
-
-  /* Motor of fan starts at value 90. probably because of some
-   * weigh of fan, so voltage within range of 0-89 is not
-   * sufficient to start motor.
-   * TODO: Value 89 should be scaled to 0 at some point
-   */
-  Counter fan_speed = { 80, 1000 };
-
-  /* Integral controller for PID. should be global, since it
-   * accumulates error signals encountered since startup
-   */
-  int integral = 0;
-
-  int saved_set_value[2] = { 0, 0 };
-  int saved_curr_value[2] = { 0, 0 };
-  int sensors_data[4] = { 0 };
-  LiquidCrystal *_lcd;
-  ModbusRegister *A01;
-  PressureWrapper *pressure;
-  bool pressure_status;
-  Timer *state_timer;
-
-  /* CO2 sensor object */
-  GMP252 co2;
-
-  /* Humidity and temperature sensor object */
-  HMP60 humidity;
 
   /** Initialization state
    *
@@ -183,6 +178,12 @@ private:
    * @param button current button
    */
   void handleControlButtons (uint8_t button);
+
+  /** Handle the timer value of eTick event
+   *
+   * @param value current event value
+   */
+  void handleTickValue (int value);
 
   /** Save values to class' varibales
    *

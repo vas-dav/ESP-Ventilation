@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Miisa",
+    "password": "$2b$12$nw.VpKKPHhgLz1XBH4CPyuPeKsmWx7roUsSwIYRVw8JAWNfNz/iaq"
+  },
+  {
+    "id": 2,
+    "name": "Jaakko",
+    "password": "$2b$12$CdhlDEu6GB6133SCqm2B1OI5o2iSQ1ed0CPdVTuoIOam2tS814i9q"
+  },
+  {
+    "id": 3,
+    "name": "Evgeni",
+    "password": "$2b$12$gv7IooOZzkBxlXgzIqE/Ieqn.EzU5hQ3Qw00yfRPcFZvurHKI0NRm"
+  },
+  {
+    "id": 4,
+    "name": "Vasili",
+    "password": "$2b$12$6mfxPyZi7SPecrvH5FknQueHOkjt5ECX7TxIknufxbffs5W9apOTq"
+  },
+  {
+    "id": 5,
+    "name": "Teacher",
+    "password": "$2b$12$3ru7GKQEaF6dqZom3m0mvetOn1kjz9HVGnJT/ZywydkrtGNGLNxoy"
+  }
+]

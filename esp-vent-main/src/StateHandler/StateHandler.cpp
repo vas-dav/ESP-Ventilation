@@ -7,12 +7,12 @@
 
 #include "StateHandler/StateHandler.h"
 
-StateHandler::StateHandler (LiquidCrystal *lcd, ModbusRegister *A01,
+StateHandler::StateHandler (LiquidCrystal *lcd, Fan *propeller,
                             PressureWrapper *pressure, Timer *global)
 {
   this->_lcd = lcd;
-  this->A01 = A01;
-  this->pressure = pressure;
+  this->_propeller = propeller;
+  this->_pressure = pressure;
   this->state_timer = global;
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
@@ -27,26 +27,32 @@ StateHandler::~StateHandler ()
 void
 StateHandler::displaySet (size_t mode)
 {
-  char line_up[16] = { 0 };
-  char line_down[16] = { 0 };
+  char line_up[LCD_SIZE] = { 0 };
+  char line_down[LCD_SIZE] = { 0 };
 
   switch (mode)
     {
     case MANUAL:
-      snprintf (line_up, 16, "SPEED: %02d%", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "PRESSURE: %02dPa",
+      snprintf (line_up, LCD_SIZE, "SPEED: %02d%",
+                saved_set_value[current_mode]);
+      snprintf (line_down, LCD_SIZE, "PRESSURE: %02dPa",
                 saved_curr_value[current_mode]);
       break;
     case AUTO:
-      snprintf (line_up, 16, "P. SET: %02dPa", saved_set_value[current_mode]);
-      snprintf (line_down, 16, "P. CURR: %02dPa",
+      snprintf (line_up, LCD_SIZE, "P. SET: %02dPa",
+                saved_set_value[current_mode]);
+      snprintf (line_down, LCD_SIZE, "P. CURR: %02dPa",
                 saved_curr_value[current_mode]);
       break;
     case SENSORS:
-      snprintf (line_up, 16, "PRE:%02d  TEM:%02d", sensors_data[PRESSUREDAT],
-                sensors_data[TEMPERATURE]);
-      snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
-                sensors_data[CO2]);
+      snprintf (line_up, LCD_SIZE, "PRE:%02d  TEM:%02d",
+                sensors_data[PRESSUREDAT], sensors_data[TEMPERATURE]);
+      snprintf (line_down, LCD_SIZE, "HUM:%02d  CO2:%02d",
+                sensors_data[HUMIDITY], sensors_data[CO2]);
+      break;
+    case ERROR_TIMEOUT:
+      snprintf (line_up, LCD_SIZE, "  FORCE STOP  ");
+      snprintf (line_down, LCD_SIZE, "REASON: TIMEOUT");
       break;
     default:
       break;
@@ -93,7 +99,6 @@ StateHandler::stateInit (const Event &event)
     case Event::eEnter:
       break;
     case Event::eExit:
-      _lcd->clear ();
       break;
     case Event::eKey:
       handleControlButtons (event.value);
@@ -117,7 +122,7 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->A01->write (fan_speed_normalized ());
+      this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -125,16 +130,8 @@ StateHandler::stateManual (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      if (event.value % 5000 == 0)
-        {
-    	  updateSensorValues ();
-          displaySet (SENSORS);
-        }
-      if (event.value % 500 == 0)
-        {
-          SetState (&StateHandler::stateGetPressure);
-          break;
-        }
+      handleTickValue (event.value);
+      break;
     }
 }
 
@@ -144,7 +141,7 @@ StateHandler::stateAuto (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->A01->write (fan_speed.getCurrent ());
+      this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -152,17 +149,9 @@ StateHandler::stateAuto (const Event &event)
       handleControlButtons (event.value);
       break;
     case Event::eTick:
-      if (event.value % 5000 == 0)
-        {
-    	  updateSensorValues ();
-          displaySet (SENSORS);
-        }
-      if (event.value % 500 == 0)
-        {
-          SetState (&StateHandler::stateGetPressure);
-        }
+      handleTickValue (event.value);
       pid ();
-      this->A01->write (fan_speed.getCurrent ());
+      this->_propeller->spin (fan_speed.getCurrent ());
       break;
     }
 }
@@ -173,7 +162,7 @@ StateHandler::stateGetPressure (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      pressure_status = pressure->isAwake ();
+      pressure_status = _pressure->isAwake ();
       break;
     case Event::eExit:
       break;
@@ -183,10 +172,10 @@ StateHandler::stateGetPressure (const Event &event)
     case Event::eTick:
       if (!pressure_status)
         {
-          pressure->wakeUp ();
+          _pressure->wakeUp ();
           break;
         }
-      save (pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
+      save (_pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
       SetState (current_mode ? &StateHandler::stateAuto
                              : &StateHandler::stateManual);
       break;
@@ -199,10 +188,10 @@ StateHandler::handleControlButtons (uint8_t button)
   switch (button)
     {
     case BUTTON_CONTROL_DOWN:
-      this->value[(current_mode) ? AUTO : MANUAL].dec ();
+      this->value[(current_mode)].dec ();
       break;
     case BUTTON_CONTROL_UP:
-      this->value[(current_mode) ? AUTO : MANUAL].inc ();
+      this->value[(current_mode)].inc ();
       break;
     case BUTTON_CONTROL_TOG_MODE:
       current_mode = !current_mode;
@@ -210,6 +199,27 @@ StateHandler::handleControlButtons (uint8_t button)
       break;
     default:
       break;
+    }
+}
+
+void
+StateHandler::handleTickValue (int value)
+{
+  if (value % TIMER_SENSORS_TIMEOUT == 0)
+    {
+      updateSensorValues ();
+      displaySet (SENSORS);
+    }
+  if (value % TIMER_PRESSURE_TIMEOUT == 0)
+    {
+      SetState (&StateHandler::stateGetPressure);
+    }
+  if (value == TIMER_ERROR_VALUE)
+    {
+      displaySet (ERROR_TIMEOUT);
+      this->fan_speed.setInit (0);
+      this->value[(current_mode)].setInit (0);
+      SetState (&StateHandler::stateInit);
     }
 }
 
@@ -235,7 +245,6 @@ StateHandler::fan_speed_normalized ()
   return speed * 10;
 }
 
-
 void
 StateHandler::pid ()
 {
@@ -252,10 +261,9 @@ void
 StateHandler::updateSensorValues ()
 {
 
-	  sensors_data[TEMPERATURE] = humidity.readT ();
-	  sensors_data[PRESSUREDAT] = pressure->getPressure ();
-	  sensors_data[CO2] = co2.read ();
-	  state_timer->tickCounter(5);
-	  sensors_data[HUMIDITY] = humidity.readRH ();
+  sensors_data[TEMPERATURE] = humidity.readT ();
+  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
+  sensors_data[CO2] = co2.read ();
+  state_timer->tickCounter (5);
+  sensors_data[HUMIDITY] = humidity.readRH ();
 }
-
