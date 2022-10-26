@@ -49,10 +49,8 @@ StateHandler::displaySet (size_t mode)
                 sensors_data[CO2]);
       break;
     case ERROR_TIMEOUT:
-      snprintf (line_up, 16, "  FORCE STOP  ", sensors_data[PRESSUREDAT],
-                sensors_data[TEMPERATURE]);
-      snprintf (line_down, 16, "REAS: TIMEOUT", sensors_data[HUMIDITY],
-                sensors_data[CO2]);
+      snprintf (line_up, 16, "  FORCE STOP  ");
+      snprintf (line_down, 16, "REASON: TIMEOUT");
       break;
     default:
       break;
