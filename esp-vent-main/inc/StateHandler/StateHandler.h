@@ -7,8 +7,6 @@
  * Purpose of this class is to store and pass
  * the events of the current mode to further process.
  *
- * Current goal is to make it to operate on interrupts
- * caused by button presses.
  *
  */
 
