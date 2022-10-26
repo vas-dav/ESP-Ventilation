@@ -48,6 +48,12 @@ StateHandler::displaySet (size_t mode)
       snprintf (line_down, 16, "HUM:%02d  CO2:%02d", sensors_data[HUMIDITY],
                 sensors_data[CO2]);
       break;
+    case ERROR_TIMEOUT:
+      snprintf (line_up, 16, "  FORCE STOP  ", sensors_data[PRESSUREDAT],
+                sensors_data[TEMPERATURE]);
+      snprintf (line_down, 16, "REAS: TIMEOUT", sensors_data[HUMIDITY],
+                sensors_data[CO2]);
+      break;
     default:
       break;
     }
@@ -93,7 +99,6 @@ StateHandler::stateInit (const Event &event)
     case Event::eEnter:
       break;
     case Event::eExit:
-      _lcd->clear ();
       break;
     case Event::eKey:
       handleControlButtons (event.value);
@@ -127,14 +132,21 @@ StateHandler::stateManual (const Event &event)
     case Event::eTick:
       if (event.value % 5000 == 0)
         {
-    	  updateSensorValues ();
+          updateSensorValues ();
           displaySet (SENSORS);
         }
       if (event.value % 500 == 0)
         {
           SetState (&StateHandler::stateGetPressure);
-          break;
         }
+      if (event.value < 0)
+        {
+          displaySet (ERROR_TIMEOUT);
+          fan_speed.setInit (0);
+          value[(current_mode)].setInit (0);
+          SetState (&StateHandler::stateInit);
+        }
+      break;
     }
 }
 
@@ -154,12 +166,19 @@ StateHandler::stateAuto (const Event &event)
     case Event::eTick:
       if (event.value % 5000 == 0)
         {
-    	  updateSensorValues ();
+          updateSensorValues ();
           displaySet (SENSORS);
         }
       if (event.value % 500 == 0)
         {
           SetState (&StateHandler::stateGetPressure);
+        }
+      if (event.value < 0)
+        {
+          displaySet (ERROR_TIMEOUT);
+          fan_speed.setInit (0);
+          value[(current_mode)].setInit (0);
+          SetState (&StateHandler::stateInit);
         }
       pid ();
       this->A01->write (fan_speed.getCurrent ());
@@ -199,10 +218,10 @@ StateHandler::handleControlButtons (uint8_t button)
   switch (button)
     {
     case BUTTON_CONTROL_DOWN:
-      this->value[(current_mode) ? AUTO : MANUAL].dec ();
+      this->value[(current_mode)].dec ();
       break;
     case BUTTON_CONTROL_UP:
-      this->value[(current_mode) ? AUTO : MANUAL].inc ();
+      this->value[(current_mode)].inc ();
       break;
     case BUTTON_CONTROL_TOG_MODE:
       current_mode = !current_mode;
@@ -235,7 +254,6 @@ StateHandler::fan_speed_normalized ()
   return speed * 10;
 }
 
-
 void
 StateHandler::pid ()
 {
@@ -252,10 +270,9 @@ void
 StateHandler::updateSensorValues ()
 {
 
-	  sensors_data[TEMPERATURE] = humidity.readT ();
-	  sensors_data[PRESSUREDAT] = pressure->getPressure ();
-	  sensors_data[CO2] = co2.read ();
-	  state_timer->tickCounter(5);
-	  sensors_data[HUMIDITY] = humidity.readRH ();
+  sensors_data[TEMPERATURE] = humidity.readT ();
+  sensors_data[PRESSUREDAT] = pressure->getPressure ();
+  sensors_data[CO2] = co2.read ();
+  state_timer->tickCounter (5);
+  sensors_data[HUMIDITY] = humidity.readRH ();
 }
-

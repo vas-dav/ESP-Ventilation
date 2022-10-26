@@ -60,7 +60,8 @@ enum _mode
 {
   MANUAL,
   AUTO,
-  SENSORS
+  SENSORS,
+  ERROR_TIMEOUT
 };
 
 enum _sensors

@@ -82,7 +82,12 @@ main (void)
   int getcounterValue = 0;
   while (1)
     {
-	  getcounterValue = glob_time.getCounter();
+      getcounterValue = glob_time.getCounter ();
+      if (getcounterValue > 15000)
+        {
+          glob_time.resetCounter ();
+          ventMachine.HandleState (Event (Event::eTick, -1));
+        }
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();
