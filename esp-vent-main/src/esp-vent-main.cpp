@@ -15,16 +15,10 @@
 #include "StateHandler/StateHandler.h"
 #include "SwitchController.h"
 #include "Timer.h"
-#include <cr_section_macros.h>
 #include "board.h"
 #include "chip.h"
 #include "common_control_values.h"
 #include <cr_section_macros.h>
-
-#define SSID        "SmartIotMQTT"
-#define PASSWORD    "SmartIot"
-#define BROKER_IP   "192.168.1.254"
-#define BROKER_PORT  1883
 
 int
 main (void)
@@ -91,4 +85,3 @@ main (void)
 
   return 0;
 }
-
