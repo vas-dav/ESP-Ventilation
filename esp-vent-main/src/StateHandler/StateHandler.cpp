@@ -34,21 +34,21 @@ StateHandler::displaySet (size_t mode)
   switch (mode)
     {
     case MANUAL:
-      snprintf (line_up, LCD_SIZE, "SPEED: %02d   (M)",
+      snprintf (line_up, LCD_SIZE, "SPEED: %03d  (M)",
                 saved_set_value[current_mode]);
-      snprintf (line_down, LCD_SIZE, "PRESSURE: %02dPa",
+      snprintf (line_down, LCD_SIZE, "PRESSURE: %03dPa",
                 saved_curr_value[current_mode]);
       break;
     case AUTO:
-      snprintf (line_up, LCD_SIZE, "P.SET: %02dPa (A)",
+      snprintf (line_up, LCD_SIZE, "P.SET: %03dPa(A)",
                 saved_set_value[current_mode]);
-      snprintf (line_down, LCD_SIZE, "P.CURR: %02dPa",
+      snprintf (line_down, LCD_SIZE, "P.CURR: %03dPa",
                 saved_curr_value[current_mode]);
       break;
     case SENSORS:
-      snprintf (line_up, LCD_SIZE, "PRE:%02d  TEM:%02d",
+      snprintf (line_up, LCD_SIZE, "PRE:%03d  TEM:%02d",
                 sensors_data[PRESSUREDAT], sensors_data[TEMPERATURE]);
-      snprintf (line_down, LCD_SIZE, "HUM:%02d  CO2:%02d",
+      snprintf (line_down, LCD_SIZE, "HUM:%02d  CO2:%03d",
                 sensors_data[HUMIDITY], sensors_data[CO2]);
       break;
     case ERROR_TIMEOUT:
@@ -245,8 +245,8 @@ StateHandler::handleTickValue (int value)
   if (error_timer > TIMER_GLOBAL_TIMEOUT && task_is_pending)
     {
       this->fan_speed.setInit (0);
-      this->_propeller->spin (0);
       this->value[(current_mode)].setInit (0);
+      integral = 0;
       saveSetAndDisplay (AUTO);
       displaySet (ERROR_TIMEOUT);
       state_timer->Sleep (2000);
