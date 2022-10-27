@@ -95,6 +95,7 @@ StateHandler::stateInit (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
+      this->_propeller->spin (fan_speed_normalized ());
       break;
     case Event::eExit:
       break;
@@ -121,7 +122,6 @@ StateHandler::stateManual (const Event &event)
     {
     case Event::eEnter:
       displaySet (MANUAL);
-      // this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -141,7 +141,6 @@ StateHandler::stateAuto (const Event &event)
     {
     case Event::eEnter:
       displaySet (AUTO);
-      // this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -272,7 +271,7 @@ StateHandler::fan_speed_normalized ()
 void
 StateHandler::pid ()
 {
-  float kP = 0.6,  kI = 0.05, kD = 0.125;
+  float kP = 0.6, kI = 0.05, kD = 0.125;
   int error = 0, last_error = 0, derivative = 0;
   error = saved_set_value[AUTO] - saved_curr_value[AUTO];
   last_error = error;
