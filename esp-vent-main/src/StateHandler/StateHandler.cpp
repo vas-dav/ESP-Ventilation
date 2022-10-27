@@ -237,7 +237,9 @@ StateHandler::handleTickValue (int value)
     }
   if (value > TIMER_PRESSURE_TIMEOUT)
     {
-      SetState (&StateHandler::stateGetPressure);
+	  if(!(saved_curr_value[current_mode] == 0 && saved_set_value[current_mode] == 0)) {
+		  SetState (&StateHandler::stateGetPressure);
+	  }
       sensor_timer += value;
       error_timer += value;
       state_timer->resetCounter ();
