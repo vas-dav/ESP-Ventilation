@@ -28,6 +28,7 @@ Timer::Timer (uint32_t freq, bool setup) : freq (freq), mode (setup)
     }
   resetCounter ();
   timer = 0;
+  prev_ticks = 0;
   systicks.store (0, std::memory_order_relaxed);
 }
 
@@ -43,8 +44,9 @@ Timer::tickCounter (int ms)
     {
       resetCounter ();
     }
-  counter.fetch_add (ms, std::memory_order_relaxed);
   Sleep (ms);
+  counter += (systicks - prev_ticks);
+  prev_ticks = systicks;
 }
 
 void

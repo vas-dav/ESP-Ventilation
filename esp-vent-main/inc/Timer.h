@@ -75,8 +75,10 @@ public:
 
 private:
   volatile std::atomic_int counter;
+  volatile std::atomic_int prev_ticks;
   uint32_t freq;
   bool mode;
+
 };
 
 #endif /* TIMER_H_ */

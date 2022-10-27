@@ -150,8 +150,8 @@ StateHandler::stateAuto (const Event &event)
       break;
     case Event::eTick:
       handleTickValue (event.value);
-      pid ();
-      this->_propeller->spin (fan_speed.getCurrent ());
+	  pid ();
+	  this->_propeller->spin (fan_speed.getCurrent ());
       break;
     }
 }
@@ -190,13 +190,16 @@ StateHandler::handleControlButtons (uint8_t button)
     {
     case BUTTON_CONTROL_DOWN:
       this->value[(current_mode)].dec ();
+      state_timer->resetCounter();
       break;
     case BUTTON_CONTROL_UP:
       this->value[(current_mode)].inc ();
+      state_timer->resetCounter();
       break;
     case BUTTON_CONTROL_TOG_MODE:
       current_mode = !current_mode;
       SetState (&StateHandler::stateInit);
+      state_timer->resetCounter();
       return;
       break;
     default:
@@ -220,9 +223,10 @@ StateHandler::handleTickValue (int value)
       updateSensorValues ();
       // displaySet (SENSORS);
     }
-  if (value % TIMER_PRESSURE_TIMEOUT == 0)
+  if (value > TIMER_PRESSURE_TIMEOUT)
     {
       SetState (&StateHandler::stateGetPressure);
+      state_timer->resetCounter();
     }
   if (value == TIMER_ERROR_VALUE)
     {
@@ -282,7 +286,7 @@ StateHandler::updateSensorValues ()
 {
 
   sensors_data[TEMPERATURE] = humidity.readT ();
-  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
+//  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
   sensors_data[CO2] = co2.read ();
   state_timer->tickCounter (5);
   sensors_data[HUMIDITY] = humidity.readRH ();
