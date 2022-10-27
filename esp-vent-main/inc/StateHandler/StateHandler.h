@@ -116,6 +116,7 @@ private:
   int saved_set_value[2] = { 0, 0 };
   int saved_curr_value[2] = { 0, 0 };
   int sensors_data[4] = { 0 };
+  int sensor_timer = 0;
   LiquidCrystal *_lcd;
   Fan *_propeller;
   PressureWrapper *_pressure;

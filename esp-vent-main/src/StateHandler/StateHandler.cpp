@@ -217,14 +217,16 @@ StateHandler::handleControlButtons (uint8_t button)
 void
 StateHandler::handleTickValue (int value)
 {
-  if (value % TIMER_SENSORS_TIMEOUT == 0)
+  if (sensor_timer > TIMER_SENSORS_TIMEOUT)
     {
       updateSensorValues ();
-      // displaySet (SENSORS);
+       displaySet (SENSORS);
+       sensor_timer = 0;
     }
   if (value > TIMER_PRESSURE_TIMEOUT)
     {
       SetState (&StateHandler::stateGetPressure);
+      ++sensor_timer;
       state_timer->resetCounter ();
     }
   if (value == TIMER_ERROR_VALUE)
