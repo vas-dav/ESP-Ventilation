@@ -70,35 +70,14 @@ main (void)
                               BUTTON_CONTROL_TOG_MODE);
   /* Other declarations */
   int getcounterValue;
-
-  uint32_t sleep_Arr[100] = {0};
-
-      CoreDebug->DEMCR |= 1 << 24;
-      DWT->CTRL |= 1;
-
-      volatile static int i1 = 0 ;
-      volatile static int i2 = 0 ;
-      volatile static int i = 0 ;
-
-
-
   while (1)
     {
-	  i1 = DWT->CYCCNT;
-
       getcounterValue = glob_time.getCounter ();
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();
       ventMachine.HandleState (Event (Event::eTick, getcounterValue));
       glob_time.tickCounter (1);
-
-//	  i2 = DWT->CYCCNT;
-//	  sleep_Arr[i] = (i2 - i1) / 72;
-//	  ++i;
-//	  if (i == 100)
-//		  while(1);
     }
-
   return 0;
 }

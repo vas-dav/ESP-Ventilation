@@ -58,7 +58,6 @@ StateHandler::displaySet (size_t mode)
     default:
       break;
     }
-
   _lcd->clear ();
   _lcd->printOnLineOne (line_up);
   _lcd->printOnLineTwo (line_down);
@@ -234,7 +233,6 @@ StateHandler::handleTickValue (int value)
   if (sensor_timer > TIMER_SENSORS_TIMEOUT)
     {
       updateSensorValues ();
-      //displaySet (SENSORS);
       sensor_timer = 0;
     }
   if (value > TIMER_PRESSURE_TIMEOUT)
@@ -305,7 +303,6 @@ StateHandler::pid ()
 void
 StateHandler::updateSensorValues ()
 {
-
   sensors_data[TEMPERATURE] = humidity.readT ();
   sensors_data[PRESSUREDAT] = _pressure->getPressure ();
   sensors_data[CO2] = co2.read ();
