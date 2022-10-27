@@ -185,13 +185,20 @@ private:
    */
   void handleTickValue (int value);
 
-  /** Save values to class' varibales
+  /** Save pressure values to class' varibales
    *
-   * @param eventValue value coming from an event
-   * @param counterValue value of the inner Counter
+   * @param pressure current pressure
    * @param mode current mode
    */
-  void save (int eventValue, size_t mode);
+  void savePressureAndDisplay (int pressure, size_t mode);
+
+  /** Save set values to class' varibales
+   *
+   * @param mode current mode
+   * @return true if saved
+   * @return false if not saved
+   */
+  bool saveSetAndDisplay (size_t mode);
 
   /** Calculates pid for fan control value
    *

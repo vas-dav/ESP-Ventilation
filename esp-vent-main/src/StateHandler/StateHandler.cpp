@@ -120,7 +120,8 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->_propeller->spin (fan_speed.getCurrent ());
+    	displaySet(MANUAL);
+      // this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -139,7 +140,8 @@ StateHandler::stateAuto (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-      this->_propeller->spin (fan_speed.getCurrent ());
+    	displaySet(AUTO);
+      // this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
       break;
@@ -173,7 +175,8 @@ StateHandler::stateGetPressure (const Event &event)
           _pressure->wakeUp ();
           break;
         }
-      save (_pressure->getPressure (), ((current_mode) ? AUTO : MANUAL));
+      savePressureAndDisplay (_pressure->getPressure (),
+                              ((current_mode) ? AUTO : MANUAL));
       SetState (current_mode ? &StateHandler::stateAuto
                              : &StateHandler::stateManual);
       break;
@@ -194,9 +197,18 @@ StateHandler::handleControlButtons (uint8_t button)
     case BUTTON_CONTROL_TOG_MODE:
       current_mode = !current_mode;
       SetState (&StateHandler::stateInit);
+      return;
       break;
     default:
       break;
+    }
+  if (current_mode == MANUAL && saveSetAndDisplay (MANUAL))
+    {
+      this->_propeller->spin (getSetSpeed () * 10);
+    }
+  else
+    {
+      saveSetAndDisplay (AUTO);
     }
 }
 
@@ -206,7 +218,7 @@ StateHandler::handleTickValue (int value)
   if (value % TIMER_SENSORS_TIMEOUT == 0)
     {
       updateSensorValues ();
-      displaySet (SENSORS);
+      // displaySet (SENSORS);
     }
   if (value % TIMER_PRESSURE_TIMEOUT == 0)
     {
@@ -222,16 +234,26 @@ StateHandler::handleTickValue (int value)
 }
 
 void
-StateHandler::save (int eventValue, size_t mode)
+StateHandler::savePressureAndDisplay (int pressure, size_t mode)
+{
+  if (saved_curr_value[mode] != pressure)
+    {
+      saved_curr_value[mode] = pressure;
+      displaySet (mode);
+    }
+}
+
+bool
+StateHandler::saveSetAndDisplay (size_t mode)
 {
   int counterValue = value[mode].getCurrent ();
-  if (saved_curr_value[mode] != eventValue
-      || saved_set_value[mode] != counterValue)
+  if (saved_set_value[mode] != counterValue)
     {
-      saved_curr_value[mode] = eventValue;
       saved_set_value[mode] = counterValue;
-      displaySet ((current_mode) ? AUTO : MANUAL);
+      displaySet (mode);
+      return true;
     }
+  return false;
 }
 
 int
