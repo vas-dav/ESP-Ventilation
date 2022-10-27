@@ -33,15 +33,15 @@ StateHandler::displaySet (size_t mode)
   switch (mode)
     {
     case MANUAL:
-      snprintf (line_up, LCD_SIZE, "SPEED: %02d%",
+      snprintf (line_up, LCD_SIZE, "SPEED: %02d   (M)",
                 saved_set_value[current_mode]);
       snprintf (line_down, LCD_SIZE, "PRESSURE: %02dPa",
                 saved_curr_value[current_mode]);
       break;
     case AUTO:
-      snprintf (line_up, LCD_SIZE, "P. SET: %02dPa",
+      snprintf (line_up, LCD_SIZE, "P.SET: %02dPa (A)",
                 saved_set_value[current_mode]);
-      snprintf (line_down, LCD_SIZE, "P. CURR: %02dPa",
+      snprintf (line_down, LCD_SIZE, "P.CURR: %02dPa",
                 saved_curr_value[current_mode]);
       break;
     case SENSORS:
@@ -286,7 +286,7 @@ StateHandler::updateSensorValues ()
 {
 
   sensors_data[TEMPERATURE] = humidity.readT ();
-  //  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
+  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
   sensors_data[CO2] = co2.read ();
   state_timer->tickCounter (5);
   sensors_data[HUMIDITY] = humidity.readRH ();
