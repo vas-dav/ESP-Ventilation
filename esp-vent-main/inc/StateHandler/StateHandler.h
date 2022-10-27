@@ -122,6 +122,8 @@ private:
   Fan *_propeller;
   PressureWrapper *_pressure;
   bool pressure_status;
+  bool task_is_pending;
+  uint8_t pressure_achieved;
   Timer *state_timer;
   /* CO2 sensor object */
   GMP252 co2;

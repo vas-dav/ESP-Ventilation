@@ -17,6 +17,7 @@ StateHandler::StateHandler (LiquidCrystal *lcd, Fan *propeller,
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
   current_mode = MANUAL;
+  pressure_achieved = 0;
 }
 
 StateHandler::~StateHandler ()
@@ -149,8 +150,19 @@ StateHandler::stateAuto (const Event &event)
       break;
     case Event::eTick:
       handleTickValue (event.value);
-      pid ();
-      this->_propeller->spin (fan_speed.getCurrent ());
+      if(saved_set_value[AUTO]){
+		  pid ();
+		  this->_propeller->spin (fan_speed.getCurrent ());
+      }
+      if (saved_curr_value[AUTO] == saved_set_value[AUTO])
+        {
+          ++pressure_achieved;
+        }
+      if (pressure_achieved > 5)
+        {
+          pressure_achieved = 0;
+          task_is_pending = false;
+        }
       break;
     }
 }
@@ -185,6 +197,8 @@ StateHandler::stateGetPressure (const Event &event)
 void
 StateHandler::handleControlButtons (uint8_t button)
 {
+  task_is_pending = true;
+  error_timer = 0;
   switch (button)
     {
     case BUTTON_CONTROL_DOWN:
@@ -220,8 +234,8 @@ StateHandler::handleTickValue (int value)
   if (sensor_timer > TIMER_SENSORS_TIMEOUT)
     {
       updateSensorValues ();
-       displaySet (SENSORS);
-       sensor_timer = 0;
+      //displaySet (SENSORS);
+      sensor_timer = 0;
     }
   if (value > TIMER_PRESSURE_TIMEOUT)
     {
@@ -230,16 +244,17 @@ StateHandler::handleTickValue (int value)
       error_timer += value;
       state_timer->resetCounter ();
     }
-  if (error_timer > TIMER_GLOBAL_TIMEOUT)
+  if (error_timer > TIMER_GLOBAL_TIMEOUT && task_is_pending)
     {
       this->fan_speed.setInit (0);
+      this->_propeller->spin (0);
       this->value[(current_mode)].setInit (0);
-      saveSetAndDisplay(AUTO);
+      saveSetAndDisplay (AUTO);
       displaySet (ERROR_TIMEOUT);
-      SetState (&StateHandler::stateInit);
-      state_timer->Sleep(2000);
-      state_timer->resetCounter();
+      state_timer->Sleep (2000);
+      state_timer->resetCounter ();
       error_timer = 0;
+      SetState (&StateHandler::stateInit);
     }
 }
 
