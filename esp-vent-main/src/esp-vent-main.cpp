@@ -68,6 +68,10 @@ main (void)
   DigitalIoPin b_toggle (0, 5, true, true, true); // A3
   SwitchController sw_toggle (&b_toggle, &ventMachine,
                               BUTTON_CONTROL_TOG_MODE);
+
+  DigitalIoPin b_toggle_sens (1, 8, true, true, true); // A3
+  SwitchController sw_toggle_sens (&b_toggle_sens, &ventMachine,
+                              BUTTON_CONTROL_TOG_ACTIVE);
   /* Other declarations */
   int getcounterValue;
   while (1)
@@ -76,6 +80,7 @@ main (void)
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();
+      sw_toggle_sens.listen();
       ventMachine.HandleState (Event (Event::eTick, getcounterValue));
       glob_time.tickCounter (1);
     }

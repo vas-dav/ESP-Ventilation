@@ -44,7 +44,7 @@ enum _buttons
   /** Optional button to toggle the
    * activation of the current setting.
    * Not compulsory to be used. */
-  BUTTON_CONTROL_TOG_ACTIVE
+  BUTTON_CONTROL_TOG_ACTIVE,
 };
 
 enum _bars
@@ -123,6 +123,8 @@ private:
   PressureWrapper *_pressure;
   bool pressure_status;
   bool task_is_pending;
+  bool sensor_values_ready;
+  bool sensor_mode;
   uint8_t pressure_achieved;
   Timer *state_timer;
   /* CO2 sensor object */
@@ -176,6 +178,12 @@ private:
    * @param event
    */
   void stateGetPressure (const Event &event);
+
+  /** Show sensors
+   *
+   * @param event event of the state
+   */
+  void stateShowSensors (const Event &event);
 
   /** Handle button presses
    *

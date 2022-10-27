@@ -17,6 +17,7 @@ StateHandler::StateHandler (LiquidCrystal *lcd, Fan *propeller,
   current = &StateHandler::stateInit;
   (this->*current) (Event (Event::eEnter));
   current_mode = MANUAL;
+  sensor_mode = false;
   pressure_achieved = 0;
 }
 
@@ -50,6 +51,7 @@ StateHandler::displaySet (size_t mode)
                 sensors_data[PRESSUREDAT], sensors_data[TEMPERATURE]);
       snprintf (line_down, LCD_SIZE, "HUM:%02d  CO2:%03d",
                 sensors_data[HUMIDITY], sensors_data[CO2]);
+      sensor_values_ready = false;
       break;
     case ERROR_TIMEOUT:
       snprintf (line_up, LCD_SIZE, "  FORCE STOP  ");
@@ -149,10 +151,11 @@ StateHandler::stateAuto (const Event &event)
       break;
     case Event::eTick:
       handleTickValue (event.value);
-      if(saved_set_value[AUTO]){
-		  pid ();
-		  this->_propeller->spin (fan_speed.getCurrent ());
-      }
+      if (saved_set_value[AUTO])
+        {
+          pid ();
+          this->_propeller->spin (fan_speed.getCurrent ());
+        }
       if (saved_curr_value[AUTO] == saved_set_value[AUTO])
         {
           ++pressure_achieved;
@@ -194,6 +197,33 @@ StateHandler::stateGetPressure (const Event &event)
 }
 
 void
+StateHandler::stateShowSensors (const Event &event)
+{
+  switch (event.type)
+    {
+    case Event::eEnter:
+      displaySet (SENSORS);
+      break;
+    case Event::eExit:
+      break;
+    case Event::eKey:
+      handleControlButtons (event.value);
+      break;
+    case Event::eTick:
+      handleTickValue (event.value);
+      if (sensor_values_ready)
+        {
+          displaySet (SENSORS);
+        }
+      if (!sensor_mode)
+        {
+          SetState (&StateHandler::stateInit);
+        }
+      break;
+    }
+}
+
+void
 StateHandler::handleControlButtons (uint8_t button)
 {
   task_is_pending = true;
@@ -214,6 +244,12 @@ StateHandler::handleControlButtons (uint8_t button)
       state_timer->resetCounter ();
       return;
       break;
+    case BUTTON_CONTROL_TOG_ACTIVE:
+      task_is_pending = false;
+      sensor_mode = !sensor_mode;
+      SetState (&StateHandler::stateShowSensors);
+      return;
+      break;
     default:
       break;
     }
@@ -230,21 +266,24 @@ StateHandler::handleControlButtons (uint8_t button)
 void
 StateHandler::handleTickValue (int value)
 {
-  if (sensor_timer > TIMER_SENSORS_TIMEOUT)
+  if (sensor_timer > TIMER_SENSORS_TIMEOUT && sensor_mode)
     {
       updateSensorValues ();
       sensor_timer = 0;
     }
   if (value > TIMER_PRESSURE_TIMEOUT)
     {
-	  if(!(saved_curr_value[current_mode] == 0 && saved_set_value[current_mode] == 0)) {
-		  SetState (&StateHandler::stateGetPressure);
-	  }
+      if (!(saved_curr_value[current_mode] == 0
+            && saved_set_value[current_mode] == 0)
+          && !sensor_mode)
+        {
+          SetState (&StateHandler::stateGetPressure);
+        }
       sensor_timer += value;
       error_timer += value;
       state_timer->resetCounter ();
     }
-  if (error_timer > TIMER_GLOBAL_TIMEOUT && task_is_pending)
+  if (error_timer > TIMER_GLOBAL_TIMEOUT && task_is_pending && !sensor_mode)
     {
       this->fan_speed.setInit (0);
       this->value[(current_mode)].setInit (0);
@@ -305,9 +344,13 @@ StateHandler::pid ()
 void
 StateHandler::updateSensorValues ()
 {
-  sensors_data[TEMPERATURE] = humidity.readT ();
-  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
-  sensors_data[CO2] = co2.read ();
-  state_timer->tickCounter (5);
-  sensors_data[HUMIDITY] = humidity.readRH ();
+  if (!sensor_values_ready)
+    {
+      sensors_data[TEMPERATURE] = humidity.readT ();
+      sensors_data[PRESSUREDAT] = _pressure->getPressure ();
+      sensors_data[CO2] = co2.read ();
+      state_timer->tickCounter (5);
+      sensors_data[HUMIDITY] = humidity.readRH ();
+      sensor_values_ready = true;
+    }
 }
