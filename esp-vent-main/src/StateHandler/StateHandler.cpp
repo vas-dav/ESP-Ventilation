@@ -59,10 +59,8 @@ StateHandler::displaySet (size_t mode)
     }
 
   _lcd->clear ();
-  _lcd->setCursor (0, 0);
-  _lcd->print (line_up);
-  _lcd->setCursor (0, 1);
-  _lcd->print (line_down);
+  _lcd->printOnLineOne (line_up);
+  _lcd->printOnLineTwo (line_down);
 }
 
 unsigned int

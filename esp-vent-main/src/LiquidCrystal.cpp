@@ -188,6 +188,31 @@ LiquidCrystal::print (const char *s)
 }
 
 void
+LiquidCrystal::printOnLineOne (const char *s)
+{
+  setCursor (0, 0);
+  print (s);
+}
+void
+LiquidCrystal::printOnLineTwo (const char *s)
+{
+  setCursor (0, 1);
+  print (s);
+}
+
+void
+LiquidCrystal::printOnLineOne (std::string const &s)
+{
+  printOnLineOne (s.c_str ());
+}
+
+void
+LiquidCrystal::printOnLineTwo (std::string const &s)
+{
+  printOnLineTwo (s.c_str ());
+}
+
+void
 LiquidCrystal::setCursor (uint8_t col, uint8_t row)
 {
   int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };

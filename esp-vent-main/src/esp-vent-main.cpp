@@ -36,8 +36,8 @@ main (void)
   DigitalIoPin d6 (1, 3, false, true, false);
   DigitalIoPin d7 (0, 0, false, true, false);
   LiquidCrystal lcd (&rs, &en, &d4, &d5, &d6, &d7);
-  lcd.setCursor (0, 0);
-  lcd.print ("Vent-Machine");
+  lcd.clear ();
+  lcd.printOnLineOne (" ESP-VENT_MAIN ");
 
   /* Timers */
   Timer glob_time (ONE_K_HZ, true);

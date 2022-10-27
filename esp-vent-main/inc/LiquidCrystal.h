@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <string>
 
-
 // commands
 #define LCD_CLEARDISPLAY 0x01
 #define LCD_RETURNHOME 0x02
@@ -75,6 +74,10 @@ public:
   void command (uint8_t);
   void print (std::string const &s);
   void print (const char *s);
+  void printOnLineOne (const char *s);
+  void printOnLineTwo (const char *s);
+  void printOnLineOne (std::string const &s);
+  void printOnLineTwo (std::string const &s);
 
 private:
   void send (uint8_t, uint8_t);
