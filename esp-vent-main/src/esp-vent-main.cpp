@@ -40,8 +40,11 @@ main (void)
   lcd.print ("Vent-Machine");
 
   /* Timers */
-  Timer glob_time;
-  Timer switch_time (false);
+  Timer glob_time (ONE_K_HZ, true);
+  /* Currently not used, but if we have time left,
+   * quick button increment is needed
+   * Timer switch_time (ONE_K_HZ, false);
+   */
 
   /* Modbus Fan setup */
   ModbusMaster fan (1);

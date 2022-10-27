@@ -33,9 +33,8 @@ public:
    * @brief Initalize the systick configuration with your frequency
    *
    */
-  Timer (uint32_t freq = 1000);
+  Timer (uint32_t freq = 1000, bool mode = true);
 
-  Timer (bool mode);
   virtual ~Timer ();
 
   /**

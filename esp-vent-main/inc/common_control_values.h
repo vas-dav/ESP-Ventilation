@@ -13,6 +13,8 @@
 #define BROKER_IP "192.168.1.254"
 #define BROKER_PORT 1883
 
+#define ONE_K_HZ 1000
+
 enum _global_values
 {
   LCD_SIZE = 16,

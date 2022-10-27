@@ -18,20 +18,14 @@ extern "C"
   }
 }
 
-Timer::Timer (uint32_t freq) : freq (freq)
+Timer::Timer (uint32_t freq, bool setup) : freq (freq), mode (setup)
 {
-  mode = true;
-  Chip_Clock_SetSysTickClockDiv (1);
-  uint32_t sysTickRate = Chip_Clock_GetSysTickClockRate ();
-  SysTick_Config (sysTickRate / freq);
-  resetCounter ();
-  timer = 0;
-  systicks.store (0, std::memory_order_relaxed);
-}
-
-Timer::Timer (bool mode)
-{
-  this->mode = false;
+  if (mode)
+    {
+      Chip_Clock_SetSysTickClockDiv (1);
+      uint32_t sysTickRate = Chip_Clock_GetSysTickClockRate ();
+      SysTick_Config (sysTickRate / freq);
+    }
   resetCounter ();
   timer = 0;
   systicks.store (0, std::memory_order_relaxed);
