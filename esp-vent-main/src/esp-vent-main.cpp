@@ -87,11 +87,6 @@ main (void)
 	  i1 = DWT->CYCCNT;
 
       getcounterValue = glob_time.getCounter ();
-      if (getcounterValue > TIMER_GLOBAL_TIMEOUT)
-        {
-          glob_time.resetCounter ();
-          ventMachine.HandleState (Event (Event::eTick, TIMER_ERROR_VALUE));
-        }
       sw_up.listen ();
       sw_down.listen ();
       sw_toggle.listen ();

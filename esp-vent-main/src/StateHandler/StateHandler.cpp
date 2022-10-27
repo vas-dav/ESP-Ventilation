@@ -226,15 +226,20 @@ StateHandler::handleTickValue (int value)
   if (value > TIMER_PRESSURE_TIMEOUT)
     {
       SetState (&StateHandler::stateGetPressure);
-      ++sensor_timer;
+      sensor_timer += value;
+      error_timer += value;
       state_timer->resetCounter ();
     }
-  if (value == TIMER_ERROR_VALUE)
+  if (error_timer > TIMER_GLOBAL_TIMEOUT)
     {
-      displaySet (ERROR_TIMEOUT);
       this->fan_speed.setInit (0);
       this->value[(current_mode)].setInit (0);
+      saveSetAndDisplay(AUTO);
+      displaySet (ERROR_TIMEOUT);
       SetState (&StateHandler::stateInit);
+      state_timer->Sleep(2000);
+      state_timer->resetCounter();
+      error_timer = 0;
     }
 }
 
