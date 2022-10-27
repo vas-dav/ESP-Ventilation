@@ -12,7 +12,15 @@ const mqtt = require('mqtt');
 const session = require('express-session');
 const bcrypt = require('bcrypt')
 
-const client = mqtt.connect('mqtt://127.0.0.1:1883', {clientId: 'node_server', clean: true})
+const client = mqtt.connect('mqtt://192.168.1.254:1883', 
+    {username: 'SmartIotMQTT', 
+    password: 'SmartIot', 
+    clientId: 'node_server', 
+    clean: true,
+    connectTimeout: 8000,
+    reconnectPeriod: 1000,
+    })
+//const client = mqtt.connect('mqtt://127.0.0.1:1883', {clientId: 'node_server', clean: true})
 let newData;
 let user;
 let msg;
@@ -46,14 +54,10 @@ function write(data, filePath) {
 }
 
 function getTime(){
-    let today = new Date();
-    let day = ("0" + today.getDate()).slice(-2);
-    let month = ("0" + (today.getMonth() + 1)).slice(-2);
-    let hours = ("0" + today.getHours()).slice(-2);
-    let mins = ("0" + today.getMinutes()).slice(-2);
-    let secs = ("0" + today.getSeconds()).slice(-2);
-    let timestamp = (day + '.' + month + '.' + today.getFullYear() + ' ' + hours + '.' + mins + '.' + secs).toString();
-    return timestamp;
+    let day = new Date();
+    day = new Date(day.getTime() - day.getTimezoneOffset()*60000);
+    let today = day.toISOString().replace('T', ' ').slice(0,19);
+    return today;
 }
 
 client.on('connect', ()=>{
@@ -62,14 +66,13 @@ client.on('connect', ()=>{
 
 client.subscribe('controller/status', (err)=>{
     if(err){
-        console.log('Subscription failed')
+        console.log('Subscription failed ' + err);
     }
 });
 
 io.on('connection', (socket)=>{
     console.log("User " + socket.id + " connected");   
-    socket.on('setting', (arg)=> {
-        let data = JSON.stringify(arg);       
+    socket.on('setting', (arg)=> {    
         client.publish("controller/settings", JSON.stringify(arg), { qos: 2, retain: false }, (error)=>{
             if(error){
                 console.log(error);
@@ -80,9 +83,6 @@ io.on('connection', (socket)=>{
 
 client.on('message', async (topic, message) =>{
     newData = JSON.parse(message);
-    console.log(newData);
-    io.emit('data', newData);  
-
     let info = [];
     try {
         info = await read('data.json');
@@ -90,22 +90,14 @@ client.on('message', async (topic, message) =>{
     let now = getTime();
     newData['ts'] = now;
     info.push(newData);
-    write(info, 'data.json');    
+    write(info, 'data.json');   
+    io.emit('data', newData); 
 });
 
 
 app.get('/', (req, res)=>{
     res.sendFile(path.join(__dirname + '/index.html'));
 })
-
-app.get('/data', async (req, res) => {
-    try {
-        const data = await read('data.json');
-        res.json(data);
-    } catch (e) {
-        res.status(404).send(e);
-    }
-});
 
 app.get('/register', (req,res)=>{
     res.send(`
@@ -132,14 +124,20 @@ app.post('/', async (req,res)=>{
 
     if(bcrypt.compareSync(password, pwd)){  
         let now = getTime();
+        let d = now.slice(8,10);
+        let m = now.slice(5,7);
+        let y = now.slice(0,4);
+        let t = now.slice(11, 19);
+        let stamp = d + '.' + m + '.' + y + ' ' + t;
+        //console.log(stamp);
         req.session.userId = username;        
-        req.session.startTime = now;
+        req.session.startTime = stamp;
         console.log('Password is correct');
         user = req.session.userId;
         io.emit('user', user); 
         sesUser = user;
         sesStart = req.session.startTime;
-        res.status(205);
+        res.redirect('/');
     }
     else{
         msg = 'wrong';
@@ -183,7 +181,12 @@ app.post('/register', async (req,res) =>{
 
 app.post('/logout',async (req, res) =>{
     let now = getTime();
-    req.session.endTime = now;
+    let d = now.slice(8,10);
+    let m = now.slice(5,7);
+    let y = now.slice(0,4);
+    let t = now.slice(11, 19);
+    let stamp = d + '.' + m + '.' + y + ' ' + t;
+    req.session.endTime = stamp;
     let sesEnd = req.session.endTime;    
     let log = [];
     try {
@@ -196,6 +199,7 @@ app.post('/logout',async (req, res) =>{
         "Login": sesStart,
         "Logout": sesEnd
     }
+    console.log(newLog);
     log.unshift(newLog);
     write(log, 'user_log.json');
 
@@ -208,7 +212,7 @@ app.post('/logout',async (req, res) =>{
     });
     
 });
-
+/*
 app.get('/data', async (req, res) => {
     try {
         const data = await read('data.json');
@@ -217,6 +221,5 @@ app.get('/data', async (req, res) => {
         res.status(404).send(e);
     }
 });
-
-
+*/
 server.listen(3000, () => console.log('Server listening on port 3000'));

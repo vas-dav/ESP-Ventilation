@@ -11,7 +11,7 @@ body {
     padding-bottom: 5px;
 }
 main {
-    margin-top: 100px;
+    margin-top: 50px;
     padding-bottom: 20px;
     display: block;
     position: relative;
@@ -21,11 +21,27 @@ main {
 aside {
     width: 100%;
     background-color: #F6FFF8;
+    margin-bottom: 50px;
+}
+
+.upper{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.lower{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 50px;
 }
 
 header {
     width: 100%;
-    height: 150px;
+    height: 100px;
+    color: black;
 }
 h1 {
     padding-top: 40px;    
@@ -51,12 +67,13 @@ h4{
     text-align: center;
 }
 
-.dropdown{
-    position: relative;
-    float: right;
+.filter{
+    font-weight: bolder;
 }
+
 .logout{
     margin-left: 20px;
+    margin-top: 35px;
 }
 #btn_log_out{
     margin-bottom: 10px;
@@ -68,6 +85,14 @@ h4{
     display: none;
 }
 
+#btn_reset{
+    position: relative;
+    float: right;
+    border-radius: 5px;
+    background-color: #CCE3DE;
+    border: 0.5px solid;
+}
+
 #user{
     display: none;
     font-weight: bolder;
@@ -75,6 +100,11 @@ h4{
 
 #btn_login{
     background-color: red;
+}
+
+.login{
+    margin-top: 50px;
+    padding-top: 50px;
 }
 
 #login-form:valid #btn_login{
@@ -89,11 +119,18 @@ h4{
     font-weight: bolder;
     border-radius: 10px;
     display: none;
+    
 }
 
 #acc{
     width: 70%;
     margin: auto;
+}
+
+#chart_warn{
+    display: none;
+    text-align: center;
+    color: red;
 }
 
 #mon-warn{
@@ -120,9 +157,8 @@ h4{
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    margin: 20px;
-    padding: 20px;
-    width: 80%;
+    margin: auto;
+    width: 85%;
 }
 
 fieldset {
@@ -176,7 +212,8 @@ fieldset {
     background-color: gray;
 }
 
-.buttons{
+#buttons{
+    display: block;
     font-size: 25px;
     font-weight: bolder;
     width: 12ch;
@@ -186,6 +223,7 @@ fieldset {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 30px;
 }
 
 .set_values{
@@ -193,6 +231,10 @@ fieldset {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+}
+
+.sp_div{
+    display: block;
 }
 
 .get_values{
@@ -226,30 +268,32 @@ fieldset {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 150px;
+    width: 200px;
 }
 
-.chart-container{
-    position: relative;
-    width: 700px;
-    height: 350px;
+#chart-cont{
+    display: block;
+    width: 90%;
     margin: auto;
+    margin-bottom: 30px;
 }
 
 canvas{
     border-radius: 10px;
     border: 1px solid black;
     background-color: white;
-    
 }
 
-.user-table{
+#user-table{
+    display: block;
     margin-bottom: 50px;
+    width: 50%;
+    margin: auto;
 }
 
 table{
     background-color: #CCE3DE;
-    width: 700px;
+    width: 90%;
     margin: auto;
     border-collapse: collapse;
 }
@@ -274,9 +318,12 @@ output {
         width: 50%;
     }
     aside {
-        margin-top: 100px;
+        margin-top: 50px;
         background: #F6FFF8;
         width: 50%;
+    }
+    .lower{
+        flex-direction: row;
     }
 }
 
