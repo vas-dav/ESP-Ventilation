@@ -120,7 +120,7 @@ StateHandler::stateManual (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-    	displaySet(MANUAL);
+      displaySet (MANUAL);
       // this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
@@ -140,7 +140,7 @@ StateHandler::stateAuto (const Event &event)
   switch (event.type)
     {
     case Event::eEnter:
-    	displaySet(AUTO);
+      displaySet (AUTO);
       // this->_propeller->spin (fan_speed.getCurrent ());
       break;
     case Event::eExit:
@@ -150,8 +150,8 @@ StateHandler::stateAuto (const Event &event)
       break;
     case Event::eTick:
       handleTickValue (event.value);
-	  pid ();
-	  this->_propeller->spin (fan_speed.getCurrent ());
+      pid ();
+      this->_propeller->spin (fan_speed.getCurrent ());
       break;
     }
 }
@@ -190,16 +190,16 @@ StateHandler::handleControlButtons (uint8_t button)
     {
     case BUTTON_CONTROL_DOWN:
       this->value[(current_mode)].dec ();
-      state_timer->resetCounter();
+      state_timer->resetCounter ();
       break;
     case BUTTON_CONTROL_UP:
       this->value[(current_mode)].inc ();
-      state_timer->resetCounter();
+      state_timer->resetCounter ();
       break;
     case BUTTON_CONTROL_TOG_MODE:
       current_mode = !current_mode;
       SetState (&StateHandler::stateInit);
-      state_timer->resetCounter();
+      state_timer->resetCounter ();
       return;
       break;
     default:
@@ -207,7 +207,7 @@ StateHandler::handleControlButtons (uint8_t button)
     }
   if (current_mode == MANUAL && saveSetAndDisplay (MANUAL))
     {
-      this->_propeller->spin (getSetSpeed () * 10);
+      this->_propeller->spin (fan_speed_normalized ());
     }
   else
     {
@@ -226,7 +226,7 @@ StateHandler::handleTickValue (int value)
   if (value > TIMER_PRESSURE_TIMEOUT)
     {
       SetState (&StateHandler::stateGetPressure);
-      state_timer->resetCounter();
+      state_timer->resetCounter ();
     }
   if (value == TIMER_ERROR_VALUE)
     {
@@ -264,15 +264,15 @@ int
 StateHandler::fan_speed_normalized ()
 {
   int speed = value[MANUAL].getCurrent ();
-  if (speed <= 92)
-    speed += 8;
+  if (speed <= 95)
+    speed += 5;
   return speed * 10;
 }
 
 void
 StateHandler::pid ()
 {
-  float kP = 1.0, kI = 0.1, kD = 0.125;
+  float kP = 0.6,  kI = 0.05, kD = 0.125;
   int error = 0, last_error = 0, derivative = 0;
   error = saved_set_value[AUTO] - saved_curr_value[AUTO];
   last_error = error;
@@ -286,7 +286,7 @@ StateHandler::updateSensorValues ()
 {
 
   sensors_data[TEMPERATURE] = humidity.readT ();
-//  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
+  //  sensors_data[PRESSUREDAT] = _pressure->getPressure ();
   sensors_data[CO2] = co2.read ();
   state_timer->tickCounter (5);
   sensors_data[HUMIDITY] = humidity.readRH ();
