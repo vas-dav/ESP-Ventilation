@@ -8,10 +8,30 @@ The objective of this project was to create a smart ventilation system that has 
 
 ## Download latest release 
 ### [esp-vent-main v1.0.0](https://github.com/vas-dav/ESP-Ventilation/releases) (2022-10-31)
-
 > Source code is safely building on **MCUXpresso IDE v11.5.0 [Build 7232] [2022-01-11]**
+### Current functionality:
+### Modes:
+##### Manual:
+```
+- Buttons to inc/dec fan speed(0-10V) (show in percents 10% == 1V)
+- Display fan speed + pressure.
+- Fan updates at the same time as UI
+- BTN1 inc voltage,  BTN2 dec voltage
+  ```
+##### Automatic:
+```
+- Buttons to inc/dec fan pressure level (0-120 Pa) (show in percents 10% == 1V)
+- Pressure to inc/dec fan speed
+- BTN1 inc pressure,  BTN2 dec pressure
+```
+##### Additional: 
+```
+- BTN3 switch between modes
+- BTN4 show sensor values
+  ```
 
 ## Latest Changes
 * [Closed Pull-requests](https://github.com/vas-dav/ESP-Ventilation/pulls?q=is%3Apr+is%3Aclosed)
 
 #### [Open issues](https://github.com/vas-dav/ESP-Ventilation/issues)
+
