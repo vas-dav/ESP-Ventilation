@@ -18,8 +18,8 @@ const end = document.getElementById('end-time');
 const reset = document.getElementById('btn_reset');
 
 let user;
-let pointerX = -1;
-let pointerY = -1;
+let pointX = -1;
+let pointY = -1;
 let lastX = 0;
 let lastY = 0;
 let counter = 0;
@@ -55,14 +55,13 @@ socket.on('data', (data) =>{
 socket.on('pwd', (data) =>{
     if(data){
         sessionStorage.setItem('reload', true);
-        document.location.reload();
-        
+        document.location.reload();        
     }
 });
 
 socket.on('user', (data) =>{
     user = data;
-    localStorage.setItem('user', data);
+    sessionStorage.setItem('user', data);
     sessionStorage.setItem('loggedIn', 'true');
 });
 
@@ -72,9 +71,6 @@ reset.addEventListener('click', e =>{
     end.value = today.replace('T', ' ') + ':00';
     start_time = new Date(start.value).getTime();
     end_time = new Date(end.value).getTime();
-
-    //start.value = today.replace('T', ' ') + ':00';
-    //end.value = today.replace('T', ' ') + ':00';
     updateChart();
 })
 
@@ -114,7 +110,7 @@ automode.addEventListener('click', () =>{
         document.getElementById('pr_div').style.opacity = 1;
 
         s_speed.disabled = true;    
-        document.getElementById('sp_div').style.opacity = 0.4;  
+        document.getElementById('sp_div').style.opacity = 0.4; 
     }
       
 })
@@ -122,12 +118,8 @@ automode.addEventListener('click', () =>{
 manmode.addEventListener('click', () =>{
     if(!sessionStorage.getItem('loggedIn')){
         document.getElementById('login-form').style.display = "block";  
-        document.getElementById('sp_div').style.display = "none";  
-        document.getElementById('pr_div').style.display = "none";          
-        document.getElementById('m_auto').style.display = "none";
-        document.getElementById('m_man').style.display = "none";
-        document.getElementById('auto_label').style.display = "none"; 
-        document.getElementById('man_label').style.display = "none";          
+        document.getElementsByClassName('modes').style.display = "none";
+        document.getElementsByClassName('set_values').style.display = "none";          
     }
     else{   
         document.getElementById('login-form').style.display = "none";       
@@ -154,17 +146,20 @@ document.getElementById('password').addEventListener('click', ()=>{
 });
 
 log_out.addEventListener('click', () =>{
-    console.log('log out clicked');
-    localStorage.clear();
     sessionStorage.clear();
 })
 
+document.getElementById('reg').addEventListener('click', ()=>{
+    sessionStorage.setItem('reload', true);
+})
+
 window.addEventListener('beforeunload', (e)=>{    
-    if(document.cookie){    
-        log_out.click();             
+    if(!sessionStorage.getItem('reload')){    
+        logOutUser();            
     }  
 });
 
+// Changes the border-color of output elements in monitor fieldset if values are outside the ranges
 function circleColor(){
     if(g_pressure.value > 115){
         g_pressure.style.borderColor = "red";
@@ -198,105 +193,87 @@ function circleColor(){
     }
 }
 
+document.onmousemove = function(event) {
+	pointX = event.pageX;
+	pointY = event.pageY;
+}
+setInterval(activityCheck, 1000);
+
+// Keeps the counter if no mouse moves are detected. If the set counter limit is exceeded, the user is logged out
+function activityCheck() {
+    if(sessionStorage.getItem('loggedIn')){
+        if(pointX - lastX === 0 && pointY - lastY === 0){
+            counter = counter + 1;
+        }
+        else{
+            lastX = pointX;
+            lastY = pointY;
+            counter = 0;
+        }
+    }
+    if(counter > 600){
+        logOutUser();
+    }
+}
+
+// Logs out the user, click of the log out button cleares session storage with the event listener of the button
 function logOutUser(){
-    if(document.cookie){
+    if(sessionStorage.getItem('loggedIn')){
         log_out.click();        
     }    
 }
 
-document.onmousemove = function(event) {
-	pointerX = event.pageX;
-	pointerY = event.pageY;
-}
-setInterval(activityCheck, 1000);
-
-function activityCheck() {
-    if(sessionStorage.getItem('loggedIn')){
-        if(pointerX - lastX === 0 && pointerY - lastY === 0){
-            counter = counter + 1;
-        }
-        else{
-            lastX = pointerX;
-            lastY = pointerY;
-            counter = 0;
-        }
-    }
-    if(counter > 60){
-        log_out.click();
-    }
-}
-
+// Session storage is used to check which elements are visible when the body of the page is loaded
 function checkUser(){
     if(sessionStorage.getItem('reload')){
         document.getElementById('login-form').style.display = "block";
         document.getElementById('pwd-warn').style.display = "block";
         sessionStorage.removeItem('reload');
     }
-    if(document.cookie && sessionStorage.getItem('loggedIn')){
+    if(sessionStorage.getItem('loggedIn')){
         document.getElementById('login-form').style.display = "none";  
         document.getElementById('user').style.display = "block";
-        document.getElementById('user').innerHTML = 'Signed in user: ' + localStorage.getItem('user');
-        document.getElementById('btn_log_out').style.display = "block";
-        document.getElementById('user').style.display = "block";
-        document.getElementById('user').innerHTML = 'Signed in user: ' + localStorage.getItem('user');
-        document.getElementById('btn_log_out').style.display = "block";
-        document.getElementById('user-table').style.width = "45%";
-        document.getElementById('chart-cont').style.width = "50%";
-
+        document.getElementById('user').innerHTML = 'Signed in user: ' + sessionStorage.getItem('user');
+        document.getElementById('btn_log_out').style.display = "block";        
         if(manmode.checked = true){        
             s_pressure.disabled = true; 
             document.getElementById('pr_div').style.opacity = 0.4; 
+            document.getElementById('sp_div').style.opacity = 1; 
             s_speed.disabled = false; 
         }  
         if(automode.checked = true){
             s_speed.disabled = true; 
             document.getElementById('sp_div').style.opacity = 0.4; 
+            document.getElementById('pr_div').style.opacity = 1; 
             s_pressure.disabled = false;       
-        }     
+        }        
     }
     else{
         document.getElementById('login-form').style.display = "block";  
+        document.getElementById('pre-reg').style.display = "none";
         document.getElementById('sp_div').style.display = "none";  
         document.getElementById('pr_div').style.display = "none";          
         document.getElementById('m_auto').style.display = "none";
         document.getElementById('m_man').style.display = "none";
         document.getElementById('auto_label').style.display = "none"; 
         document.getElementById('man_label').style.display = "none";  
-        document.getElementById('user-table').style.display = "none";       
-        document.getElementById('chart-cont').style.width = "95%";   
+        document.getElementById('user-table').style.display = "none";          
     }
 }
 
-function checkMode(){
-    if(document.cookie && sessionStorage.getItem('loggedIn')){
-        automode.checked = true;
-        s_speed.disabled = true; 
-        document.getElementById('sp_div').style.opacity = 0.4; 
-        document.getElementById('pr_div').style.opacity = 1; 
-        s_pressure.disabled = false;         
-    }
-    else{
-        document.getElementById('login-form').style.display = "block";  
-        document.getElementById('sp_div').style.display = "none";  
-        document.getElementById('pr_div').style.display = "none";          
-        document.getElementById('m_auto').style.display = "none";
-        document.getElementById('m_man').style.display = "none";
-        document.getElementById('auto_label').style.display = "none"; 
-        document.getElementById('man_label').style.display = "none";  
-        document.getElementById('user-table').style.display = "none";        
-    }
-}
-
+// Sends the selected pressure value with socket to the server
 function sendPressure(){
     let press = { auto: true, pressure: parseInt(s_pressure.value) }
     socket.emit('setting', press);
 }
 
+// Sends the selected fan speed value with socket to the server
 function sendSpeed(){
     let speed = { auto: false, speed: parseInt(s_speed.value) }
     socket.emit('setting', speed);
 }
 
+// Updates the data chart on the page, fetches values from json file (db) and shows the data with selected time interval
 function updateChart(){ 
     async function fetchData(){  
         const response = await fetch('data.json');
@@ -345,6 +322,7 @@ function updateChart(){
     });
 };
 
+// data and config are base settings for the data chart
 const data = {
         datasets: [{
             label: 'CO2',
@@ -433,6 +411,7 @@ const config = {
 
 const myChart = new Chart(canvas, config);
 
+// Fetches the data from json file (db) and updates the the user log history table
 fetch('user_log.json')
 .then((res)=>{
     return res.json();
@@ -452,6 +431,7 @@ fetch('user_log.json')
     placeholder.innerHTML = out;
 });
 
+// Fetches the data from json file (db) and sets the latest values to the monitor fieldset output elements when the body of the page is loaded
 async function getStartValues(){
     await fetch('data.json')
     .then((res) =>{

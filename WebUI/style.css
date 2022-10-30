@@ -71,9 +71,22 @@ h4{
     font-weight: bolder;
 }
 
+#pre-reg{
+    display: block;
+    position: relative; 
+    float:right;
+    border-radius: 5px;
+}
+
+#reg{
+    border-radius: 5px;
+    color: black;
+    background-color: #CCE3DE;
+}
+
 .logout{
     margin-left: 20px;
-    margin-top: 35px;
+    margin-top: 35px;    
 }
 #btn_log_out{
     margin-bottom: 10px;
@@ -91,6 +104,7 @@ h4{
     border-radius: 5px;
     background-color: #CCE3DE;
     border: 0.5px solid;
+    color: black;
 }
 
 #user{
@@ -289,17 +303,31 @@ canvas{
     margin-bottom: 50px;
     width: 50%;
     margin: auto;
+    
+}
+
+#log{
+    height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+    width: 100%;
 }
 
 table{
     background-color: #CCE3DE;
-    width: 90%;
+    width: 100%;
     margin: auto;
     border-collapse: collapse;
 }
 
 table, th, td {
     border: 1px solid;
+}
+
+.th.fixed{
+    top: 0;
+    z-index: 2;
+    position: sticky;
 }
 
 td{

@@ -60,6 +60,13 @@ function getTime(){
     return today;
 }
 
+const isLogged = (req, res, next) =>{
+    if(!req.session.userId){
+        res.send(`<h1 style="text-align:center; margin-top:50px;">This page is only for registered users.</h1>`);
+    }
+    else next()
+}
+
 client.on('connect', ()=>{
     console.log('MQTT client connected: '+ client.connected);       
 });
@@ -94,21 +101,9 @@ client.on('message', async (topic, message) =>{
     io.emit('data', newData); 
 });
 
-
 app.get('/', (req, res)=>{
     res.sendFile(path.join(__dirname + '/index.html'));
 })
-
-app.get('/register', (req,res)=>{
-    res.send(`
-    <h1>Register</h1>
-    <form method='post' action='/register' />
-        <input type='text' name='name' placeholder='Username' required />
-        <input type='password' name='password' placeholder='Password' required />
-        <input type='submit' />
-    </form>
-    `);
-});
 
 app.post('/', async (req,res)=>{
     let pwd;
@@ -129,7 +124,6 @@ app.post('/', async (req,res)=>{
         let y = now.slice(0,4);
         let t = now.slice(11, 19);
         let stamp = d + '.' + m + '.' + y + ' ' + t;
-        //console.log(stamp);
         req.session.userId = username;        
         req.session.startTime = stamp;
         console.log('Password is correct');
@@ -145,7 +139,52 @@ app.post('/', async (req,res)=>{
         console.log('Wrong password');
         res.status(205);
     }    
-})
+});
+
+app.post('/logout', async (req, res) =>{
+    let now = getTime();
+    let d = now.slice(8,10);
+    let m = now.slice(5,7);
+    let y = now.slice(0,4);
+    let t = now.slice(11, 19);
+    let stamp = d + '.' + m + '.' + y + ' ' + t;
+    req.session.endTime = stamp;
+    let sesEnd = req.session.endTime;    
+    let log = [];
+    try {
+        log = await read('user_log.json');
+    } catch (e) { console.log(e); }
+    
+    let newLog = {
+        "id": log.length +1,
+        "UserId": sesUser,
+        "Login": sesStart,
+        "Logout": sesEnd
+    }
+    log.unshift(newLog);
+    write(log, 'user_log.json');
+
+    req.session.destroy(err => {
+        if(err){
+            return res.redirect('/');
+        }
+        res.clearCookie('sid');
+        res.redirect('/');
+    });    
+});
+
+app.use(isLogged);
+
+app.get('/register', (req,res)=>{
+    res.send(`
+    <h1 style="text-align:center; margin-top:50px;">Register new user</h1>
+    <form method='post' action='/register' style="text-align: center;"/>
+        <input type='text' name='name' placeholder='Username' required /><br>
+        <input type='password' name='password' placeholder='Password' required /><br>
+        <input type='submit' id='post-reg' value="Send"/>
+    </form>
+    `);
+});
 
 app.post('/register', async (req,res) =>{
     let users = [];
@@ -176,50 +215,7 @@ app.post('/register', async (req,res) =>{
             console.log('User exists already. No registeration done.');
         }
     }
-    res.redirect('/register')
-})
-
-app.post('/logout',async (req, res) =>{
-    let now = getTime();
-    let d = now.slice(8,10);
-    let m = now.slice(5,7);
-    let y = now.slice(0,4);
-    let t = now.slice(11, 19);
-    let stamp = d + '.' + m + '.' + y + ' ' + t;
-    req.session.endTime = stamp;
-    let sesEnd = req.session.endTime;    
-    let log = [];
-    try {
-        log = await read('user_log.json');
-    } catch (e) { console.log(e); }
-    
-    let newLog = {
-        "id": log.length +1,
-        "UserId": sesUser,
-        "Login": sesStart,
-        "Logout": sesEnd
-    }
-    console.log(newLog);
-    log.unshift(newLog);
-    write(log, 'user_log.json');
-
-    req.session.destroy(err => {
-        if(err){
-            return res.redirect('/');
-        }
-        res.clearCookie('sid');
-        res.redirect('/');
-    });
-    
+    res.redirect('/')
 });
-/*
-app.get('/data', async (req, res) => {
-    try {
-        const data = await read('data.json');
-        res.json(data);
-    } catch (e) {
-        res.status(404).send(e);
-    }
-});
-*/
+
 server.listen(3000, () => console.log('Server listening on port 3000'));

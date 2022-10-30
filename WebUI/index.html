@@ -10,9 +10,12 @@
     <script src="main.js" defer></script>
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
 </head>
-<body onload="checkUser(), checkMode(), getStartValues(), updateChart()">
-    <header>
-        <h1>ABB Ventilation Controller</h1>        
+<body onload="checkUser(), getStartValues(), updateChart()">
+    <header> 
+        <form id="pre-reg" method="get" action="/register" style="margin-top: 10px; margin-right: 10px;">
+            <input id="reg" type="submit" value="Register new user">
+        </form>  
+        <h1>ABB Ventilation Controller</h1>     
     </header>
     <div class="logout">
         <p id="user"></p>
@@ -132,17 +135,19 @@
         </div>        
         <div id="user-table">
             <h2>User Log History</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Login time</th>
-                        <th>Logout time</th>
-                    </tr>
-                </thead>
-                <tbody id="table-output">                        
-                </tbody>
-            </table>
+            <div id="log">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Login time</th>
+                            <th>Logout time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-output">                        
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>
